@@ -192,7 +192,7 @@ main() {
     echo ""
 
     log_warn "This script prepares optional VM-backed lab helpers."
-    log_warn "The canonical validation path remains ./artifact/setup.sh."
+    log_warn "The canonical validation path remains bash artifact/setup.sh."
     
     detect_os
     

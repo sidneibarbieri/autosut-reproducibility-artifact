@@ -36,9 +36,9 @@ summaries or local SUT reports in the checkout.
 ## Minimal Working Example
 
 ```bash
-./artifact/setup.sh
-./artifact/run.sh
-./artifact/validate.sh
+bash artifact/setup.sh
+bash artifact/run.sh
+bash artifact/validate.sh
 ```
 
 The smoke path currently executes one representative campaign:

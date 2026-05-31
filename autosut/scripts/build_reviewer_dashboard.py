@@ -514,7 +514,7 @@ def render_audit_overview(merged) -> str:
       <strong>2. Small execution trace</strong>
       <p>Runs one repository-local campaign and validates the resulting JSON
         evidence manifest.</p>
-      <code>./artifact/setup.sh &amp;&amp; ./artifact/run.sh &amp;&amp; ./artifact/validate.sh</code>
+      <code>bash artifact/setup.sh &amp;&amp; bash artifact/run.sh &amp;&amp; bash artifact/validate.sh</code>
     </div>
     <div class='recipe-card'>
       <strong>3. Executable non-uniqueness witness</strong>

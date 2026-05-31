@@ -8,9 +8,9 @@
 From repository root:
 
 ```bash
-./artifact/setup.sh
-./artifact/run.sh
-./artifact/validate.sh
+bash artifact/setup.sh
+bash artifact/run.sh
+bash artifact/validate.sh
 ```
 
 Optional interactive helper:
@@ -83,9 +83,9 @@ This refreshes:
 For final release validation:
 
 ```bash
-./artifact/setup.sh
-./artifact/run.sh
-./artifact/validate.sh
+bash artifact/setup.sh
+bash artifact/run.sh
+bash artifact/validate.sh
 ```
 
 Optional VM-backed validation:

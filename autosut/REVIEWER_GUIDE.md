@@ -116,9 +116,9 @@ JavaScript framework, no server, no network calls.
 ## 3. Minimal Working Example
 
 ```bash
-./artifact/setup.sh
-./artifact/run.sh
-./artifact/validate.sh
+bash artifact/setup.sh
+bash artifact/run.sh
+bash artifact/validate.sh
 ```
 
 `artifact/setup.sh` prepares the repo-local `.venv`; `artifact/run.sh` and

@@ -58,7 +58,7 @@ them.
 | Path | Command | Required tools | Recommended host | Typical role |
 | --- | --- | --- | --- | --- |
 | Fast study-claim validation | `bash run_review_check.sh` | `python3` | commodity laptop/desktop | revalidate released values and synthesized outputs |
-| Minimal working example | `./artifact/setup.sh && ./artifact/run.sh && ./artifact/validate.sh` | `python3`, `venv` | commodity laptop/desktop | smallest repository-local execution trace |
+| Minimal working example | `bash artifact/setup.sh && bash artifact/run.sh && bash artifact/validate.sh` | `python3`, `venv` | commodity laptop/desktop | smallest repository-local execution trace |
 | Orchestrated campaign replay | `python3 scripts/run_all_orchestrated_campaigns.py --preflight-only` then `python3 scripts/run_all_orchestrated_campaigns.py` | `python3`, `docker` | Docker-capable host | sequentially replay all implemented campaign/SUT pairs and write TSV/JSON status reports |
 | VM-backed realism | `bash run_vm_backed_campaign.sh 0.c0011` | `python3`, `vagrant`, `qemu` or `libvirt` | 8 CPU cores, 16 GB RAM, 25 GB free disk recommended | cold-start campaign/SUT replay on declared lab infrastructure |
 
@@ -93,9 +93,9 @@ claims without provisioning VMs.
 ## Minimal Working Example
 
 ```bash
-./artifact/setup.sh
-./artifact/run.sh
-./artifact/validate.sh
+bash artifact/setup.sh
+bash artifact/run.sh
+bash artifact/validate.sh
 ```
 
 `artifact/setup.sh` prepares the repo-local `.venv`; the subsequent wrappers

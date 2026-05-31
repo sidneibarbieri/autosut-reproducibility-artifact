@@ -92,9 +92,9 @@ Before publication or artifact packaging, run:
 
 ```bash
 bash run_review_check.sh
-./artifact/setup.sh
-./artifact/run.sh
-./artifact/validate.sh
+bash artifact/setup.sh
+bash artifact/run.sh
+bash artifact/validate.sh
 python3 scripts/check_public_surface.py
 bash scripts/sanitize_repo.sh
 python3 scripts/package_complete_public_repo.py

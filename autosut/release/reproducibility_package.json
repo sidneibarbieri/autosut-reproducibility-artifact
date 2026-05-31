@@ -11,9 +11,9 @@
     "qemu": "optional for qemu-backed lab workflows"
   },
   "setup_instructions": [
-    "Run: ./artifact/setup.sh",
-    "Run: ./artifact/run.sh",
-    "Run: ./artifact/validate.sh"
+    "Run: bash artifact/setup.sh",
+    "Run: bash artifact/run.sh",
+    "Run: bash artifact/validate.sh"
   ],
   "notes": [
     "The canonical smoke path is host-only and does not require VMs.",

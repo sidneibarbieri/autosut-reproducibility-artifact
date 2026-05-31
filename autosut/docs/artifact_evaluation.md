@@ -10,7 +10,7 @@ repository.
 | Path | Command | Required tools | Recommended host | Purpose |
 | --- | --- | --- | --- | --- |
 | Fast validation | `bash run_review_check.sh` | `python3`, `venv` | commodity laptop/desktop | revalidate released values and study-facing outputs |
-| Minimal working example | `./artifact/setup.sh && ./artifact/run.sh && ./artifact/validate.sh` | `python3`, `venv` | commodity laptop/desktop | smallest live execution trace |
+| Minimal working example | `bash artifact/setup.sh && bash artifact/run.sh && bash artifact/validate.sh` | `python3`, `venv` | commodity laptop/desktop | smallest live execution trace |
 | VM-backed realism | `bash run_vm_backed_campaign.sh 0.c0011` | `python3`, `venv`, `vagrant`, `qemu` or `libvirt` | 8 CPU cores, 16 GB RAM, 25 GB free disk recommended | cold-start campaign/SUT replay on declared lab infrastructure |
 
 The first two paths are the canonical validation contract. The VM-backed path is
@@ -48,9 +48,9 @@ It also regenerates the infrastructure/SUT automation coverage report in
 ## Minimal Working Example
 
 ```bash
-./artifact/setup.sh
-./artifact/run.sh
-./artifact/validate.sh
+bash artifact/setup.sh
+bash artifact/run.sh
+bash artifact/validate.sh
 ```
 
 This path currently executes one representative campaign and emits structured

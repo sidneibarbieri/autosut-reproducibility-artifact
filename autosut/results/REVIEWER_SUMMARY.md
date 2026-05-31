@@ -3,9 +3,9 @@
 ## Canonical Reviewer Path
 
 ```bash
-./artifact/setup.sh
-./artifact/run.sh
-./artifact/validate.sh
+bash artifact/setup.sh
+bash artifact/run.sh
+bash artifact/validate.sh
 ```
 
 This path is the reviewer baseline. It is intentionally narrower than the full
