@@ -22,6 +22,16 @@ Python and LaTeX dependencies are available. The command does not
 require API keys, private data, paid services, Caldera, Docker, or VM
 startup.
 
+## Evidence Dashboard
+
+The reviewer-facing static dashboard is
+`autosut/release/dashboard/index.html`. If you view the file through
+the 4open file browser, use the page's `Raw` link to render the HTML;
+after downloading the ZIP, open the same file locally in a browser.
+The dashboard summarizes the claim map, replay report, canonical
+execution evidence, and raw CSV/JSON anchors without requiring a
+server or external service.
+
 ## Full Docker Replay
 
 ```bash

@@ -25,6 +25,12 @@ The fastest top-level validation path is
 `bash run_review_check.sh`. The `artifact/` wrappers remain the smallest
 repository-local execution example.
 
+The static evidence dashboard is `release/dashboard/index.html`. In the 4open
+file browser, click the file's `Raw` link to render the HTML; in a downloaded
+ZIP or clone, open the file locally in a browser. The dashboard is designed as
+the reviewer-first visual map of claims, replay reports, canonical evidence,
+and raw CSV/JSON anchors.
+
 The public repository scope intended for GitHub publication and artifact
 distribution is defined in `PUBLIC_REPOSITORY_SCOPE.md`.
 
