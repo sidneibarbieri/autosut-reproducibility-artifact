@@ -1,0 +1,31 @@
+{
+  "credentials": [
+    {
+      "kind": "password",
+      "user": "eclipseops",
+      "secret": "Eclipse123!",
+      "location": null,
+      "purpose": "Operator account matching the frozen YAML's 0.operation_midnighteclipse declaration (eclipseops:Eclipse123!)."
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/var/lib/eclipseops/network_inventory.txt",
+      "content_text": "vpn-gateway-01\nvpn-gateway-02\n",
+      "content_b64": null,
+      "owner": "root",
+      "mode": "0644",
+      "purpose": "Decoy network inventory the CVE-2024-3400 attacker would enumerate post-exploitation."
+    }
+  ],
+  "exposures": [
+    {
+      "port": 443,
+      "protocol": "tcp",
+      "service": "globalprotect_https_surrogate",
+      "expose_to": "private_network"
+    }
+  ],
+  "applications": [],
+  "notes": "Realism for the GlobalProtect surrogate target."
+}

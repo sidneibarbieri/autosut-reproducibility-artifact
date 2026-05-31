@@ -1,0 +1,72 @@
+{
+  "credentials": [
+    {
+      "kind": "password",
+      "user": "clouduser",
+      "secret": "cloudpass123",
+      "location": null,
+      "purpose": "Operator account matching the frozen YAML declaration (clouduser:cloudpass123)."
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/home/clouduser/.mozilla/firefox/profiles.ini",
+      "content_text": "[General]\nStartWithLastProfile=1\n[Profile0]\nName=default\n",
+      "content_b64": null,
+      "owner": "clouduser",
+      "mode": "0644",
+      "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/.mozilla/firefox/profiles.ini)."
+    },
+    {
+      "path": "/home/clouduser/.config/google-chrome/Default/Preferences",
+      "content_text": "{\"profile\":{\"name\":\"Default\"}}\n",
+      "content_b64": null,
+      "owner": "clouduser",
+      "mode": "0644",
+      "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/.config/google-chrome/Default/Preferences)."
+    },
+    {
+      "path": "/home/clouduser/staging/encoded_payload.b64",
+      "content_text": "TEFCX1BBWUxPQUQK\n",
+      "content_b64": null,
+      "owner": "clouduser",
+      "mode": "0644",
+      "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/staging/encoded_payload.b64)."
+    }
+  ],
+  "exposures": [
+    {
+      "port": 22,
+      "protocol": "tcp",
+      "service": "ssh",
+      "expose_to": "private_network"
+    },
+    {
+      "port": 80,
+      "protocol": "tcp",
+      "service": "http",
+      "expose_to": "private_network"
+    }
+  ],
+  "applications": [
+    {
+      "name": "openssh",
+      "version": "default",
+      "recipe": "openssh_weak_password",
+      "cve_pins": [],
+      "config": {},
+      "image_override": null,
+      "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+    },
+    {
+      "name": "apache_httpd",
+      "version": "default",
+      "recipe": "apache_default_site",
+      "cve_pins": [],
+      "config": {},
+      "image_override": null,
+      "purpose": "HTTP web surface the frozen YAML declares."
+    }
+  ],
+  "notes": "0.outer_space \u2014 browser discovery, tool staging, cloud infrastructure artefacts on Linux SUT."
+}

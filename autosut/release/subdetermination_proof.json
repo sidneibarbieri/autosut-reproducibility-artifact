@@ -1,0 +1,792 @@
+{
+  "generated_at": "2026-05-29T18:38:58+00:00",
+  "proofs": {
+    "0.cve_2021_41773": {
+      "campaign_id": "0.cve_2021_41773",
+      "invariant_fingerprint": "aeeab0a0eee1173255978a8ef9a60ef3202c7288324fbb715f1c538319698d0e",
+      "invariant_count": 4,
+      "free_count": 1,
+      "free_fraction": 20.0,
+      "canonical": {
+        "variant_id": "0.cve_2021_41773#canonical",
+        "seed": 0,
+        "sut_profile": {
+          "sut_id": "0.cve_2021_41773",
+          "base_image": "httpd:2.4.49",
+          "services": [
+            "http"
+          ],
+          "memory_mb": 512,
+          "smp": 1,
+          "backend": null,
+          "hosts": [
+            {
+              "name": "attacker",
+              "base_image": "autosut/dmz-host:s28",
+              "role": "attacker",
+              "services": [],
+              "memory_mb": 256,
+              "smp": 1,
+              "startup_commands": [
+                "apk add --no-cache curl >/dev/null 2>&1 && echo attacker_curl_ok"
+              ],
+              "composition": null,
+              "zones": []
+            },
+            {
+              "name": "target",
+              "base_image": "httpd:2.4.49",
+              "role": "target",
+              "services": [
+                "http"
+              ],
+              "memory_mb": 512,
+              "smp": 1,
+              "startup_commands": [],
+              "composition": {
+                "credentials": [],
+                "artifacts": [
+                  {
+                    "path": "/usr/local/apache2/cgi-bin/lab.sh",
+                    "content_text": "#!/bin/sh\necho Content-Type: text/plain\necho\necho LAB_CGI_OK\n",
+                    "content_b64": null,
+                    "owner": "root",
+                    "mode": "0755",
+                    "purpose": "Decoy CGI to confirm script alias mounted.",
+                    "source": "analyst_authored"
+                  }
+                ],
+                "exposures": [
+                  {
+                    "port": 80,
+                    "protocol": "tcp",
+                    "service": "http",
+                    "expose_to": "private_network",
+                    "purpose": "Documented CVE-2021-41773 path-traversal exploit surface on the vulnerable httpd 2.4.49.",
+                    "source": "corpus_supported"
+                  }
+                ],
+                "applications": [
+                  {
+                    "name": "apache_httpd",
+                    "version": "2.4.49",
+                    "recipe": "apache_httpd_2.4.49_cve_2021_41773",
+                    "cve_pins": [
+                      "CVE-2021-41773"
+                    ],
+                    "config": {},
+                    "image_override": null,
+                    "purpose": "Vulnerable web server \u2014 pre-patch httpd 2.4.49 with the Alias+cgi-bin trigger the advisory documents.",
+                    "source": "corpus_supported"
+                  }
+                ],
+                "notes": "S17 reference composition: every realism element is declared, applied, and audit-logged."
+              },
+              "zones": []
+            }
+          ],
+          "composition": null,
+          "topology": null,
+          "notes": "Two-host CVE-2021-41773 reference. Target uses the canonical vulnerable httpd:2.4.49 multi-arch image; the SUT composer applies a vulnerable httpd.conf the advisory documents."
+        },
+        "free_elements_changed": [],
+        "free_fraction": 20.0
+      },
+      "variants": [
+        {
+          "variant_id": "0.cve_2021_41773#seed1",
+          "seed": 1,
+          "sut_profile": {
+            "sut_id": "0.cve_2021_41773-s1",
+            "base_image": "httpd:2.4.49",
+            "services": [
+              "http"
+            ],
+            "memory_mb": 512,
+            "smp": 1,
+            "backend": null,
+            "hosts": [
+              {
+                "name": "attacker",
+                "base_image": "autosut/dmz-host:s28",
+                "role": "attacker",
+                "services": [],
+                "memory_mb": 256,
+                "smp": 1,
+                "startup_commands": [
+                  "apk add --no-cache curl >/dev/null 2>&1 && echo attacker_curl_ok"
+                ],
+                "composition": null,
+                "zones": []
+              },
+              {
+                "name": "target",
+                "base_image": "httpd:2.4.49",
+                "role": "target",
+                "services": [
+                  "http"
+                ],
+                "memory_mb": 512,
+                "smp": 1,
+                "startup_commands": [],
+                "composition": {
+                  "credentials": [],
+                  "artifacts": [
+                    {
+                      "path": "/usr/local/apache2/cgi-bin/decoy_44cb63.txt",
+                      "content_text": "lab decoy 44cb63\n",
+                      "content_b64": null,
+                      "owner": "root",
+                      "mode": "0755",
+                      "purpose": "Decoy CGI to confirm script alias mounted.",
+                      "source": "analyst_authored"
+                    }
+                  ],
+                  "exposures": [
+                    {
+                      "port": 80,
+                      "protocol": "tcp",
+                      "service": "http",
+                      "expose_to": "private_network",
+                      "purpose": "Documented CVE-2021-41773 path-traversal exploit surface on the vulnerable httpd 2.4.49.",
+                      "source": "corpus_supported"
+                    }
+                  ],
+                  "applications": [
+                    {
+                      "name": "apache_httpd",
+                      "version": "2.4.49",
+                      "recipe": "apache_httpd_2.4.49_cve_2021_41773",
+                      "cve_pins": [
+                        "CVE-2021-41773"
+                      ],
+                      "config": {},
+                      "image_override": null,
+                      "purpose": "Vulnerable web server \u2014 pre-patch httpd 2.4.49 with the Alias+cgi-bin trigger the advisory documents.",
+                      "source": "corpus_supported"
+                    }
+                  ],
+                  "notes": "S17 reference composition: every realism element is declared, applied, and audit-logged."
+                },
+                "zones": []
+              }
+            ],
+            "composition": null,
+            "topology": null,
+            "notes": "Two-host CVE-2021-41773 reference. Target uses the canonical vulnerable httpd:2.4.49 multi-arch image; the SUT composer applies a vulnerable httpd.conf the advisory documents."
+          },
+          "free_elements_changed": [
+            "target.artifact./usr/local/apache2/cgi-bin/lab.sh"
+          ],
+          "free_fraction": 20.0
+        },
+        {
+          "variant_id": "0.cve_2021_41773#seed2",
+          "seed": 2,
+          "sut_profile": {
+            "sut_id": "0.cve_2021_41773-s2",
+            "base_image": "httpd:2.4.49",
+            "services": [
+              "http"
+            ],
+            "memory_mb": 512,
+            "smp": 1,
+            "backend": null,
+            "hosts": [
+              {
+                "name": "attacker",
+                "base_image": "autosut/dmz-host:s28",
+                "role": "attacker",
+                "services": [],
+                "memory_mb": 256,
+                "smp": 1,
+                "startup_commands": [
+                  "apk add --no-cache curl >/dev/null 2>&1 && echo attacker_curl_ok"
+                ],
+                "composition": null,
+                "zones": []
+              },
+              {
+                "name": "target",
+                "base_image": "httpd:2.4.49",
+                "role": "target",
+                "services": [
+                  "http"
+                ],
+                "memory_mb": 512,
+                "smp": 1,
+                "startup_commands": [],
+                "composition": {
+                  "credentials": [],
+                  "artifacts": [
+                    {
+                      "path": "/usr/local/apache2/cgi-bin/decoy_1cf44d.txt",
+                      "content_text": "lab decoy 1cf44d\n",
+                      "content_b64": null,
+                      "owner": "root",
+                      "mode": "0755",
+                      "purpose": "Decoy CGI to confirm script alias mounted.",
+                      "source": "analyst_authored"
+                    }
+                  ],
+                  "exposures": [
+                    {
+                      "port": 80,
+                      "protocol": "tcp",
+                      "service": "http",
+                      "expose_to": "private_network",
+                      "purpose": "Documented CVE-2021-41773 path-traversal exploit surface on the vulnerable httpd 2.4.49.",
+                      "source": "corpus_supported"
+                    }
+                  ],
+                  "applications": [
+                    {
+                      "name": "apache_httpd",
+                      "version": "2.4.49",
+                      "recipe": "apache_httpd_2.4.49_cve_2021_41773",
+                      "cve_pins": [
+                        "CVE-2021-41773"
+                      ],
+                      "config": {},
+                      "image_override": null,
+                      "purpose": "Vulnerable web server \u2014 pre-patch httpd 2.4.49 with the Alias+cgi-bin trigger the advisory documents.",
+                      "source": "corpus_supported"
+                    }
+                  ],
+                  "notes": "S17 reference composition: every realism element is declared, applied, and audit-logged."
+                },
+                "zones": []
+              }
+            ],
+            "composition": null,
+            "topology": null,
+            "notes": "Two-host CVE-2021-41773 reference. Target uses the canonical vulnerable httpd:2.4.49 multi-arch image; the SUT composer applies a vulnerable httpd.conf the advisory documents."
+          },
+          "free_elements_changed": [
+            "target.artifact./usr/local/apache2/cgi-bin/lab.sh"
+          ],
+          "free_fraction": 20.0
+        }
+      ],
+      "executable": true
+    },
+    "0.apt41_dust": {
+      "campaign_id": "0.apt41_dust",
+      "invariant_fingerprint": "25cf8df29d62c9e55c317243f680b48edb8307d7eefa7845db4de99f7f657d16",
+      "invariant_count": 1,
+      "free_count": 10,
+      "free_fraction": 90.9,
+      "canonical": {
+        "variant_id": "0.apt41_dust#canonical",
+        "seed": 0,
+        "sut_profile": {
+          "sut_id": "apt41_dust_dual_ops",
+          "base_image": "python:3.11-slim",
+          "services": [
+            "ssh",
+            "apache2",
+            "mysql"
+          ],
+          "memory_mb": 1024,
+          "smp": 1,
+          "backend": null,
+          "hosts": null,
+          "composition": {
+            "credentials": [
+              {
+                "kind": "password",
+                "user": "dustops",
+                "secret": "Dust2024!",
+                "location": null,
+                "purpose": "Operator account matching the frozen YAML declaration (dustops:Dust2024!).",
+                "source": "autosut_concretized"
+              }
+            ],
+            "artifacts": [
+              {
+                "path": "/home/dustops/intel/targets.txt",
+                "content_text": "Targets: target-financial-01, target-financial-02\n",
+                "content_b64": null,
+                "owner": "dustops",
+                "mode": "0644",
+                "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/targets.txt).",
+                "source": "analyst_authored"
+              },
+              {
+                "path": "/home/dustops/intel/financials.csv",
+                "content_text": "Q,Account,Amount\nQ1,A123,1000\n",
+                "content_b64": null,
+                "owner": "dustops",
+                "mode": "0644",
+                "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/financials.csv).",
+                "source": "analyst_authored"
+              },
+              {
+                "path": "/tmp/staged_payload.sh",
+                "content_text": "#!/bin/sh\necho payload_ran\n",
+                "content_b64": null,
+                "owner": "dustops",
+                "mode": "0644",
+                "purpose": "Decoy artefact declared by the frozen YAML (/tmp/staged_payload.sh).",
+                "source": "analyst_authored"
+              }
+            ],
+            "exposures": [
+              {
+                "port": 22,
+                "protocol": "tcp",
+                "service": "ssh",
+                "expose_to": "private_network",
+                "purpose": "SSH service the frozen YAML declares (password_auth_enabled).",
+                "source": "analyst_authored"
+              },
+              {
+                "port": 80,
+                "protocol": "tcp",
+                "service": "http",
+                "expose_to": "private_network",
+                "purpose": "HTTP web surface the frozen YAML declares.",
+                "source": "analyst_authored"
+              },
+              {
+                "port": 3306,
+                "protocol": "tcp",
+                "service": "mysql",
+                "expose_to": "private_network",
+                "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed).",
+                "source": "analyst_authored"
+              }
+            ],
+            "applications": [
+              {
+                "name": "openssh",
+                "version": "default",
+                "recipe": "openssh_weak_password",
+                "cve_pins": [],
+                "config": {},
+                "image_override": null,
+                "purpose": "ssh service the frozen YAML declares (password_auth_enabled).",
+                "source": "analyst_authored"
+              },
+              {
+                "name": "apache_httpd",
+                "version": "default",
+                "recipe": "apache_default_site",
+                "cve_pins": [],
+                "config": {},
+                "image_override": null,
+                "purpose": "HTTP web surface the frozen YAML declares.",
+                "source": "analyst_authored"
+              },
+              {
+                "name": "mysql",
+                "version": "default",
+                "recipe": "mysql_default_instance",
+                "cve_pins": [],
+                "config": {},
+                "image_override": null,
+                "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed).",
+                "source": "analyst_authored"
+              }
+            ],
+            "notes": "0.apt41_dust \u2014 APT41 DUST dual espionage + financial ops on multi-service Linux SUT (ssh + apache + mysql)."
+          },
+          "topology": null,
+          "notes": "0.apt41_dust \u2014 APT41 DUST dual espionage + financial ops on multi-service Linux SUT (ssh + apache + mysql)."
+        },
+        "free_elements_changed": [],
+        "free_fraction": 90.9
+      },
+      "variants": [
+        {
+          "variant_id": "0.apt41_dust#seed1",
+          "seed": 1,
+          "sut_profile": {
+            "sut_id": "apt41_dust_dual_ops-s1",
+            "base_image": "python:3.11-slim",
+            "services": [
+              "ssh",
+              "apache2",
+              "mysql"
+            ],
+            "memory_mb": 1024,
+            "smp": 1,
+            "backend": null,
+            "hosts": null,
+            "composition": {
+              "credentials": [
+                {
+                  "kind": "password",
+                  "user": "labuser_44cb63",
+                  "secret": "Lab-44cb63!",
+                  "location": null,
+                  "purpose": "Operator account matching the frozen YAML declaration (dustops:Dust2024!).",
+                  "source": "autosut_concretized"
+                }
+              ],
+              "artifacts": [
+                {
+                  "path": "/home/dustops/intel/decoy_204f89.txt",
+                  "content_text": "lab decoy 204f89\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/targets.txt).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "path": "/home/dustops/intel/decoy_829868.txt",
+                  "content_text": "lab decoy 829868\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/financials.csv).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "path": "/tmp/decoy_3c5fd7.txt",
+                  "content_text": "lab decoy 3c5fd7\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/tmp/staged_payload.sh).",
+                  "source": "analyst_authored"
+                }
+              ],
+              "exposures": [
+                {
+                  "port": 22,
+                  "protocol": "tcp",
+                  "service": "ssh",
+                  "expose_to": "private_network",
+                  "purpose": "SSH service the frozen YAML declares (password_auth_enabled).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "port": 80,
+                  "protocol": "tcp",
+                  "service": "http",
+                  "expose_to": "private_network",
+                  "purpose": "HTTP web surface the frozen YAML declares.",
+                  "source": "analyst_authored"
+                },
+                {
+                  "port": 3306,
+                  "protocol": "tcp",
+                  "service": "mysql",
+                  "expose_to": "private_network",
+                  "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed).",
+                  "source": "analyst_authored"
+                }
+              ],
+              "applications": [
+                {
+                  "name": "dropbear",
+                  "version": "default",
+                  "recipe": "dropbear_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: remote authenticated service (SSH).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "name": "nginx",
+                  "version": "default",
+                  "recipe": "nginx_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: edge HTTP service.",
+                  "source": "analyst_authored"
+                },
+                {
+                  "name": "mariadb",
+                  "version": "default",
+                  "recipe": "mariadb_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: relational database service.",
+                  "source": "analyst_authored"
+                }
+              ],
+              "notes": "0.apt41_dust \u2014 APT41 DUST dual espionage + financial ops on multi-service Linux SUT (ssh + apache + mysql)."
+            },
+            "topology": null,
+            "notes": "0.apt41_dust \u2014 APT41 DUST dual espionage + financial ops on multi-service Linux SUT (ssh + apache + mysql)."
+          },
+          "free_elements_changed": [
+            "software.openssh@default",
+            "software.apache_httpd@default",
+            "software.mysql@default",
+            "credential.dustops",
+            "artifact./home/dustops/intel/targets.txt",
+            "artifact./home/dustops/intel/financials.csv",
+            "artifact./tmp/staged_payload.sh"
+          ],
+          "free_fraction": 90.9
+        },
+        {
+          "variant_id": "0.apt41_dust#seed2",
+          "seed": 2,
+          "sut_profile": {
+            "sut_id": "apt41_dust_dual_ops-s2",
+            "base_image": "python:3.11-slim",
+            "services": [
+              "ssh",
+              "apache2",
+              "mysql"
+            ],
+            "memory_mb": 1024,
+            "smp": 1,
+            "backend": null,
+            "hosts": null,
+            "composition": {
+              "credentials": [
+                {
+                  "kind": "password",
+                  "user": "labuser_1cf44d",
+                  "secret": "Lab-1cf44d!",
+                  "location": null,
+                  "purpose": "Operator account matching the frozen YAML declaration (dustops:Dust2024!).",
+                  "source": "autosut_concretized"
+                }
+              ],
+              "artifacts": [
+                {
+                  "path": "/home/dustops/intel/decoy_2ee433.txt",
+                  "content_text": "lab decoy 2ee433\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/targets.txt).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "path": "/home/dustops/intel/decoy_2b7457.txt",
+                  "content_text": "lab decoy 2b7457\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/financials.csv).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "path": "/tmp/decoy_b8dc86.txt",
+                  "content_text": "lab decoy b8dc86\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/tmp/staged_payload.sh).",
+                  "source": "analyst_authored"
+                }
+              ],
+              "exposures": [
+                {
+                  "port": 22,
+                  "protocol": "tcp",
+                  "service": "ssh",
+                  "expose_to": "private_network",
+                  "purpose": "SSH service the frozen YAML declares (password_auth_enabled).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "port": 80,
+                  "protocol": "tcp",
+                  "service": "http",
+                  "expose_to": "private_network",
+                  "purpose": "HTTP web surface the frozen YAML declares.",
+                  "source": "analyst_authored"
+                },
+                {
+                  "port": 3306,
+                  "protocol": "tcp",
+                  "service": "mysql",
+                  "expose_to": "private_network",
+                  "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed).",
+                  "source": "analyst_authored"
+                }
+              ],
+              "applications": [
+                {
+                  "name": "dropbear",
+                  "version": "default",
+                  "recipe": "dropbear_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: remote authenticated service (SSH).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "name": "nginx",
+                  "version": "default",
+                  "recipe": "nginx_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: edge HTTP service.",
+                  "source": "analyst_authored"
+                },
+                {
+                  "name": "mariadb",
+                  "version": "default",
+                  "recipe": "mariadb_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: relational database service.",
+                  "source": "analyst_authored"
+                }
+              ],
+              "notes": "0.apt41_dust \u2014 APT41 DUST dual espionage + financial ops on multi-service Linux SUT (ssh + apache + mysql)."
+            },
+            "topology": null,
+            "notes": "0.apt41_dust \u2014 APT41 DUST dual espionage + financial ops on multi-service Linux SUT (ssh + apache + mysql)."
+          },
+          "free_elements_changed": [
+            "software.openssh@default",
+            "software.apache_httpd@default",
+            "software.mysql@default",
+            "credential.dustops",
+            "artifact./home/dustops/intel/targets.txt",
+            "artifact./home/dustops/intel/financials.csv",
+            "artifact./tmp/staged_payload.sh"
+          ],
+          "free_fraction": 90.9
+        },
+        {
+          "variant_id": "0.apt41_dust#seed3",
+          "seed": 3,
+          "sut_profile": {
+            "sut_id": "apt41_dust_dual_ops-s3",
+            "base_image": "python:3.11-slim",
+            "services": [
+              "ssh",
+              "apache2",
+              "mysql"
+            ],
+            "memory_mb": 1024,
+            "smp": 1,
+            "backend": null,
+            "hosts": null,
+            "composition": {
+              "credentials": [
+                {
+                  "kind": "password",
+                  "user": "labuser_79d67f",
+                  "secret": "Lab-79d67f!",
+                  "location": null,
+                  "purpose": "Operator account matching the frozen YAML declaration (dustops:Dust2024!).",
+                  "source": "autosut_concretized"
+                }
+              ],
+              "artifacts": [
+                {
+                  "path": "/home/dustops/intel/decoy_42c6c6.txt",
+                  "content_text": "lab decoy 42c6c6\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/targets.txt).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "path": "/home/dustops/intel/decoy_bd6ac3.txt",
+                  "content_text": "lab decoy bd6ac3\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/financials.csv).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "path": "/tmp/decoy_f2b725.txt",
+                  "content_text": "lab decoy f2b725\n",
+                  "content_b64": null,
+                  "owner": "dustops",
+                  "mode": "0644",
+                  "purpose": "Decoy artefact declared by the frozen YAML (/tmp/staged_payload.sh).",
+                  "source": "analyst_authored"
+                }
+              ],
+              "exposures": [
+                {
+                  "port": 22,
+                  "protocol": "tcp",
+                  "service": "ssh",
+                  "expose_to": "private_network",
+                  "purpose": "SSH service the frozen YAML declares (password_auth_enabled).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "port": 80,
+                  "protocol": "tcp",
+                  "service": "http",
+                  "expose_to": "private_network",
+                  "purpose": "HTTP web surface the frozen YAML declares.",
+                  "source": "analyst_authored"
+                },
+                {
+                  "port": 3306,
+                  "protocol": "tcp",
+                  "service": "mysql",
+                  "expose_to": "private_network",
+                  "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed).",
+                  "source": "analyst_authored"
+                }
+              ],
+              "applications": [
+                {
+                  "name": "dropbear",
+                  "version": "default",
+                  "recipe": "dropbear_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: remote authenticated service (SSH).",
+                  "source": "analyst_authored"
+                },
+                {
+                  "name": "nginx",
+                  "version": "default",
+                  "recipe": "nginx_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: edge HTTP service.",
+                  "source": "analyst_authored"
+                },
+                {
+                  "name": "mariadb",
+                  "version": "default",
+                  "recipe": "mariadb_equivalent",
+                  "cve_pins": [],
+                  "config": {},
+                  "image_override": null,
+                  "purpose": "Realises the same abstract precondition: relational database service.",
+                  "source": "analyst_authored"
+                }
+              ],
+              "notes": "0.apt41_dust \u2014 APT41 DUST dual espionage + financial ops on multi-service Linux SUT (ssh + apache + mysql)."
+            },
+            "topology": null,
+            "notes": "0.apt41_dust \u2014 APT41 DUST dual espionage + financial ops on multi-service Linux SUT (ssh + apache + mysql)."
+          },
+          "free_elements_changed": [
+            "software.openssh@default",
+            "software.apache_httpd@default",
+            "software.mysql@default",
+            "credential.dustops",
+            "artifact./home/dustops/intel/targets.txt",
+            "artifact./home/dustops/intel/financials.csv",
+            "artifact./tmp/staged_payload.sh"
+          ],
+          "free_fraction": 90.9
+        }
+      ],
+      "executable": false
+    }
+  }
+}

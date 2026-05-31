@@ -1,0 +1,10 @@
+{
+  "campaign_id": "0.dmz_segmentation_demo",
+  "timestamp": "2026-05-29T00:32:51+00:00",
+  "total_techniques": 4,
+  "successful": 4,
+  "fidelity_distribution": {
+    "adapted": 4
+  },
+  "evidence_directory": "release/evidence/0.dmz_segmentation_demo_20260529_003139"
+}

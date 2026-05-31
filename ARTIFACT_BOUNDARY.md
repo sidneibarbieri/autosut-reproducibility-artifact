@@ -1,0 +1,19 @@
+# Artifact Boundary
+
+## Public in this repository
+
+- Measurement code and frozen public CTI bundle snapshots.
+- Deterministic audit outputs used by the submitted paper.
+- Optional VM/lab orchestration code without local runtime images.
+
+## Excluded from this repository
+
+- Private notes, coauthor/admin material, and non-public study material.
+- Manuscript source, venue submission files, and generated paper PDFs.
+- Local virtual environments, Python caches, and LaTeX build residue.
+- VM runtime images, overlays, `.vagrant` state, Docker database state, and local evidence archives.
+- Runtime credentials or locally generated certificates from exploratory lab runs.
+- Historical frozen-workspace paths that are useful only for internal comparison.
+
+The public validation path is designed to reproduce the paper's
+measurement claims without crossing this boundary.

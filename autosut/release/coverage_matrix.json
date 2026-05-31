@@ -1,0 +1,596 @@
+{
+  "generated_at": "2026-05-29T08:23:07",
+  "total": 8,
+  "complete": 8,
+  "partial": 0,
+  "missing": 0,
+  "campaigns": [
+    {
+      "docker_campaign": "apt41_dust",
+      "docker_name": "APT41 DUST",
+      "docker_techniques": 24,
+      "sticks_campaign_id": "0.apt41_dust",
+      "campaign_file": true,
+      "sut_profile": true,
+      "sticks_techniques": 23,
+      "executor_coverage": 1.0,
+      "latest_execution": {
+        "total": 10,
+        "successful": 10,
+        "failed": 0,
+        "success_rate": 1.0,
+        "evidence_path": "release/evidence/0.apt41_dust_full_20260528_193246"
+      },
+      "status": "COMPLETE",
+      "divergences": [
+        "docker_techniques=24 includes redundant sub-steps merged into 13 canonical ATT&CK techniques",
+        "Web-service C2 (T1102) and infrastructure acquisition (T1583.006) simulated as inspired; no live external traffic"
+      ],
+      "techniques": [
+        {
+          "technique_id": "T1593.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1594",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1596.005",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1583.007",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1586.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1588.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1505.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1543.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1574.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1569.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1027.013",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1036.004",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1553.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1070.004",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1213.006",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1119",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1074.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1560.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1102",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1071.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1573.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1105",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1567.002",
+          "has_executor": true
+        }
+      ]
+    },
+    {
+      "docker_campaign": "c0010",
+      "docker_name": "C0010",
+      "docker_techniques": 10,
+      "sticks_campaign_id": "0.c0010",
+      "campaign_file": true,
+      "sut_profile": true,
+      "sticks_techniques": 9,
+      "executor_coverage": 1.0,
+      "latest_execution": {
+        "total": 9,
+        "successful": 9,
+        "failed": 0,
+        "success_rate": 1.0,
+        "evidence_path": "release/evidence/0.c0010_20260528_192645"
+      },
+      "status": "COMPLETE",
+      "divergences": [
+        "Resource-development steps remain inspired; no live external provider interaction"
+      ],
+      "techniques": [
+        {
+          "technique_id": "T1584.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1608.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1608.004",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1189",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1587.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1583.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1608.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1588.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1105",
+          "has_executor": true
+        }
+      ]
+    },
+    {
+      "docker_campaign": "c0026",
+      "docker_name": "C0026",
+      "docker_techniques": 7,
+      "sticks_campaign_id": "0.c0026",
+      "campaign_file": true,
+      "sut_profile": true,
+      "sticks_techniques": 6,
+      "executor_coverage": 1.0,
+      "latest_execution": {
+        "total": 6,
+        "successful": 6,
+        "failed": 0,
+        "success_rate": 1.0,
+        "evidence_path": "release/evidence/0.c0026_20260528_193000"
+      },
+      "status": "COMPLETE",
+      "divergences": [
+        "DNS resolution override adapted to lab-only local resolver path"
+      ],
+      "techniques": [
+        {
+          "technique_id": "T1583.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1568",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1105",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1005",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1560.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1030",
+          "has_executor": true
+        }
+      ]
+    },
+    {
+      "docker_campaign": "costaricto",
+      "docker_name": "CostaRicto",
+      "docker_techniques": 11,
+      "sticks_campaign_id": "0.costaricto",
+      "campaign_file": true,
+      "sut_profile": true,
+      "sticks_techniques": 10,
+      "executor_coverage": 1.0,
+      "latest_execution": {
+        "total": 10,
+        "successful": 10,
+        "failed": 0,
+        "success_rate": 1.0,
+        "evidence_path": "release/evidence/0.costaricto_20260528_175808"
+      },
+      "status": "COMPLETE",
+      "divergences": [
+        "Multi-hop proxy and external remote services remain inspired; no live C2 infrastructure"
+      ],
+      "techniques": [
+        {
+          "technique_id": "T1046",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1105",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1090.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1053.005",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1588.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1133",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1583.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1587.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1005",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1572",
+          "has_executor": true
+        }
+      ]
+    },
+    {
+      "docker_campaign": "operation_midnighteclipse",
+      "docker_name": "Operation MidnightEclipse",
+      "docker_techniques": 18,
+      "sticks_campaign_id": "0.operation_midnighteclipse",
+      "campaign_file": true,
+      "sut_profile": true,
+      "sticks_techniques": 17,
+      "executor_coverage": 1.0,
+      "latest_execution": {
+        "total": 17,
+        "successful": 17,
+        "failed": 0,
+        "success_rate": 1.0,
+        "evidence_path": "release/evidence/0.operation_midnighteclipse_20260528_151341"
+      },
+      "status": "COMPLETE",
+      "divergences": [],
+      "techniques": [
+        {
+          "technique_id": "T1584.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1584.006",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1588.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1190",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1078",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1078.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1059.004",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1053.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1559",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1003.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1021.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1021.006",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1005",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1074.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1090",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1071.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1105",
+          "has_executor": true
+        }
+      ]
+    },
+    {
+      "docker_campaign": "outer_space",
+      "docker_name": "Outer Space",
+      "docker_techniques": 9,
+      "sticks_campaign_id": "0.outer_space",
+      "campaign_file": true,
+      "sut_profile": true,
+      "sticks_techniques": 8,
+      "executor_coverage": 1.0,
+      "latest_execution": {
+        "total": 8,
+        "successful": 8,
+        "failed": 0,
+        "success_rate": 1.0,
+        "evidence_path": "release/evidence/0.outer_space_20260528_193246"
+      },
+      "status": "COMPLETE",
+      "divergences": [
+        "Satellite-themed C2 infrastructure acquisition simulated as inspired"
+      ],
+      "techniques": [
+        {
+          "technique_id": "T1105",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1584.004",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1217",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1071.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1585.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1027.013",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1587.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1059.005",
+          "has_executor": true
+        }
+      ]
+    },
+    {
+      "docker_campaign": "salesforce_data_exfiltration",
+      "docker_name": "Salesforce Data Exfiltration",
+      "docker_techniques": 19,
+      "sticks_campaign_id": "0.salesforce_data_exfiltration",
+      "campaign_file": true,
+      "sut_profile": true,
+      "sticks_techniques": 18,
+      "executor_coverage": 1.0,
+      "latest_execution": {
+        "total": 18,
+        "successful": 18,
+        "failed": 0,
+        "success_rate": 1.0,
+        "evidence_path": "release/evidence/0.salesforce_data_exfiltration_20260528_151501"
+      },
+      "status": "COMPLETE",
+      "divergences": [
+        "SaaS API calls to Salesforce simulated as inspired; no live tenant"
+      ],
+      "techniques": [
+        {
+          "technique_id": "T1598.004",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1585",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1585.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1586.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1587.001",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1588.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1608.005",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1671",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1059.006",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1036",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1078.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1656",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1083",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1213.004",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1090",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1090.003",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1020",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1567",
+          "has_executor": true
+        }
+      ]
+    },
+    {
+      "docker_campaign": "shadowray",
+      "docker_name": "ShadowRay",
+      "docker_techniques": 11,
+      "sticks_campaign_id": "0.shadowray",
+      "campaign_file": true,
+      "sut_profile": true,
+      "sticks_techniques": 10,
+      "executor_coverage": 1.0,
+      "latest_execution": {
+        "total": 3,
+        "successful": 3,
+        "failed": 0,
+        "success_rate": 1.0,
+        "evidence_path": "release/evidence/0.shadowray_20260528_150556"
+      },
+      "status": "COMPLETE",
+      "divergences": [
+        "Ray Dashboard (CVE-2023-48022) is exposed as a declared step-conditioned SUT overlay immediately before T1190, not hidden inside the base image. The overlay provisions a minimal unauthenticated HTTP stub on port 8265 that responds to /api/version and /api/jobs/ like a Ray cluster with auth disabled. If the overlay is absent, the executor still falls back to provisioning the same boundary inline inside the target VM. The boundary exercised (unauthenticated job-submission API) is methodologically equivalent to CVE-2023-48022 exploitation."
+      ],
+      "techniques": [
+        {
+          "technique_id": "T1190",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1027.013",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1003.008",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1546.004",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1588.002",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1105",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1059.006",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1016",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1068",
+          "has_executor": true
+        },
+        {
+          "technique_id": "T1496.001",
+          "has_executor": true
+        }
+      ]
+    }
+  ]
+}

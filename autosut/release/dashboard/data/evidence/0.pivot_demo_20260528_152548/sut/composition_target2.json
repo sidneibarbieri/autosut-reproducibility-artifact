@@ -1,0 +1,22 @@
+{
+  "credentials": [
+    {
+      "kind": "password",
+      "user": "labuser",
+      "secret": "Lab-Demo-2026!",
+      "location": null,
+      "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
+    }
+  ],
+  "artifacts": [],
+  "exposures": [
+    {
+      "port": 22,
+      "protocol": "tcp",
+      "service": "ssh",
+      "expose_to": "private_network"
+    }
+  ],
+  "applications": [],
+  "notes": "Pivot target realism: weak SSH credential + listening port 22 on the per-run private Docker network."
+}
