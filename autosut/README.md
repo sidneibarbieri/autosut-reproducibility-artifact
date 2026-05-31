@@ -10,11 +10,13 @@ The repository contains:
 - lab provisioning helpers,
 - evidence and table-generation scripts.
 
-This repository currently has three reproducibility layers:
+This repository currently has four reproducibility layers:
 
-- a paper-claim validation path in `run_review_check.sh`;
+- a study-claim validation path in `run_review_check.sh`;
 - a repository-local minimal working example in `artifact/` and
   `scripts/run_campaign.py`;
+- an orchestrated campaign replay path in
+  `scripts/run_all_orchestrated_campaigns.py`;
 - a provider-aware VM-backed path in `run_vm_backed_campaign.sh` and
   `scripts/run_lab_campaign.py` for campaigns that need concrete lab
   infrastructure.
@@ -28,9 +30,9 @@ distribution is defined in `PUBLIC_REPOSITORY_SCOPE.md`.
 
 The repository also ships a deterministic downstream report,
 `results/CVE_RESOLUTION_CANDIDATES.md`, that asks a narrower question than the
-paper itself: when a published campaign already carries CVE evidence, which
+main study itself: when a published campaign already carries CVE evidence, which
 pairs can currently be turned into candidate SUT targets with explicit package
-or product bindings? This report is an artifact extension, not a broader paper
+or product bindings? This report is an artifact extension, not a broader study
 claim. It is also not an exhaustive crawl of the `apt` or `pip` ecosystems:
 it only resolves the ATT&CK-linked campaign/CVE slice already present in the
 artifact through curated, source-backed rules. In the current public artifact,
@@ -55,19 +57,21 @@ them.
 
 | Path | Command | Required tools | Recommended host | Typical role |
 | --- | --- | --- | --- | --- |
-| Fast paper-claim validation | `bash run_review_check.sh` | `python3` | commodity laptop/desktop | revalidate released values and synthesized outputs |
+| Fast study-claim validation | `bash run_review_check.sh` | `python3` | commodity laptop/desktop | revalidate released values and synthesized outputs |
 | Minimal working example | `./artifact/setup.sh && ./artifact/run.sh && ./artifact/validate.sh` | `python3`, `venv` | commodity laptop/desktop | smallest repository-local execution trace |
+| Orchestrated campaign replay | `python3 scripts/run_all_orchestrated_campaigns.py --preflight-only` then `python3 scripts/run_all_orchestrated_campaigns.py` | `python3`, `docker` | Docker-capable host | sequentially replay all implemented campaign/SUT pairs and write TSV/JSON status reports |
 | VM-backed realism | `bash run_vm_backed_campaign.sh 0.c0011` | `python3`, `vagrant`, `qemu` or `libvirt` | 8 CPU cores, 16 GB RAM, 25 GB free disk recommended | cold-start campaign/SUT replay on declared lab infrastructure |
 
-The first two paths are the canonical validation contract. The VM-backed path is
-honest but heavier: on a cold start it may spend most of its time bootstrapping
-guests, installing packages, and bringing Caldera-related lab services up
-before the campaign itself runs.
-By default, the VM-backed wrapper restores tracked paper-facing summaries after
+The first two paths are the fastest validation contract. The orchestrated
+Docker path is the reviewer-facing full replay of implemented campaign/SUT
+pairs. The VM-backed path is honest but heavier: on a cold start it may spend
+most of its time bootstrapping guests, installing packages, and bringing
+Caldera-related lab services up before the campaign itself runs.
+By default, the VM-backed wrapper restores tracked study-facing summaries after
 teardown and removes runtime-only lab byproducts. Use
 `--persist-derived-state` only when you explicitly want to keep regenerated
 summaries or local SUT reports in the checkout.
-All three paths are local: they do not call external services and do not
+These paths are local: they do not call external services and do not
 require API keys or cloud credits.
 
 ## Fast Validation
@@ -76,14 +80,14 @@ require API keys or cloud credits.
 bash run_review_check.sh
 ```
 
-This path reruns the measurement pipeline, refreshes the released paper-facing
+This path reruns the measurement pipeline, refreshes the released study-facing
 outputs, and checks that the synthesized values remain internally consistent.
 If the required Python packages are not already available, the wrapper creates
 and reuses a repo-local `.venv` automatically.
 On a cold machine, that first bootstrap may download the packages listed in
 `requirements.txt`.
 
-It is the recommended first step for anyone who wants to confirm the paper
+It is the recommended first step for anyone who wants to confirm the study
 claims without provisioning VMs.
 
 ## Minimal Working Example
@@ -114,14 +118,50 @@ This path is the smallest end-to-end execution example in the public checkout.
 It should be preferred over the VM-backed path when the goal is simply to
 confirm that the repository runs and emits structured evidence correctly.
 
+## Full Orchestrated Campaign Replay
+
+Use the preflight first. It checks Docker and the Caldera C2 dependency before
+starting a long replay, so an infrastructure problem is reported before it
+creates misleading campaign failures.
+
+```bash
+python3 scripts/run_all_orchestrated_campaigns.py --preflight-only
+```
+
+Run one campaign when debugging:
+
+```bash
+python3 scripts/run_all_orchestrated_campaigns.py --campaign 0.c0013
+```
+
+Run the full implemented campaign suite:
+
+```bash
+python3 scripts/run_all_orchestrated_campaigns.py
+```
+
+If a previous local batch was interrupted, first remove only stale AutoSUT
+campaign containers:
+
+```bash
+python3 scripts/run_all_orchestrated_campaigns.py --clean-stale-autosut-containers --preflight-only
+```
+
+The runner writes `release/orchestrated_replay_<timestamp>.tsv` and a matching
+JSON report after each campaign. This makes partial long runs auditable instead
+of losing all progress when a host, Docker, or Caldera issue interrupts the
+batch. By default, known slow campaigns run last so the reviewer gets early
+feedback from faster campaigns; use `--catalog-order` to preserve catalog order.
+
 ## Canonical Entry Points
 
-- `run_review_check.sh`: top-level paper-claim validation path
+- `run_review_check.sh`: top-level study-claim validation path
 - `run_vm_backed_campaign.sh`: top-level VM-backed realism wrapper for one campaign
 - `artifact/setup.sh`: environment and dependency check
 - `artifact/run.sh`: canonical smoke execution for one representative campaign
 - `artifact/validate.sh`: output validation for the smoke path
 - `artifact/teardown.sh`: cleanup helper
+- `scripts/run_all_orchestrated_campaigns.py`: Docker-backed full campaign replay with preflight and TSV/JSON reports
 - `scripts/run_campaign.py`: campaign execution
 - `scripts/run_lab_campaign.py`: canonical VM-backed orchestration for one campaign/SUT pair
 - `scripts/generate_tables.py`: LaTeX table generation
@@ -131,7 +171,7 @@ confirm that the repository runs and emits structured evidence correctly.
 
 ## What Is Currently Guaranteed
 
-- `bash run_review_check.sh` revalidates the released paper-facing outputs from
+- `bash run_review_check.sh` revalidates the released study-facing outputs from
   a clean checkout.
 - The released reports include a deterministic campaign/CVE concretization view
   in `results/CVE_RESOLUTION_CANDIDATES.md` and
@@ -200,7 +240,7 @@ confirm that the repository runs and emits structured evidence correctly.
 
 - Start with `bash run_review_check.sh`.
 - Use the `artifact/` path when you want the smallest repository-local
-  execution example rather than the full paper-facing validation path.
+  execution example rather than the full study-facing validation path.
 - Use `python3 scripts/run_campaign.py` to inspect the available campaign IDs in
   the current checkout.
 - Use `python3 scripts/generate_corpus_state.py` to inspect the current published

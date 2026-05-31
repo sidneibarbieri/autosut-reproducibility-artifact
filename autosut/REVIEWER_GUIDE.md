@@ -33,13 +33,14 @@ emulation must reconstruct the environment beyond the structured intelligence.
 
 | Path | Required tools | Recommended host | Notes |
 | --- | --- | --- | --- |
-| `run_review_check.sh` | `python3` | commodity laptop/desktop | fastest way to validate paper-facing outputs |
+| `run_review_check.sh` | `python3` | commodity laptop/desktop | fastest way to validate study-facing outputs |
 | `artifact/` smoke path | `python3`, `venv` | commodity laptop/desktop | smallest repository-local execution trace |
+| `scripts/run_all_orchestrated_campaigns.py` | `python3`, `docker` | Docker-capable host | full sequential replay of implemented campaign/SUT pairs |
 | `run_vm_backed_campaign.sh` | `python3`, `vagrant`, `qemu` or `libvirt` | 8 CPU cores, 16 GB RAM, 25 GB free disk recommended | cold-start guest bootstrap can dominate runtime |
 
 For the heavy path, Linux x86_64 with `libvirt` is preferred when available.
 On macOS ARM64, the supported fallback is `qemu`.
-By default, the VM-backed wrapper restores tracked paper-facing summaries after
+By default, the VM-backed wrapper restores tracked study-facing summaries after
 teardown and removes runtime-only lab byproducts. Use
 `--persist-derived-state` only when you explicitly want to keep regenerated
 summaries or local SUT reports in the checkout.
@@ -48,19 +49,20 @@ services and do not require API keys or paid model access.
 
 ## Recommended Order
 
-1. Run the fast paper-claim validation path (Section 1).
+1. Run the fast study-claim validation path (Section 1).
 2. Use the Findings → Evidence map (Section 2) to spot-check individual claims against the raw CSV outputs.
 3. Run the repository-local minimal working example (Section 3) for the smallest execution trace.
-4. If you want the realistic VM-backed substrate, run the canonical lab path (Section 5).
+4. If you want a full Docker-backed replay, run the orchestrated campaign suite (Section 5).
+5. If you want the realistic VM-backed substrate, run the canonical lab path (Section 6).
 
-## 1. Fast Paper-Claim Validation
+## 1. Fast Study-Claim Validation
 
 ```bash
 bash run_review_check.sh
 ```
 
 This path is the fastest way to revalidate the released measurement outputs and
-paper-facing synthesized artifacts.
+study-facing synthesized artifacts.
 If the core Python packages are missing, the wrapper creates and reuses a
 repo-local `.venv` automatically.
 On a cold machine, that first bootstrap may download the packages listed in
@@ -68,16 +70,15 @@ On a cold machine, that first bootstrap may download the packages listed in
 
 ## 2. Findings → Evidence Map
 
-Each headline number in the paper traces to a generated macro, a raw evidence
+Each headline number in the study traces to a generated macro, a raw evidence
 file, and a step of `run_review_check.sh` that enforces it. Reviewers can
-spot-check any claim without parsing the manuscript.
+spot-check any claim without parsing the manuscript separately.
 
 All evidence files referenced below are under
 `measurement/sut/scripts/results/audit/`. The generated macros are in
-`measurement/sut/scripts/results/todo_values_latex.tex` (synced into
-`paper/results/values.tex`).
+`measurement/sut/scripts/results/todo_values_latex.tex`.
 
-| # | Finding (paper claim) | Macro | Evidence file | Enforced by |
+| # | Finding (study claim) | Macro | Evidence file | Enforced by |
 |---|-----------------------|-------|---------------|-------------|
 | 1 | Software refs rarely pin versions or CPEs (97.6% lack both) | `\softwarenoversionnocpepercentage` | `software_version_enrichment.csv` | step 3 (numeric invariants) |
 | 2 | Campaign-level CVE evidence is sparse and fragmented (8 actionable, 5 campaigns) | `\campaignlinkedcvecount` | `campaign_cves.csv` | step 3b (table content) |
@@ -85,7 +86,7 @@ All evidence files referenced below are under
 | 4 | Profile confusion collapses at k≥2 (1.3% → 0.0%) | `\thresholdkoneconfusionpct`, `\thresholdktwoconfusionpct` | `evidence_threshold_curve.csv` | step 3 (numeric invariants), step 6e (macro consistency) |
 | 5 | Container-feasible technique fraction is small (2.7%) | `\compatibilitycontainerfeasiblepercentage` | `compatibility_rule_breakdown.csv`, `technique_compatibility.csv` | step 3b (rule breakdown rows) |
 
-**Worked examples** (Section 4 of the paper) are reproducible from the same
+**Worked examples** are reproducible from the same
 evidence files. The SharePoint ToolShell vs. ShadowRay contrast, for instance,
 is two rows in `campaign_cves.csv` cross-referenced with
 `campaign_profile_completeness.csv`.
@@ -95,8 +96,9 @@ is two rows in `campaign_cves.csv` cross-referenced with
 in `null_model_confusion_distribution.csv`; δ-sensitivity values for the
 profile confusion claim are in `delta_sensitivity.csv`.
 
-**Full traceability**: `release/TRACEABILITY_APPENDIX.md` maps every macro back
-to its generating pipeline step.
+**Full traceability**: `release/CLAIM_EVIDENCE_TRACEABILITY.md` and
+`release/claim_evidence_traceability.json` map study claims back to generated
+outputs and evidence files.
 
 **Interactive view**: a static HTML dashboard with the same map plus tables
 and the experiment log is available at `release/dashboard/index.html`. Build
@@ -184,7 +186,48 @@ declared, how many target hosts are configured, whether base weaknesses are
 applied automatically, whether step-conditioned overlays exist, and whether
 latest evidence is currently shipped.
 
-## 5. VM-Backed Realism Path
+## 5. Full Orchestrated Campaign Replay
+
+This path is for reviewers who want to re-execute the implemented Docker-backed
+campaign/SUT pairs rather than only inspect shipped evidence.
+
+Start with preflight:
+
+```bash
+python3 scripts/run_all_orchestrated_campaigns.py --preflight-only
+```
+
+Run a single campaign:
+
+```bash
+python3 scripts/run_all_orchestrated_campaigns.py --campaign 0.c0013
+```
+
+Run all implemented campaigns:
+
+```bash
+python3 scripts/run_all_orchestrated_campaigns.py
+```
+
+After an interrupted local batch, clean only stale AutoSUT campaign containers
+before replaying:
+
+```bash
+python3 scripts/run_all_orchestrated_campaigns.py --clean-stale-autosut-containers --preflight-only
+```
+
+Expected reports:
+
+- `release/orchestrated_replay_<timestamp>.tsv`
+- `release/orchestrated_replay_<timestamp>.json`
+
+The runner attempts to bring the local Caldera C2 online before replaying
+Caldera-driven campaigns. If Caldera or Docker is not reachable, preflight fails
+before producing misleading campaign-level failures. By default, known slow
+campaigns run last so the reviewer sees early progress from faster campaigns;
+use `--catalog-order` only when exact catalog order matters.
+
+## 6. VM-Backed Realism Path
 
 The repository also contains a provider-aware VM-backed path for realism
 checks. This path is not required for the smoke path, but it is the supported

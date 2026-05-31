@@ -180,6 +180,15 @@ def c0011_sut() -> SUTProfile:
                         "for T1552.001.",
                 source=ProvenanceSource.analyst_authored,
             ),
+            StagedArtifact(
+                path="/root/.ssh/known_hosts",
+                content_text="10.0.0.5 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILabKnownHostKey\n",
+                owner="root", mode="0644",
+                purpose="Remote-system-discovery seed for Caldera T1018 "
+                        "(Parse SSH known_hosts). The file is an analyst-authored "
+                        "lab affordance, not corpus-supported CTI.",
+                source=ProvenanceSource.analyst_authored,
+            ),
         ],
         applications=[
             ApplicationStack(
@@ -1082,6 +1091,7 @@ def implemented_campaigns() -> list[str]:
         "0.salesforce_data_exfiltration",
         "0.caldera_linux_demo",
         "0.fin6_emulation",
+        "0.dmz_segmentation_demo",
         "0.pivot_demo",
         "0.cve_2021_41773",
     ]

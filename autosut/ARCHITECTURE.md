@@ -4,13 +4,13 @@
 
 AutoSUT exposes three reproducibility layers:
 
-- a fast paper-claim validation path in `run_review_check.sh`;
+- a fast study-claim validation path in `run_review_check.sh`;
 - a repository-local minimal working example based on the local runner and
   artifact wrappers;
 - a provider-aware VM-backed realism path used for campaigns that need a
   concrete substrate, infrastructure checks, and measurement experiments.
 
-The fast validation path is the primary reproducibility target for paper-facing
+The fast validation path is the primary reproducibility target for study-facing
 claims. The minimal working example is the smallest repository-local execution
 trace. The VM-backed path is also part of the supported architecture, but it
 remains a heavier execution tier because backend behavior differs across
@@ -115,7 +115,7 @@ Canonical flow:
 2. Load the matching SUT profile from `data/sut_profiles/`.
 3. Execute the campaign runner.
 4. Write evidence to `release/evidence/`.
-5. Generate paper-facing tables under `results/tables/`.
+5. Generate study-facing tables under `results/tables/`.
 
 VM-backed realism flow:
 

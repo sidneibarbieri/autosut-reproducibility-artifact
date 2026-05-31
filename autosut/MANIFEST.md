@@ -28,7 +28,7 @@
 
 - `release/evidence/` (generated at run time)
 - `results/tables/`
-- `results/` synthesized reports and paper-facing summaries
+- `results/` synthesized reports and study-facing summaries
 
 ## Optional Infrastructure Helpers
 

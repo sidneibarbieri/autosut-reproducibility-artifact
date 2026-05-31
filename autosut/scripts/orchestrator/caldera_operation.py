@@ -20,7 +20,6 @@ operation/link/ability IDs threaded into the manifest for auditability.
 
 from __future__ import annotations
 
-import platform as _platform
 import subprocess
 import time
 import uuid
@@ -59,8 +58,20 @@ class CalderaLinkResult:
     error: Optional[str] = None
 
 
-def _host_arch_for_sandcat() -> str:
-    machine = _platform.machine().lower()
+def _container_arch_for_sandcat(container: str) -> str:
+    """Return the Sandcat architecture that matches the target container.
+
+    Docker Desktop on Apple Silicon often runs linux/amd64 images through
+    emulation. Choosing the host architecture in that case asks Caldera for a
+    linux/arm64 sandcat even though the SUT is x86_64, which forces a fragile
+    just-in-time build inside Caldera. Inspecting the SUT keeps the C2 path
+    aligned with the executable target.
+    """
+    proc = subprocess.run(
+        ["docker", "exec", container, "uname", "-m"],
+        capture_output=True, text=True, check=False, timeout=5,
+    )
+    machine = (proc.stdout.strip() if proc.returncode == 0 else "").lower()
     if machine in ("aarch64", "arm64"):
         return "arm64"
     return "amd64"
@@ -83,7 +94,7 @@ def _container_has_sandcat(container: str) -> bool:
 
 
 def _install_sandcat(container: str) -> bool:
-    arch = _host_arch_for_sandcat()
+    arch = _container_arch_for_sandcat(container)
     binary = caldera_client.download_sandcat(platform="linux", architecture=arch)
     if not binary:
         return False
@@ -163,7 +174,7 @@ def ensure_agent(container: str, run_dir: Path,
 def dispatch_via_caldera(container: str, technique_id: str,
                          run_dir: Path,
                          preferred_platform: str = "linux",
-                         operation_timeout_s: int = 90
+                         operation_timeout_s: int = 180
                          ) -> CalderaLinkResult:
     """Run a single ART ability for ``technique_id`` against the agent in
     ``container``. Returns a CalderaLinkResult; if anything along the chain

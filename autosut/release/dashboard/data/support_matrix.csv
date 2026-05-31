@@ -4,6 +4,6 @@ software,20,1,0,19,0
 vulnerability,3,2,1,0,0
 credentials,22,1,21,0,0
 exposures,28,3,1,24,0
-artifacts,29,0,0,29,0
+artifacts,32,0,0,32,0
 topology,3,0,0,3,0
-ALL,130,32,23,75,0
+ALL,133,32,23,78,0

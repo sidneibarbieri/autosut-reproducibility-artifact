@@ -1,0 +1,11 @@
+{
+  "campaign_id": "0.c0011",
+  "timestamp": "2026-05-31T22:19:45+00:00",
+  "total_techniques": 11,
+  "successful": 11,
+  "fidelity_distribution": {
+    "adapted": 2,
+    "inspired": 9
+  },
+  "evidence_directory": "release/evidence/0.c0011_20260531_221853"
+}

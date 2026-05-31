@@ -13,16 +13,29 @@ bash run_review_check.sh
 
 The command reruns the measurement pipeline from frozen public input
 bundles, regenerates figures and traceability outputs, and validates
-numeric invariants. If a manuscript tree exists in a maintainer
-workspace, the same verifier can also synchronize paper macros; the
-submitted paper itself is intentionally not included in this artifact.
+numeric invariants. The study manuscript itself is intentionally
+not included in this artifact; this repository is the independent
+evidence and reproduction package.
 
 Expected runtime on a laptop-class machine is about one minute once
 Python and LaTeX dependencies are available. The command does not
 require API keys, private data, paid services, Caldera, Docker, or VM
 startup.
 
-## Heavier Optional Path
+## Full Docker Replay
+
+```bash
+cd autosut
+python3 scripts/run_all_orchestrated_campaigns.py --preflight-only
+python3 scripts/run_all_orchestrated_campaigns.py --clean-stale-autosut-containers
+```
+
+This path replays the implemented Docker-backed campaign/SUT pairs
+and writes TSV/JSON reports under `release/`. It is slower than the
+fast validation path and requires Docker; the preflight separates
+infrastructure readiness from campaign failures before the long run.
+
+## Heavier Optional VM Path
 
 ```bash
 cd autosut

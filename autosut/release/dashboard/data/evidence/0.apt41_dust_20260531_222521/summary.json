@@ -1,0 +1,11 @@
+{
+  "campaign_id": "0.apt41_dust",
+  "timestamp": "2026-05-31T22:28:25+00:00",
+  "total_techniques": 23,
+  "successful": 23,
+  "fidelity_distribution": {
+    "inspired": 13,
+    "adapted": 10
+  },
+  "evidence_directory": "release/evidence/0.apt41_dust_20260531_222521"
+}

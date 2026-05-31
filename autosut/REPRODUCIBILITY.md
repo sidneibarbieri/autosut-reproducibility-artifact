@@ -3,32 +3,32 @@
 ## Scope
 
 This repository supports controlled campaign execution and evidence collection.
-The current reproducibility target has three layers: a fast paper-claim
+The current reproducibility target has three layers: a fast study-claim
 validation path, a repository-local minimal working example, and a supported
 provider-aware VM-backed path for campaign/SUT pairs that need concrete lab
 infrastructure.
 
-## Fast Paper-Claim Validation
+## Fast Study-Claim Validation
 
 ```bash
 bash run_review_check.sh
 ```
 
-This path reruns the measurement pipeline, regenerates paper-facing outputs,
+This path reruns the measurement pipeline, regenerates study-facing outputs,
 and checks that the released values remain consistent from the same checkout.
 
 ## Host and Runtime Expectations
 
 | Path | Required tools | Recommended host | Interpretation |
 | --- | --- | --- | --- |
-| Fast paper-claim validation | `python3`, `venv` | commodity laptop/desktop | canonical validation of released values |
+| Fast study-claim validation | `python3`, `venv` | commodity laptop/desktop | canonical validation of released values |
 | Minimal working example | `python3`, `venv` | commodity laptop/desktop | smallest live execution example |
 | VM-backed path | `python3`, `venv`, `vagrant`, `qemu` or `libvirt` | 8 CPU cores, 16 GB RAM, 25 GB free disk recommended | heavier cold-start realism path for one campaign/SUT pair |
 
 The heavy path is allowed to be slow. First-boot package installation,
 guest bootstrap, and Caldera-related service provisioning can dominate the run
 time on a clean checkout, especially on macOS ARM64 with `qemu`.
-By default, the VM-backed wrapper restores tracked paper-facing summaries after
+By default, the VM-backed wrapper restores tracked study-facing summaries after
 teardown and removes runtime-only lab byproducts. Use
 `--persist-derived-state` only when you explicitly want to keep regenerated
 summaries or local SUT reports in the checkout.
@@ -45,7 +45,7 @@ The smoke path currently executes one representative campaign:
 
 - `0.c0011`
 
-and then regenerates the LaTeX tables used by the paper-facing workflow.
+and then regenerates the LaTeX tables used by the study-facing workflow.
 
 ## Generated Outputs
 
@@ -133,15 +133,16 @@ requirement for the canonical smoke path.
 
 ## Known Limits
 
-- Some campaigns still expose missing executor coverage or unmet semantic
-  preconditions at the strict pair-validation level even when a profile file is
-  present.
+- Docker-backed campaign replay is supported for the implemented campaign/SUT
+  pairs, but it remains host- and Docker-dependent; reviewers should run
+  preflight first so infrastructure failures are separated from campaign
+  failures.
 - Compatibility JSON campaigns and canonical YAML campaigns coexist in the same
   repository; the loader supports both.
 - Raw evidence is generated locally under `release/evidence/` when a reviewer
   runs the included workflows.
-- The public GitHub handoff keeps synthesized reports, not heavyweight frozen
-  evidence trees.
+- The public GitHub handoff keeps synthesized reports and compact dashboard
+  evidence, not the full internal archive of exploratory and superseded runs.
 
 ## Integrity Principle
 

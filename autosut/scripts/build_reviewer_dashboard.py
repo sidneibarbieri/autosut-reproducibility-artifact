@@ -31,7 +31,10 @@ EXPERIMENT_LOG = PROJECT_ROOT / "release" / "EXPERIMENT_LOG.jsonl"
 DASHBOARD_DIR = PROJECT_ROOT / "release" / "dashboard"
 DATA_DIR = DASHBOARD_DIR / "data"
 MACRO_PATTERN = re.compile(r"\\newcommand\{\\([A-Za-z][A-Za-z0-9]+)\}\{([^}]*)\}")
-TEXT_EVIDENCE_SUFFIXES = {".json", ".log", ".txt", ".md", ".csv", ".yml", ".yaml"}
+TEXT_EVIDENCE_SUFFIXES = {".json", ".log", ".txt", ".md", ".csv", ".tsv", ".yml", ".yaml"}
+PRIMARY_REPLAY_REPORTS = (
+    "orchestrated_replay_full_19_after_repairs.tsv",
+)
 
 
 # Reuse the provenance report's collectors and display labels (source order,
@@ -77,7 +80,7 @@ class Finding:
     claim_template: str
     macro_keys: tuple[str, ...]
     evidence_files: tuple[str, ...]
-    study_section: str
+    claim_family: str
 
 
 FINDINGS = (
@@ -89,7 +92,7 @@ FINDINGS = (
         macro_keys=("softwarenoversionnocpepercentage", "softwarewithversionsignalpercentage",
                     "softwarewithcpepercentage"),
         evidence_files=("software_version_enrichment.csv",),
-        study_section="§3.5 Software specificity",
+        claim_family="Software specificity",
     ),
     Finding(
         number=2,
@@ -99,7 +102,7 @@ FINDINGS = (
         macro_keys=("campaignlinkedcvecount", "cveuniquecount",
                     "entcampaignswithcvestructuredpct"),
         evidence_files=("campaign_cves.csv", "all_cves.csv"),
-        study_section="§3.6 Vulnerability evidence",
+        claim_family="Vulnerability evidence",
     ),
     Finding(
         number=3,
@@ -109,7 +112,7 @@ FINDINGS = (
         macro_keys=("enterpriseplatformpct", "enterpriseplatformcount",
                     "enterprisesystemrequirementspct"),
         evidence_files=("platform_distribution.csv",),
-        study_section="§3.4 Platform coverage",
+        claim_family="Platform coverage",
     ),
     Finding(
         number=4,
@@ -121,7 +124,7 @@ FINDINGS = (
         evidence_files=("evidence_threshold_curve.csv",
                         "bootstrap_confusion_distribution.csv",
                         "null_model_confusion_distribution.csv"),
-        study_section="§4 Profile specificity",
+        claim_family="Profile specificity",
     ),
     Finding(
         number=5,
@@ -134,7 +137,7 @@ FINDINGS = (
                     "compatibilityinfrastructuredependentpercentage",
                     "compatibilityfallbackassignmentpercentage"),
         evidence_files=("compatibility_rule_breakdown.csv", "technique_compatibility.csv"),
-        study_section="§3.7 Backend compatibility",
+        claim_family="Backend compatibility",
     ),
 )
 
@@ -151,8 +154,10 @@ STYLE = """\
   --accent: #24546f;
   --accent-strong: #16394e;
   --accent-soft: #e7f0f1;
+  --panel: #fbfbf8;
   --ok: #2f6b45;
   --warn: #8a5a00;
+  --bad: #8b2e22;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; font-family: "Avenir Next", Avenir,
@@ -170,13 +175,13 @@ nav { background: rgba(231,240,241,0.92); border-bottom: 1px solid var(--border)
 nav a { color: var(--accent-strong); text-decoration: none; margin-right: 22px;
   font-size: 13px; font-weight: 600; }
 nav a:hover { text-decoration: underline; }
-main { max-width: 1100px; margin: 0 auto; padding: 28px 40px; }
+main { max-width: 1180px; margin: 0 auto; padding: 28px 40px; }
 section { margin-bottom: 46px; }
 h2 { font-size: 19px; font-weight: 650; margin: 0 0 14px; padding-bottom: 6px;
   border-bottom: 1px solid var(--border); }
 h3 { font-size: 14px; font-weight: 600; margin: 18px 0 6px; }
 table { width: 100%; border-collapse: collapse; background: var(--bg-elev);
-  border: 1px solid var(--border); margin: 10px 0; }
+  border: 1px solid var(--border); margin: 10px 0; table-layout: auto; }
 th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border);
   font-size: 13px; vertical-align: top; }
 th { background: var(--accent-soft); font-weight: 600; color: var(--accent); }
@@ -184,6 +189,10 @@ tr:last-child td { border-bottom: none; }
 td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
 td.mono, code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 12px; }
+.table-wrap { width: 100%; overflow-x: auto; border-radius: 8px; }
+.table-wrap table { min-width: 680px; }
+.table-wrap.compact table { min-width: 520px; }
+.table-wrap.wide table { min-width: 920px; }
 .finding { background: var(--bg-elev); border: 1px solid var(--border);
   padding: 16px 18px; margin-bottom: 14px; }
 .finding-head { display: flex; gap: 12px; align-items: baseline; margin-bottom: 8px; }
@@ -203,7 +212,10 @@ footer { margin: 40px 0 0; padding: 20px 40px; border-top: 1px solid var(--borde
 .run-card p { margin: 6px 0; }
 .run-card table { margin: 8px 0; }
 .lead { font-size: 15px; margin: 0 0 16px; }
+.thesis { font-size: 17px; line-height: 1.45; margin: 0 0 16px;
+  max-width: 900px; }
 .sim { color: var(--warn); font-weight: 600; }
+.bad { color: var(--bad); font-weight: 600; }
 .realism-summary { background: var(--accent-soft); border: 1px solid var(--border);
   padding: 10px 14px; margin: 0 0 16px; }
 .overview-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -213,8 +225,21 @@ footer { margin: 40px 0 0; padding: 20px 40px; border-top: 1px solid var(--borde
   box-shadow: 0 2px 12px rgba(20,40,70,0.06); }
 .overview-card strong { display: block; margin-bottom: 5px; font-size: 13px; }
 .overview-card span { display: block; color: var(--fg-dim); font-size: 12px; }
+.recipe-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px; margin: 18px 0 4px; }
+.recipe-card { background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px; }
+.recipe-card strong { display: block; margin-bottom: 6px; }
+.recipe-card p { margin: 6px 0; color: var(--fg-dim); font-size: 12px; }
+.recipe-card code { display: inline-block; margin-top: 5px; white-space: normal;
+  overflow-wrap: anywhere; }
 .finding, .run-card, .realism-summary { border-radius: 8px;
   box-shadow: 0 1px 2px rgba(20,40,70,0.05); }
+details.evidence-group { background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: 8px; margin: 10px 0; padding: 11px 14px; }
+details.evidence-group summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+details.evidence-group p { margin: 8px 0 6px; }
+details.evidence-group ul { margin: 8px 0 0; columns: 2; }
 table { border-radius: 8px; overflow: hidden;
   box-shadow: 0 1px 2px rgba(20,40,70,0.05); }
 .finding { transition: box-shadow .15s ease; }
@@ -228,6 +253,7 @@ table { border-radius: 8px; overflow: hidden;
   header, nav { padding-left: 22px; padding-right: 22px; }
   main { padding: 22px; }
   .overview-grid { grid-template-columns: 1fr; }
+  .recipe-grid { grid-template-columns: 1fr; }
 }
 """
 
@@ -262,6 +288,26 @@ def copy_data_files() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     for src in AUDIT_DIR.glob("*.csv"):
         shutil.copy2(src, DATA_DIR / src.name)
+    canonical_src = PROJECT_ROOT / "release" / "golden_runs.json"
+    if canonical_src.exists():
+        shutil.copy2(canonical_src, DATA_DIR / "canonical_runs.json")
+
+
+def copy_replay_reports() -> None:
+    """Copy reviewer replay reports into the dashboard with local paths scrubbed."""
+    replay_dest = DATA_DIR / "replay_reports"
+    if replay_dest.exists():
+        shutil.rmtree(replay_dest)
+    replay_dest.mkdir(parents=True, exist_ok=True)
+    for name in PRIMARY_REPLAY_REPORTS:
+        src = PROJECT_ROOT / "release" / name
+        if not src.exists():
+            continue
+        shutil.copy2(src, replay_dest / src.name)
+        json_src = src.with_suffix(".json")
+        if json_src.exists():
+            shutil.copy2(json_src, replay_dest / json_src.name)
+    scrub_local_paths(replay_dest)
 
 
 def copy_curated_evidence_files() -> None:
@@ -368,17 +414,29 @@ EVIDENCE_GROUPS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
 )
 
 
-def render_table(header: list[str], rows: list[list[str]], numeric_cols: set[int] | None = None) -> str:
+def render_table(header: list[str],
+                 rows: list[list[str]],
+                 numeric_cols: set[int] | None = None,
+                 mono_cols: set[int] | None = None,
+                 wide: bool = False) -> str:
     numeric_cols = numeric_cols or set()
+    mono_cols = mono_cols or set()
     head = "".join(f"<th>{escape(col)}</th>" for col in header)
     body_lines = []
     for row in rows:
         cells = []
         for idx, cell in enumerate(row):
-            cls = "numeric" if idx in numeric_cols else ""
+            classes = []
+            if idx in numeric_cols:
+                classes.append("numeric")
+            if idx in mono_cols:
+                classes.append("mono")
+            cls = " ".join(classes)
             cells.append(f"<td class='{cls}'>{escape(cell)}</td>")
         body_lines.append("<tr>" + "".join(cells) + "</tr>")
-    return f"<table><thead><tr>{head}</tr></thead><tbody>{''.join(body_lines)}</tbody></table>"
+    wrap_cls = "table-wrap wide" if wide else "table-wrap"
+    return (f"<div class='{wrap_cls}'><table><thead><tr>{head}</tr></thead>"
+            f"<tbody>{''.join(body_lines)}</tbody></table></div>")
 
 
 def render_findings(macros: dict[str, str]) -> str:
@@ -406,40 +464,63 @@ def render_findings(macros: dict[str, str]) -> str:
   <div class='finding-meta'>
     <strong>Macros:</strong> {macro_chips}<br>
     <strong>Evidence:</strong> {evidence_links}<br>
-    <strong>Study section:</strong> {escape(finding.study_section)}
+    <strong>Claim family:</strong> {escape(finding.claim_family)}
   </div>
 </div>""")
     return "\n".join(blocks)
 
 
-def render_audit_overview() -> str:
-    return """
+def render_audit_overview(merged) -> str:
+    pct = merged.percentages
+    return f"""
 <section id='overview'>
   <h2>Reviewer Path</h2>
-  <p class='lead'>This dashboard is the visual index for a deterministic
-    artifact. It separates the scientific claim, the evidence files that back
-    it, the command that rechecks the public surface, and the boundary of what
-    the repository intentionally excludes.</p>
+  <p class='thesis'><strong>Claim under audit:</strong> structured CTI
+    constrains executable SUT environments but does not uniquely determine
+    them. This page is organized around the checks a reviewer is likely to run:
+    rederive the measurements, inspect the claim-to-evidence map, and reproduce
+    at least one executable witness.</p>
   <div class='overview-grid'>
     <div class='overview-card'>
-      <strong>Claim</strong>
-      <span>Structured CTI constrains the executable environment but does not
-        uniquely determine it.</span>
+      <strong>Environment gap</strong>
+      <span>{merged.total_elements} SUT elements: {pct['corpus_supported']}%
+        corpus-supported, {pct['autosut_concretized']}% AutoSUT-concretized,
+        {pct['analyst_authored']}% analyst-authored.</span>
     </div>
     <div class='overview-card'>
-      <strong>Evidence</strong>
-      <span>Macros, CSVs, JSON manifests, provenance tables, and curated
-        execution traces are linked below.</span>
+      <strong>Non-uniqueness witness</strong>
+      <span>CVE-2021-41773 preserves the same corpus fingerprint while
+        executing compatible SUT variants.</span>
     </div>
     <div class='overview-card'>
-      <strong>Recheck</strong>
-      <span><code>bash run_review_check.sh</code> regenerates the measurement
-        outputs from frozen public inputs.</span>
+      <strong>Execution evidence</strong>
+      <span>Canonical manifests distinguish real execution from declared
+        behavioral coverage; simulated steps are never counted as execution.</span>
     </div>
     <div class='overview-card'>
       <strong>Boundary</strong>
-      <span>The manuscript, private notes, runtime VM images, and historical
-        development logs are outside this artifact.</span>
+      <span>The manuscript, private notes, raw development logs, and VM images
+        are not part of this artifact.</span>
+    </div>
+  </div>
+  <div class='recipe-grid'>
+    <div class='recipe-card'>
+      <strong>1. Fast deterministic audit</strong>
+      <p>Regenerates measurements, dashboard inputs, figures, invariants, and
+        traceability files from the shipped public inputs.</p>
+      <code>bash run_review_check.sh</code>
+    </div>
+    <div class='recipe-card'>
+      <strong>2. Small execution trace</strong>
+      <p>Runs one repository-local campaign and validates the resulting JSON
+        evidence manifest.</p>
+      <code>./artifact/setup.sh &amp;&amp; ./artifact/run.sh &amp;&amp; ./artifact/validate.sh</code>
+    </div>
+    <div class='recipe-card'>
+      <strong>3. Executable non-uniqueness witness</strong>
+      <p>Runs the CVE-2021-41773 witness variants and checks that declared and
+        executed modes match.</p>
+      <code>.venv/bin/python3 scripts/prove_subdetermination.py 0.cve_2021_41773 --variants 2 --execute</code>
     </div>
   </div>
 </section>"""
@@ -529,7 +610,7 @@ def render_provenance_summary(summaries: list, merged) -> str:
         "computed</strong> — the aggregator only tallies tags set in "
         "<code>catalog.py</code>; the sole derived tags are definitional (a real "
         "CVE id <em>is</em> corpus evidence; an OS family <em>is</em> an ATT&amp;CK "
-        "platform)."
+        "platform).</p>"
     )
 
     downloads = (
@@ -598,24 +679,24 @@ def render_experiment_log() -> str:
 
     The historical EXPERIMENT_LOG.jsonl is the append-only ledger of every
     run AutoSUT ever produced. For public review, we filter it down to the
-    canonical subset listed in ``release/golden_runs.json`` so the reviewer
-    never compares partials against goldens side-by-side.
+    canonical subset designated by the release manifest so the reviewer
+    never compares partials against canonical evidence side-by-side.
     """
     entries = load_jsonl(EXPERIMENT_LOG)
-    golden_runs_file = PROJECT_ROOT / "release" / "golden_runs.json"
-    if not golden_runs_file.exists():
-        return ("<p class='muted'>No <code>release/golden_runs.json</code>. "
+    canonical_runs_file = PROJECT_ROOT / "release" / "golden_runs.json"
+    if not canonical_runs_file.exists():
+        return ("<p class='muted'>No canonical run manifest. "
                 "Run <code>python scripts/curate_evidence.py --apply</code> "
-                "to designate goldens.</p>")
-    golden_data = json.loads(golden_runs_file.read_text(encoding="utf-8"))
-    golden_run_ids = {entry["golden_run_id"]
-                      for entry in golden_data.get("campaigns", [])}
+                "to designate canonical evidence runs.</p>")
+    canonical_data = json.loads(canonical_runs_file.read_text(encoding="utf-8"))
+    canonical_run_ids = {entry["golden_run_id"]
+                         for entry in canonical_data.get("campaigns", [])}
     if not entries:
         return "<p class='muted'>No experiment log entries.</p>"
     header = ["Run ID", "Campaign", "Timestamp", "Total", "Pass", "Fail", "Fidelity"]
     rows = []
     for entry in entries:
-        if entry.get("run_id") not in golden_run_ids:
+        if entry.get("run_id") not in canonical_run_ids:
             continue
         fidelity = ", ".join(f"{k}={v}" for k, v
                               in entry.get("fidelity_distribution", {}).items()) or "-"
@@ -633,7 +714,7 @@ def render_experiment_log() -> str:
                 "<a href='#execution'>Execution evidence</a> section above and "
                 "stored under <code>release/evidence/&lt;run-id&gt;/</code>; the "
                 "reproduction script regenerates the full ledger.</p>")
-    return render_table(header, rows, numeric_cols={3, 4, 5})
+    return render_table(header, rows, numeric_cols={3, 4, 5}, mono_cols={0})
 
 
 def render_rule_breakdown() -> str:
@@ -641,7 +722,7 @@ def render_rule_breakdown() -> str:
     if not path.exists():
         return "<p class='muted'>compatibility_rule_breakdown.csv missing.</p>"
     header, rows = load_csv(path)
-    return render_table(header, rows, numeric_cols={2, 3, 4})
+    return render_table(header, rows, numeric_cols={3, 4, 5}, mono_cols={1}, wide=True)
 
 
 def render_evidence_groups() -> str:
@@ -657,9 +738,11 @@ def render_evidence_groups() -> str:
             for name in present
         )
         blocks.append(
-            f"<h3>{escape(title)}</h3>"
+            "<details class='evidence-group'>"
+            f"<summary>{escape(title)} ({len(present)} file{'s' if len(present) != 1 else ''})</summary>"
             f"<p class='muted'>{escape(blurb)}</p>"
             f"<ul>{items}</ul>"
+            "</details>"
         )
 
     # Anything left over (e.g., a CSV we did not anticipate) goes in a tail group.
@@ -671,30 +754,104 @@ def render_evidence_groups() -> str:
             for name in leftover
         )
         blocks.append(
-            "<h3>Other</h3>"
+            "<details class='evidence-group'>"
+            f"<summary>Other ({len(leftover)} file{'s' if len(leftover) != 1 else ''})</summary>"
             "<p class='muted'>Supporting derived outputs not grouped above.</p>"
             f"<ul>{items}</ul>"
+            "</details>"
         )
     return "".join(blocks)
 
 
 def render_execution_claim_table() -> str:
     """Map each execution mode to the scientific claim a reviewer may draw."""
-    rows = []
-    for mode, tier, claim in EXECUTION_MODE_CLAIMS:
-        tier_cell = (
-            f"<td class='sim'>{escape(tier)}</td>"
-            if mode == SIMULATED_MODE
-            else f"<td>{escape(tier)}</td>"
+    rows = [[mode, tier, claim] for mode, tier, claim in EXECUTION_MODE_CLAIMS]
+    return render_table(
+        ["Execution mode", "Tier", "Claim it licenses"],
+        rows,
+        mono_cols={0},
+        wide=True,
+    )
+
+
+def _load_replay_report(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        return list(reader)
+
+
+def render_replay_reports() -> str:
+    """Summarize end-to-end replay reports generated by the batch runner."""
+    reports = [
+        PROJECT_ROOT / "release" / name
+        for name in PRIMARY_REPLAY_REPORTS
+        if (PROJECT_ROOT / "release" / name).exists()
+    ]
+    if not reports:
+        return (
+            "<p class='muted'>No replay report found yet. Run "
+            "<code>.venv/bin/python3 scripts/run_all_orchestrated_campaigns.py "
+            "--output release/orchestrated_replay_full.tsv</code>.</p>"
         )
-        rows.append(
-            f"<tr><td><code>{escape(mode)}</code></td>{tier_cell}"
-            f"<td>{escape(claim)}</td></tr>"
+
+    rows = []
+    for report in reports:
+        try:
+            entries = _load_replay_report(report)
+        except (csv.Error, OSError):
+            continue
+        if not entries:
+            continue
+        success = sum(int(row.get("successful") or 0) for row in entries)
+        total = sum(int(row.get("total") or 0) for row in entries)
+        elapsed = sum(float(row.get("elapsed_seconds") or 0) for row in entries)
+        status_values = [row.get("status") or "UNKNOWN" for row in entries]
+        status = "PASS" if status_values and all(v == "PASS" for v in status_values) else ",".join(sorted(set(status_values)))
+        report_link = f"data/replay_reports/{report.name}"
+        json_name = report.with_suffix(".json").name
+        json_link = f"data/replay_reports/{json_name}"
+        rows.append([
+            report.name,
+            status,
+            str(len(entries)),
+            f"{success}/{total}",
+            f"{elapsed:.1f}s",
+            report_link,
+            json_link if (DATA_DIR / "replay_reports" / json_name).exists() else "",
+        ])
+    if not rows:
+        return "<p class='muted'>Replay reports exist but could not be parsed.</p>"
+
+    linked_rows = []
+    for row in rows:
+        linked_rows.append([
+            row[0],
+            row[1],
+            row[2],
+            row[3],
+            row[4],
+            f"<a href='{escape(row[5])}' title='{escape(row[5])}'><code>TSV</code></a>",
+            (f"<a href='{escape(row[6])}' title='{escape(row[6])}'><code>JSON</code></a>"
+             if row[6] else ""),
+        ])
+    header = ["Report", "Status", "Campaigns", "Techniques", "Elapsed", "TSV", "JSON"]
+    head = "".join(f"<th>{escape(col)}</th>" for col in header)
+    body = []
+    for row in linked_rows:
+        body.append(
+            "<tr>"
+            f"<td class='mono'>{escape(row[0])}</td>"
+            f"<td>{escape(row[1])}</td>"
+            f"<td class='numeric'>{escape(row[2])}</td>"
+            f"<td class='numeric'>{escape(row[3])}</td>"
+            f"<td class='numeric'>{escape(row[4])}</td>"
+            f"<td>{row[5]}</td>"
+            f"<td>{row[6]}</td>"
+            "</tr>"
         )
     return (
-        "<table><thead><tr><th>Execution mode</th><th>Tier</th>"
-        "<th>Claim it licenses</th></tr></thead>"
-        f"<tbody>{''.join(rows)}</tbody></table>"
+        "<div class='table-wrap wide'><table><thead><tr>"
+        f"{head}</tr></thead><tbody>{''.join(body)}</tbody></table></div>"
     )
 
 
@@ -702,27 +859,27 @@ def render_execution_tour() -> str:
     """Render the live-evidence section using only canonical evidence runs.
 
     By design, the dashboard surfaces exclusively the canonical evidence
-    runs designated by ``scripts/curate_evidence.py`` and persisted in
-    ``release/golden_runs.json``. Partial, empty, broken, and superseded
-    runs are not eligible for display here; they live under
-    ``release/evidence/_archive/`` but never represent the artifact.
+    runs designated by ``scripts/curate_evidence.py`` and persisted in the
+    release manifest. Partial, empty, broken, and superseded runs are not
+    eligible for display here; they live under ``release/evidence/_archive/``
+    but never represent the artifact.
     """
-    golden_runs_file = PROJECT_ROOT / "release" / "golden_runs.json"
+    canonical_runs_file = PROJECT_ROOT / "release" / "golden_runs.json"
     evidence_root = PROJECT_ROOT / "release" / "evidence"
 
-    if not golden_runs_file.exists():
+    if not canonical_runs_file.exists():
         return ("<p class='muted'>No canonical runs yet. Run "
                 "<code>python scripts/curate_evidence.py --apply</code> "
                 "to designate canonical runs and curate the tree.</p>")
 
-    golden_data = json.loads(golden_runs_file.read_text(encoding="utf-8"))
-    golden_entries = golden_data.get("campaigns", [])
-    if not golden_entries:
+    canonical_data = json.loads(canonical_runs_file.read_text(encoding="utf-8"))
+    canonical_entries = canonical_data.get("campaigns", [])
+    if not canonical_entries:
         return ("<p class='muted'>No campaigns met the canonical-run criteria. "
                 "Re-run the canonical corpus, then re-curate.</p>")
 
     candidates = [evidence_root / Path(entry["evidence_path"]).name
-                  for entry in golden_entries]
+                  for entry in canonical_entries]
     if not candidates:
         return "<p class='muted'>No campaign runs found under release/evidence/.</p>"
 
@@ -928,7 +1085,7 @@ def render_subdetermination_section() -> str:
     return table + conclusion + witness + coverage_note + interpretation
 
 
-def render_html(macros: dict[str, str], provenance_section: str) -> str:
+def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
     return f"""<!doctype html>
 <html lang='en'>
 <head>
@@ -947,13 +1104,14 @@ def render_html(macros: dict[str, str], provenance_section: str) -> str:
   <a href='#nonuniqueness'>Non-uniqueness proof</a>
   <a href='#provenance'>Reconstruction boundary</a>
   <a href='#findings'>Claim map</a>
+  <a href='#replay'>Replay reports</a>
   <a href='#execution'>Execution evidence</a>
   <a href='#worked'>Worked examples</a>
   <a href='#rules'>Compatibility rules</a>
   <a href='#raw'>Raw evidence</a>
 </nav>
 <main>
-{render_audit_overview()}
+{render_audit_overview(merged)}
 <section id='nonuniqueness'>
   <h2>Environment Non-Uniqueness Proof</h2>
   <p class='muted'>The core result: the same CTI admits multiple distinct,
@@ -984,12 +1142,23 @@ def render_html(macros: dict[str, str], provenance_section: str) -> str:
     open the raw evidence under <code>data/</code>.</p>
   {render_findings(macros)}
 </section>
+<section id='replay'>
+  <h2>End-to-End Replay Reports</h2>
+  <p class='muted'>These are the batch-run reports a reviewer gets when
+    re-executing implemented campaigns. They are separate from curated
+    canonical runs: a replay report is the latest local execution result,
+    while the canonical section below shows the stable evidence bundled for
+    claim inspection. The dashboard intentionally shows only the primary PASS
+    report; non-primary development attempts remain outside the reviewer-facing
+    interface.</p>
+  {render_replay_reports()}
+</section>
 <section id='execution'>
   <h2>Curated Canonical Runs</h2>
   <p class='muted'>
     Only complete, canonical runs are shown here: every technique succeeded and
     the manifest, summary, and fidelity rubric are all present. Selection
-    criteria are recorded in <code>release/golden_runs.json</code>. Partial,
+    criteria are copied into <code>data/canonical_runs.json</code>. Partial,
     empty, or superseded development runs are excluded, so experimental and
     publishable evidence are never mixed. Execution is split into realism tiers:
     <code>real_controlled</code>, <code>caldera_driven</code>, and
@@ -1016,7 +1185,7 @@ def render_html(macros: dict[str, str], provenance_section: str) -> str:
 <section id='raw'>
   <h2>Raw evidence — grouped by analysis topic</h2>
   <p class='muted'>All {len(list(DATA_DIR.glob('*.csv')))} CSVs produced by the measurement pipeline,
-    grouped by the question they answer. Open any file to verify a paper claim
+    grouped by the question they answer. Open any file to verify a study claim
     directly against the underlying rows.</p>
   {render_evidence_groups()}
 </section>
@@ -1033,6 +1202,7 @@ def render_html(macros: dict[str, str], provenance_section: str) -> str:
 def main() -> int:
     DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
     copy_data_files()
+    copy_replay_reports()
     copy_curated_evidence_files()
     # Provenance is computed once from the catalog and fed to both the download
     # artifacts and the rendered summary, so the page and the files agree.
@@ -1043,7 +1213,7 @@ def main() -> int:
     macros = load_macros()
     (DASHBOARD_DIR / "style.css").write_text(STYLE, encoding="utf-8")
     (DASHBOARD_DIR / "index.html").write_text(
-        render_html(macros, provenance_section), encoding="utf-8")
+        render_html(macros, provenance_section, merged), encoding="utf-8")
     csv_count = len(list(DATA_DIR.glob("*.csv")))
     evidence_count = len(list((DATA_DIR / "evidence").glob("*"))) if (DATA_DIR / "evidence").exists() else 0
     print(f"[dashboard] wrote {DASHBOARD_DIR / 'index.html'}")

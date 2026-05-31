@@ -13,7 +13,7 @@
 #      summary.json, fidelity_report.json, and a non-zero technique count
 #   4. every golden run reports 100% success
 #   5. dashboard html is present and only references golden run paths
-#   6. realism matrix is present (paper-facing artefact)
+#   6. realism matrix is present (study-facing artefact)
 #   7. evidence under release/evidence/ contains no non-archived partial
 #      run (i.e. _archive/ is the only place historical runs may live)
 #   8. release/subdetermination_proof.json (S32) is present and the

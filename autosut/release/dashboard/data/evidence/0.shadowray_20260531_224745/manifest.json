@@ -1,0 +1,140 @@
+{
+  "campaign_id": "0.shadowray",
+  "run_id": "0.shadowray_20260531_224745",
+  "timestamp": "2026-05-31T22:53:19.116168Z",
+  "attacker": {
+    "profile_id": "python_rpc_attacker",
+    "capabilities": [
+      "rpc_rce",
+      "db_dump",
+      "pivot"
+    ],
+    "notes": "Python + requests to drive the Ray dashboard job submission endpoint, plus mysql client for follow-on data exfiltration."
+  },
+  "sut": {
+    "sut_id": "linux_python_compute_node",
+    "base_image": "python:3.11-slim",
+    "services": [
+      "python3",
+      "ray_2_6_3"
+    ],
+    "memory_mb": 4096,
+    "smp": 2,
+    "backend": null,
+    "hosts": null,
+    "composition": {
+      "credentials": [
+        {
+          "kind": "api_token",
+          "user": "ray",
+          "secret": "(no-auth)",
+          "location": null,
+          "purpose": "Ray dashboard ships without authentication on the unauthenticated job-submission endpoint exploited by CVE-2023-48022.",
+          "source": "corpus_supported"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "/opt/sensitive/credentials.txt",
+          "content_text": "API_KEY=ya29.demo-credential\n",
+          "content_b64": null,
+          "owner": "root",
+          "mode": "0644",
+          "purpose": "Decoy ML-pipeline credentials \u2014 T1005 collection target after the unauthenticated job-submission RCE.",
+          "source": "analyst_authored"
+        },
+        {
+          "path": "/opt/sensitive/manifest.txt",
+          "content_text": "training_dataset_v3.parquet\n",
+          "content_b64": null,
+          "owner": "root",
+          "mode": "0644",
+          "purpose": "Decoy ML-pipeline artefact manifest \u2014 T1083 / T1005 target post-exploitation.",
+          "source": "analyst_authored"
+        }
+      ],
+      "exposures": [
+        {
+          "port": 8265,
+          "protocol": "tcp",
+          "service": "ray_dashboard_http",
+          "expose_to": "private_network",
+          "purpose": "Documented CVE-2023-48022 exploit surface \u2014 the unauthenticated Ray dashboard job-submission endpoint.",
+          "source": "corpus_supported"
+        }
+      ],
+      "applications": [],
+      "notes": "Ray 2.6.3 install is driven by the existing injector (ray_2_6_3 / ray_dashboard_surrogate). The composition here declares the *additional* SUT realism (decoy data + exposure) so the manifest carries the full picture even when the real-CVE install falls back to surrogate."
+    },
+    "topology": null,
+    "notes": "Ray cluster dashboard is the unauthenticated RCE surface exploited by CVE-2023-48022. Python slim base avoids the ARM64 apt/GPG issues seen on Ubuntu Jammy images. The vulnerable Ray version is installed by the CVE injector; the composer applies the surrounding realism layer."
+  },
+  "cves_injected": [
+    {
+      "cve_id": "CVE-2023-48022",
+      "fidelity": "adapted",
+      "realization": "real_cve",
+      "success": true,
+      "log_path": "sut/cve_injection_CVE-2023-48022.log",
+      "notes": "Ray 2.6.3 installed from PyPI with default dashboard enabled. The unauthenticated job-submission endpoint is the documented RCE surface for CVE-2023-48022."
+    }
+  ],
+  "techniques": [
+    {
+      "technique_id": "T1190",
+      "declared_fidelity": "adapted",
+      "executed_fidelity": "adapted",
+      "declared_mode": "real_controlled",
+      "executed_mode": "real_controlled",
+      "realization": "real_cve",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1190_dashboard_probe.log",
+        "techniques/T1190_job_submit.log",
+        "techniques/T1190_verify_rce.log"
+      ],
+      "duration_sec": 1.3727962499833666,
+      "notes": "Unauthenticated Ray dashboard job submission executed a shell command on the target; marker file confirms remote execution.",
+      "caldera_ability_id": null,
+      "caldera_ability_name": null
+    },
+    {
+      "technique_id": "T1082",
+      "declared_fidelity": "adapted",
+      "executed_fidelity": "adapted",
+      "declared_mode": "real_controlled",
+      "executed_mode": "real_controlled",
+      "realization": "real_cve",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1190_job_submit.log",
+        "techniques/T1082_discovery_output.log"
+      ],
+      "duration_sec": 0.06953466701088473,
+      "notes": "System information verified from the same unauthenticated Ray RCE job that established execution.",
+      "caldera_ability_id": null,
+      "caldera_ability_name": null
+    },
+    {
+      "technique_id": "T1005",
+      "declared_fidelity": "adapted",
+      "executed_fidelity": "adapted",
+      "declared_mode": "real_controlled",
+      "executed_mode": "real_controlled",
+      "realization": "real_cve",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1005_source_data.log",
+        "techniques/T1190_job_submit.log",
+        "techniques/T1005_exfil_evidence.log"
+      ],
+      "duration_sec": 0.09176266699796543,
+      "notes": "Sensitive data verified from the same unauthenticated Ray RCE job that established execution.",
+      "caldera_ability_id": null,
+      "caldera_ability_name": null
+    }
+  ],
+  "teardown_clean": true,
+  "manifest_path": "<local-workspace>/release/evidence/0.shadowray_20260531_224745/manifest.json",
+  "summary_path": "<local-workspace>/release/evidence/0.shadowray_20260531_224745/summary.json"
+}

@@ -3,7 +3,7 @@
 ## Public in this repository
 
 - Measurement code and frozen public CTI bundle snapshots.
-- Deterministic audit outputs used by the submitted paper.
+- Deterministic audit outputs used by the study.
 - Optional VM/lab orchestration code without local runtime images.
 
 ## Excluded from this repository
@@ -15,5 +15,5 @@
 - Runtime credentials or locally generated certificates from exploratory lab runs.
 - Historical frozen-workspace paths that are useful only for internal comparison.
 
-The public validation path is designed to reproduce the paper's
+The public validation path is designed to reproduce the study's
 measurement claims without crossing this boundary.

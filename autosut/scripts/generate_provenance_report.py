@@ -131,7 +131,7 @@ def write_csv(path: Path, merged: ProvenanceSummary) -> None:
     # ALL summary row. Downstream parsers can rely on this header forever.
     fieldnames = ["dimension", "total", *_SOURCE_ORDER]
     with path.open("w", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer = csv.DictWriter(fh, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         for row in provenance.support_matrix_rows(merged):
             writer.writerow({key: row.get(key, 0) for key in fieldnames})

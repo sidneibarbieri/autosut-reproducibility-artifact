@@ -7,3 +7,6 @@ __pycache__/
 paper/build_artifacts/
 autosut/release/evidence/
 autosut/results/evidence/
+autosut/results/PUBLIC_SURFACE_REPORT.md
+autosut/results/public_surface_report.json
+autosut/results/tables/all_tables_*.tex

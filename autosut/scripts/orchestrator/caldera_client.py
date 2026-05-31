@@ -165,6 +165,12 @@ def find_ability_by_technique(technique_id: str,
 
 
 _ABILITIES_CACHE: list[dict] = []
+PREFERRED_LINUX_ABILITY_BY_TECHNIQUE = {
+    # Software Discovery: stock Caldera lists Chrome/Go/Python checks. The
+    # AutoSUT Linux Python SUT is guaranteed to have Python, while Chrome is
+    # intentionally absent from the minimal image.
+    "T1518": "b18e8767-b7ea-41a3-8e80-baf65a5ddef5",
+}
 
 
 def all_abilities_indexed_by_technique(api_key: Optional[str] = None) -> dict[str, list[dict]]:
@@ -212,6 +218,12 @@ def best_ability_for(technique_id: str,
         if strict_platform:
             return None
         return candidates[0]
+
+    preferred_ability_id = PREFERRED_LINUX_ABILITY_BY_TECHNIQUE.get(technique_id)
+    if preferred_ability_id:
+        for ability in matched:
+            if ability.get("ability_id") == preferred_ability_id:
+                return ability
 
     # Second pass: prefer the simpler, self-contained variants.
     def simplicity(ability: dict) -> int:
@@ -372,7 +384,7 @@ def start_operation(name: str, adversary_id: str,
         "autonomous": 1,
         "obfuscator": "plain-text",
         "auto_close": True,
-        "jitter": "2/5",
+        "jitter": "0/0",
         "visibility": 50,
     }
     response = _post_json("/api/v2/operations", body, api_key=api_key)

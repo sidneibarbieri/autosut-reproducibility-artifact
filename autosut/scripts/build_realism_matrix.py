@@ -1,5 +1,4 @@
 """Build the frozen-vs-AutoSUT realism matrix.
-import os
 
 Reads, per canonical campaign:
 
@@ -11,7 +10,7 @@ Reads, per canonical campaign:
 
 Emits two artefacts side-by-side:
 
-- ``release/REALISM_MATRIX.md`` for the paper-facing reviewer.
+- ``release/REALISM_MATRIX.md`` for the study-facing reviewer.
 - ``release/realism_matrix.json`` for downstream tooling.
 
 No prose. Each row is evidence the reviewer can grep against the cited
@@ -23,6 +22,7 @@ AutoSUT cves, technique pass rate, fidelity distribution, evidence path.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path

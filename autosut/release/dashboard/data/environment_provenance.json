@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T10:12:35",
+  "generated_at": "2026-05-31T20:04:45",
   "policy": "hybrid_3category",
   "dimensions": [
     "platform",
@@ -13,17 +13,17 @@
   "skipped_unimplemented": [],
   "global": {
     "campaign_id": "ALL",
-    "total_elements": 130,
+    "total_elements": 133,
     "by_source": {
       "corpus_supported": 32,
-      "analyst_authored": 75,
+      "analyst_authored": 78,
       "autosut_concretized": 23,
       "inferred": 0
     },
     "percentages": {
-      "corpus_supported": 24.6,
-      "analyst_authored": 57.7,
-      "autosut_concretized": 17.7,
+      "corpus_supported": 24.1,
+      "analyst_authored": 58.6,
+      "autosut_concretized": 17.3,
       "inferred": 0.0
     },
     "by_dimension": {
@@ -59,7 +59,7 @@
       },
       "artifacts": {
         "corpus_supported": 0,
-        "analyst_authored": 29,
+        "analyst_authored": 32,
         "autosut_concretized": 0,
         "inferred": 0
       },
@@ -230,6 +230,14 @@
         "source": "analyst_authored",
         "host": null,
         "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
+      },
+      {
+        "dimension": "artifacts",
+        "identifier": "artifact./root/.ssh/known_hosts",
+        "value": "/root/.ssh/known_hosts",
+        "source": "analyst_authored",
+        "host": null,
+        "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
       },
       {
         "dimension": "platform",
@@ -864,6 +872,14 @@
         "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
       },
       {
+        "dimension": "artifacts",
+        "identifier": "artifact./root/.ssh/known_hosts",
+        "value": "/root/.ssh/known_hosts",
+        "source": "analyst_authored",
+        "host": null,
+        "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
+      },
+      {
         "dimension": "platform",
         "identifier": "platform.linux",
         "value": "linux",
@@ -912,100 +928,12 @@
         "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
       },
       {
-        "dimension": "platform",
-        "identifier": "attacker.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "attacker",
-        "purpose": "materialised as alpine:3.19"
-      },
-      {
-        "dimension": "platform",
-        "identifier": "target1.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "target1",
-        "purpose": "materialised as alpine:3.19"
-      },
-      {
-        "dimension": "credentials",
-        "identifier": "target1.credential.labuser",
-        "value": "password:labuser",
-        "source": "autosut_concretized",
-        "host": "target1",
-        "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
-      },
-      {
-        "dimension": "exposures",
-        "identifier": "target1.exposure.22",
-        "value": "22/tcp ssh",
-        "source": "analyst_authored",
-        "host": "target1",
-        "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
-      },
-      {
-        "dimension": "platform",
-        "identifier": "target2.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "target2",
-        "purpose": "materialised as alpine:3.19"
-      },
-      {
-        "dimension": "credentials",
-        "identifier": "target2.credential.labuser",
-        "value": "password:labuser",
-        "source": "autosut_concretized",
-        "host": "target2",
-        "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
-      },
-      {
-        "dimension": "exposures",
-        "identifier": "target2.exposure.22",
-        "value": "22/tcp ssh",
-        "source": "analyst_authored",
-        "host": "target2",
-        "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
-      },
-      {
-        "dimension": "platform",
-        "identifier": "attacker.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "attacker",
-        "purpose": "materialised as autosut/dmz-host:s28"
-      },
-      {
-        "dimension": "platform",
-        "identifier": "target.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "target",
-        "purpose": "materialised as httpd:2.4.49"
-      },
-      {
-        "dimension": "software",
-        "identifier": "target.software.apache_httpd@2.4.49",
-        "value": "apache_httpd@2.4.49",
-        "source": "corpus_supported",
-        "host": "target",
-        "purpose": "Vulnerable web server \u2014 pre-patch httpd 2.4.49 with the Alias+cgi-bin trigger the advisory documents."
-      },
-      {
-        "dimension": "exposures",
-        "identifier": "target.exposure.80",
-        "value": "80/tcp http",
-        "source": "corpus_supported",
-        "host": "target",
-        "purpose": "Documented CVE-2021-41773 path-traversal exploit surface on the vulnerable httpd 2.4.49."
-      },
-      {
         "dimension": "artifacts",
-        "identifier": "target.artifact./usr/local/apache2/cgi-bin/lab.sh",
-        "value": "/usr/local/apache2/cgi-bin/lab.sh",
+        "identifier": "artifact./root/.ssh/known_hosts",
+        "value": "/root/.ssh/known_hosts",
         "source": "analyst_authored",
-        "host": "target",
-        "purpose": "Decoy CGI to confirm script alias mounted."
+        "host": null,
+        "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
       },
       {
         "dimension": "platform",
@@ -1110,6 +1038,102 @@
         "source": "analyst_authored",
         "host": null,
         "purpose": "Backend zone. No direct path from internet_edge."
+      },
+      {
+        "dimension": "platform",
+        "identifier": "attacker.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "attacker",
+        "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "platform",
+        "identifier": "target1.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "target1",
+        "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "credentials",
+        "identifier": "target1.credential.labuser",
+        "value": "password:labuser",
+        "source": "autosut_concretized",
+        "host": "target1",
+        "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
+      },
+      {
+        "dimension": "exposures",
+        "identifier": "target1.exposure.22",
+        "value": "22/tcp ssh",
+        "source": "analyst_authored",
+        "host": "target1",
+        "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
+      },
+      {
+        "dimension": "platform",
+        "identifier": "target2.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "target2",
+        "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "credentials",
+        "identifier": "target2.credential.labuser",
+        "value": "password:labuser",
+        "source": "autosut_concretized",
+        "host": "target2",
+        "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
+      },
+      {
+        "dimension": "exposures",
+        "identifier": "target2.exposure.22",
+        "value": "22/tcp ssh",
+        "source": "analyst_authored",
+        "host": "target2",
+        "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
+      },
+      {
+        "dimension": "platform",
+        "identifier": "attacker.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "attacker",
+        "purpose": "materialised as autosut/dmz-host:s28"
+      },
+      {
+        "dimension": "platform",
+        "identifier": "target.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "target",
+        "purpose": "materialised as httpd:2.4.49"
+      },
+      {
+        "dimension": "software",
+        "identifier": "target.software.apache_httpd@2.4.49",
+        "value": "apache_httpd@2.4.49",
+        "source": "corpus_supported",
+        "host": "target",
+        "purpose": "Vulnerable web server \u2014 pre-patch httpd 2.4.49 with the Alias+cgi-bin trigger the advisory documents."
+      },
+      {
+        "dimension": "exposures",
+        "identifier": "target.exposure.80",
+        "value": "80/tcp http",
+        "source": "corpus_supported",
+        "host": "target",
+        "purpose": "Documented CVE-2021-41773 path-traversal exploit surface on the vulnerable httpd 2.4.49."
+      },
+      {
+        "dimension": "artifacts",
+        "identifier": "target.artifact./usr/local/apache2/cgi-bin/lab.sh",
+        "value": "/usr/local/apache2/cgi-bin/lab.sh",
+        "source": "analyst_authored",
+        "host": "target",
+        "purpose": "Decoy CGI to confirm script alias mounted."
       }
     ]
   },
@@ -1352,17 +1376,17 @@
     },
     {
       "campaign_id": "0.c0011",
-      "total_elements": 6,
+      "total_elements": 7,
       "by_source": {
         "corpus_supported": 1,
-        "analyst_authored": 4,
+        "analyst_authored": 5,
         "autosut_concretized": 1,
         "inferred": 0
       },
       "percentages": {
-        "corpus_supported": 16.7,
-        "analyst_authored": 66.7,
-        "autosut_concretized": 16.7,
+        "corpus_supported": 14.3,
+        "analyst_authored": 71.4,
+        "autosut_concretized": 14.3,
         "inferred": 0.0
       },
       "by_dimension": {
@@ -1398,7 +1422,7 @@
         },
         "artifacts": {
           "corpus_supported": 0,
-          "analyst_authored": 2,
+          "analyst_authored": 3,
           "autosut_concretized": 0,
           "inferred": 0
         },
@@ -1457,6 +1481,14 @@
           "source": "analyst_authored",
           "host": null,
           "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
+        },
+        {
+          "dimension": "artifacts",
+          "identifier": "artifact./root/.ssh/known_hosts",
+          "value": "/root/.ssh/known_hosts",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
         }
       ]
     },
@@ -2728,17 +2760,17 @@
     },
     {
       "campaign_id": "0.caldera_linux_demo",
-      "total_elements": 6,
+      "total_elements": 7,
       "by_source": {
         "corpus_supported": 1,
-        "analyst_authored": 4,
+        "analyst_authored": 5,
         "autosut_concretized": 1,
         "inferred": 0
       },
       "percentages": {
-        "corpus_supported": 16.7,
-        "analyst_authored": 66.7,
-        "autosut_concretized": 16.7,
+        "corpus_supported": 14.3,
+        "analyst_authored": 71.4,
+        "autosut_concretized": 14.3,
         "inferred": 0.0
       },
       "by_dimension": {
@@ -2774,7 +2806,7 @@
         },
         "artifacts": {
           "corpus_supported": 0,
-          "analyst_authored": 2,
+          "analyst_authored": 3,
           "autosut_concretized": 0,
           "inferred": 0
         },
@@ -2833,22 +2865,30 @@
           "source": "analyst_authored",
           "host": null,
           "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
+        },
+        {
+          "dimension": "artifacts",
+          "identifier": "artifact./root/.ssh/known_hosts",
+          "value": "/root/.ssh/known_hosts",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
         }
       ]
     },
     {
       "campaign_id": "0.fin6_emulation",
-      "total_elements": 6,
+      "total_elements": 7,
       "by_source": {
         "corpus_supported": 1,
-        "analyst_authored": 4,
+        "analyst_authored": 5,
         "autosut_concretized": 1,
         "inferred": 0
       },
       "percentages": {
-        "corpus_supported": 16.7,
-        "analyst_authored": 66.7,
-        "autosut_concretized": 16.7,
+        "corpus_supported": 14.3,
+        "analyst_authored": 71.4,
+        "autosut_concretized": 14.3,
         "inferred": 0.0
       },
       "by_dimension": {
@@ -2884,7 +2924,7 @@
         },
         "artifacts": {
           "corpus_supported": 0,
-          "analyst_authored": 2,
+          "analyst_authored": 3,
           "autosut_concretized": 0,
           "inferred": 0
         },
@@ -2943,6 +2983,180 @@
           "source": "analyst_authored",
           "host": null,
           "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
+        },
+        {
+          "dimension": "artifacts",
+          "identifier": "artifact./root/.ssh/known_hosts",
+          "value": "/root/.ssh/known_hosts",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
+        }
+      ]
+    },
+    {
+      "campaign_id": "0.dmz_segmentation_demo",
+      "total_elements": 13,
+      "by_source": {
+        "corpus_supported": 4,
+        "analyst_authored": 6,
+        "autosut_concretized": 3,
+        "inferred": 0
+      },
+      "percentages": {
+        "corpus_supported": 30.8,
+        "analyst_authored": 46.2,
+        "autosut_concretized": 23.1,
+        "inferred": 0.0
+      },
+      "by_dimension": {
+        "platform": {
+          "corpus_supported": 4,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "software": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "vulnerability": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "credentials": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 3,
+          "inferred": 0
+        },
+        "exposures": {
+          "corpus_supported": 0,
+          "analyst_authored": 3,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "artifacts": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "topology": {
+          "corpus_supported": 0,
+          "analyst_authored": 3,
+          "autosut_concretized": 0,
+          "inferred": 0
+        }
+      },
+      "elements": [
+        {
+          "dimension": "platform",
+          "identifier": "attacker.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "attacker",
+          "purpose": "materialised as autosut/dmz-host:s28"
+        },
+        {
+          "dimension": "platform",
+          "identifier": "nginx.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "nginx",
+          "purpose": "materialised as autosut/dmz-host:s28"
+        },
+        {
+          "dimension": "credentials",
+          "identifier": "nginx.credential.labuser",
+          "value": "password:labuser",
+          "source": "autosut_concretized",
+          "host": "nginx",
+          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
+        },
+        {
+          "dimension": "exposures",
+          "identifier": "nginx.exposure.22",
+          "value": "22/tcp ssh",
+          "source": "analyst_authored",
+          "host": "nginx",
+          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
+        },
+        {
+          "dimension": "platform",
+          "identifier": "app_server.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "app_server",
+          "purpose": "materialised as autosut/dmz-host:s28"
+        },
+        {
+          "dimension": "credentials",
+          "identifier": "app_server.credential.labuser",
+          "value": "password:labuser",
+          "source": "autosut_concretized",
+          "host": "app_server",
+          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
+        },
+        {
+          "dimension": "exposures",
+          "identifier": "app_server.exposure.22",
+          "value": "22/tcp ssh",
+          "source": "analyst_authored",
+          "host": "app_server",
+          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
+        },
+        {
+          "dimension": "platform",
+          "identifier": "db.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "db",
+          "purpose": "materialised as autosut/dmz-host:s28"
+        },
+        {
+          "dimension": "credentials",
+          "identifier": "db.credential.labuser",
+          "value": "password:labuser",
+          "source": "autosut_concretized",
+          "host": "db",
+          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
+        },
+        {
+          "dimension": "exposures",
+          "identifier": "db.exposure.22",
+          "value": "22/tcp ssh",
+          "source": "analyst_authored",
+          "host": "db",
+          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
+        },
+        {
+          "dimension": "topology",
+          "identifier": "topology.zone.internet_edge",
+          "value": "internet_edge",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Where the attacker originates. Has no enterprise access."
+        },
+        {
+          "dimension": "topology",
+          "identifier": "topology.zone.dmz",
+          "value": "dmz",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Bridges internet_edge and enterprise. Hosts edge-facing services."
+        },
+        {
+          "dimension": "topology",
+          "identifier": "topology.zone.enterprise",
+          "value": "enterprise",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Backend zone. No direct path from internet_edge."
         }
       ]
     },
@@ -3163,172 +3377,6 @@
           "source": "analyst_authored",
           "host": "target",
           "purpose": "Decoy CGI to confirm script alias mounted."
-        }
-      ]
-    },
-    {
-      "campaign_id": "0.dmz_segmentation_demo",
-      "total_elements": 13,
-      "by_source": {
-        "corpus_supported": 4,
-        "analyst_authored": 6,
-        "autosut_concretized": 3,
-        "inferred": 0
-      },
-      "percentages": {
-        "corpus_supported": 30.8,
-        "analyst_authored": 46.2,
-        "autosut_concretized": 23.1,
-        "inferred": 0.0
-      },
-      "by_dimension": {
-        "platform": {
-          "corpus_supported": 4,
-          "analyst_authored": 0,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "software": {
-          "corpus_supported": 0,
-          "analyst_authored": 0,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "vulnerability": {
-          "corpus_supported": 0,
-          "analyst_authored": 0,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "credentials": {
-          "corpus_supported": 0,
-          "analyst_authored": 0,
-          "autosut_concretized": 3,
-          "inferred": 0
-        },
-        "exposures": {
-          "corpus_supported": 0,
-          "analyst_authored": 3,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "artifacts": {
-          "corpus_supported": 0,
-          "analyst_authored": 0,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "topology": {
-          "corpus_supported": 0,
-          "analyst_authored": 3,
-          "autosut_concretized": 0,
-          "inferred": 0
-        }
-      },
-      "elements": [
-        {
-          "dimension": "platform",
-          "identifier": "attacker.platform.linux",
-          "value": "linux",
-          "source": "corpus_supported",
-          "host": "attacker",
-          "purpose": "materialised as autosut/dmz-host:s28"
-        },
-        {
-          "dimension": "platform",
-          "identifier": "nginx.platform.linux",
-          "value": "linux",
-          "source": "corpus_supported",
-          "host": "nginx",
-          "purpose": "materialised as autosut/dmz-host:s28"
-        },
-        {
-          "dimension": "credentials",
-          "identifier": "nginx.credential.labuser",
-          "value": "password:labuser",
-          "source": "autosut_concretized",
-          "host": "nginx",
-          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
-        },
-        {
-          "dimension": "exposures",
-          "identifier": "nginx.exposure.22",
-          "value": "22/tcp ssh",
-          "source": "analyst_authored",
-          "host": "nginx",
-          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
-        },
-        {
-          "dimension": "platform",
-          "identifier": "app_server.platform.linux",
-          "value": "linux",
-          "source": "corpus_supported",
-          "host": "app_server",
-          "purpose": "materialised as autosut/dmz-host:s28"
-        },
-        {
-          "dimension": "credentials",
-          "identifier": "app_server.credential.labuser",
-          "value": "password:labuser",
-          "source": "autosut_concretized",
-          "host": "app_server",
-          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
-        },
-        {
-          "dimension": "exposures",
-          "identifier": "app_server.exposure.22",
-          "value": "22/tcp ssh",
-          "source": "analyst_authored",
-          "host": "app_server",
-          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
-        },
-        {
-          "dimension": "platform",
-          "identifier": "db.platform.linux",
-          "value": "linux",
-          "source": "corpus_supported",
-          "host": "db",
-          "purpose": "materialised as autosut/dmz-host:s28"
-        },
-        {
-          "dimension": "credentials",
-          "identifier": "db.credential.labuser",
-          "value": "password:labuser",
-          "source": "autosut_concretized",
-          "host": "db",
-          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
-        },
-        {
-          "dimension": "exposures",
-          "identifier": "db.exposure.22",
-          "value": "22/tcp ssh",
-          "source": "analyst_authored",
-          "host": "db",
-          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
-        },
-        {
-          "dimension": "topology",
-          "identifier": "topology.zone.internet_edge",
-          "value": "internet_edge",
-          "source": "analyst_authored",
-          "host": null,
-          "purpose": "Where the attacker originates. Has no enterprise access."
-        },
-        {
-          "dimension": "topology",
-          "identifier": "topology.zone.dmz",
-          "value": "dmz",
-          "source": "analyst_authored",
-          "host": null,
-          "purpose": "Bridges internet_edge and enterprise. Hosts edge-facing services."
-        },
-        {
-          "dimension": "topology",
-          "identifier": "topology.zone.enterprise",
-          "value": "enterprise",
-          "source": "analyst_authored",
-          "host": null,
-          "purpose": "Backend zone. No direct path from internet_edge."
         }
       ]
     }

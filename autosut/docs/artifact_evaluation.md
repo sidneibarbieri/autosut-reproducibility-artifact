@@ -9,13 +9,13 @@ repository.
 
 | Path | Command | Required tools | Recommended host | Purpose |
 | --- | --- | --- | --- | --- |
-| Fast validation | `bash run_review_check.sh` | `python3`, `venv` | commodity laptop/desktop | revalidate released values and paper-facing outputs |
+| Fast validation | `bash run_review_check.sh` | `python3`, `venv` | commodity laptop/desktop | revalidate released values and study-facing outputs |
 | Minimal working example | `./artifact/setup.sh && ./artifact/run.sh && ./artifact/validate.sh` | `python3`, `venv` | commodity laptop/desktop | smallest live execution trace |
 | VM-backed realism | `bash run_vm_backed_campaign.sh 0.c0011` | `python3`, `venv`, `vagrant`, `qemu` or `libvirt` | 8 CPU cores, 16 GB RAM, 25 GB free disk recommended | cold-start campaign/SUT replay on declared lab infrastructure |
 
 The first two paths are the canonical validation contract. The VM-backed path is
 supported, but intentionally heavier.
-By default, the VM-backed wrapper restores tracked paper-facing summaries after
+By default, the VM-backed wrapper restores tracked study-facing summaries after
 teardown and removes runtime-only lab byproducts. Use
 `--persist-derived-state` only when you explicitly want to keep regenerated
 summaries or local SUT reports in the checkout.
@@ -33,11 +33,11 @@ summaries or local SUT reports in the checkout.
 bash run_review_check.sh
 ```
 
-This reruns the measurement pipeline, refreshes paper-facing synthesized
+This reruns the measurement pipeline, refreshes study-facing synthesized
 outputs, and checks that the released values remain internally consistent.
 It also regenerates the deterministic downstream CVE concretization report in
 `results/CVE_RESOLUTION_CANDIDATES.md`.
-That report is intentionally narrower than the paper claim: it is not an
+That report is intentionally narrower than the main study claim: it is not an
 exhaustive crawl of the `apt` or `pip` ecosystems, only a deterministic
 resolution layer over ATT&CK-linked campaign/CVE pairs in the current artifact.
 It also regenerates the compatibility-rule audit surface in
