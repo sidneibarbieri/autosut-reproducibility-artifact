@@ -172,6 +172,14 @@ def find_sensitive_text_hits() -> list[dict[str, str]]:
 
 
 def is_git_ignored(relative_path: str) -> bool:
+    # ZIP downloads from anonymous mirrors do not include .git metadata. Treat
+    # reviewer-generated runtime paths as ignorable there too so the checker can
+    # be run both before and after artifact/setup.sh.
+    if not (PROJECT_ROOT / ".git").exists():
+        return relative_path in LOCAL_RUNTIME_ARTIFACTS or any(
+            part == "__pycache__" for part in Path(relative_path).parts
+        )
+
     result = subprocess.run(
         ["git", "check-ignore", relative_path],
         cwd=PROJECT_ROOT,
