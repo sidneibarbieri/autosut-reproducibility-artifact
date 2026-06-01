@@ -24,8 +24,8 @@ header { background: rgba(255,255,255,0.86); border-bottom: 1px solid var(--bord
 h1 { margin: 0; font-size: 25px; font-weight: 650; letter-spacing: -0.35px; }
 header p { margin: 5px 0 0; color: var(--fg-dim); font-size: 13px; }
 nav { background: rgba(231,240,241,0.92); border-bottom: 1px solid var(--border);
-  padding: 10px 40px; }
-nav a { color: var(--accent-strong); text-decoration: none; margin-right: 22px;
+  padding: 10px 40px; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+nav a { color: var(--accent-strong); text-decoration: none; margin-right: 0;
   font-size: 13px; font-weight: 600; }
 nav a:hover { text-decoration: underline; }
 main { max-width: 1180px; margin: 0 auto; padding: 28px 40px; }
@@ -34,15 +34,17 @@ h2 { font-size: 19px; font-weight: 650; margin: 0 0 14px; padding-bottom: 6px;
   border-bottom: 1px solid var(--border); }
 h3 { font-size: 14px; font-weight: 600; margin: 18px 0 6px; }
 table { width: 100%; border-collapse: collapse; background: var(--bg-elev);
-  border: 1px solid var(--border); margin: 10px 0; table-layout: auto; }
+  border: 0; margin: 0; table-layout: auto; }
 th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border);
-  font-size: 13px; vertical-align: top; }
+  font-size: 13px; vertical-align: top; overflow-wrap: anywhere; }
 th { background: var(--accent-soft); font-weight: 600; color: var(--accent); }
 tr:last-child td { border-bottom: none; }
 td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
 td.mono, code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 12px; }
-.table-wrap { width: 100%; overflow-x: auto; border-radius: 8px; }
+.table-wrap { width: 100%; max-width: 100%; overflow-x: auto; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--bg-elev); margin: 10px 0;
+  box-shadow: 0 1px 2px rgba(20,40,70,0.05); -webkit-overflow-scrolling: touch; }
 .table-wrap table { min-width: 680px; }
 .table-wrap.compact table { min-width: 520px; }
 .table-wrap.wide table { min-width: 920px; }
@@ -93,8 +95,7 @@ details.evidence-group { background: var(--bg-elev); border: 1px solid var(--bor
 details.evidence-group summary { cursor: pointer; font-weight: 600; color: var(--accent); }
 details.evidence-group p { margin: 8px 0 6px; }
 details.evidence-group ul { margin: 8px 0 0; columns: 2; }
-table { border-radius: 8px; overflow: hidden;
-  box-shadow: 0 1px 2px rgba(20,40,70,0.05); }
+.table-wrap table { border-radius: 8px; overflow: hidden; }
 .finding { transition: box-shadow .15s ease; }
 .finding:hover { box-shadow: 0 3px 10px rgba(20,40,70,0.09); }
 #nonuniqueness { background: var(--bg-elev); border: 1px solid var(--border);
@@ -104,7 +105,11 @@ table { border-radius: 8px; overflow: hidden;
 .real { color: var(--ok); font-weight: 600; }
 @media (max-width: 850px) {
   header, nav { padding-left: 22px; padding-right: 22px; }
-  main { padding: 22px; }
+  main { padding: 22px; max-width: 100%; overflow-x: hidden; }
   .overview-grid { grid-template-columns: 1fr; }
   .recipe-grid { grid-template-columns: 1fr; }
+  .table-wrap table { min-width: 560px; }
+  .table-wrap.compact table { min-width: 480px; }
+  .table-wrap.wide table { min-width: 760px; }
+  #nonuniqueness { padding: 18px; }
 }

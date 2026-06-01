@@ -113,6 +113,25 @@ python3 -m http.server 8765 -d release/dashboard
 The dashboard is fully self-contained (HTML + CSS + co-located CSVs); no
 JavaScript framework, no server, no network calls.
 
+**Compatibility adjudication**: the deterministic CF/VMR/ID taxonomy ships with
+a 36-row stratified packet at
+`measurement/sut/scripts/results/audit/compatibility_validation_sample.csv`.
+The submitted artifact leaves the manual columns blank on purpose, so the
+paper does not claim completed inter-rater agreement. To adjudicate the packet,
+fill `manual_expected_class`, `manual_verdict_match`, `manual_notes`, and
+`reviewer`, then run:
+
+```bash
+python3 measurement/sut/scripts/evaluate_compatibility_validation.py
+```
+
+The evaluator regenerates
+`measurement/sut/scripts/results/compatibility_validation_summary.json`,
+`measurement/sut/scripts/results/audit/compatibility_validation_confusion.csv`,
+and
+`measurement/sut/scripts/results/audit/compatibility_validation_disagreements.csv`,
+including agreement and Cohen's kappa once labels exist.
+
 ## 3. Minimal Working Example
 
 ```bash
@@ -378,6 +397,9 @@ contract.
 - The repository also regenerates `results/COMPATIBILITY_RULE_SURFACE.md` so
   reviewers can inspect the exact keywords and regexes behind the deterministic
   CF/VMR/ID classification rules.
+- The compatibility-validation packet is intentionally submitted without manual
+  labels; the evaluator reports `pending_manual_labels` until independent
+  adjudication is added.
 - The repository also regenerates `results/INFRA_AUTOMATION_COVERAGE.md` so
   reviewers can see the current IaC/SUT automation boundary without reverse
   engineering it from YAML profiles and shell scripts.

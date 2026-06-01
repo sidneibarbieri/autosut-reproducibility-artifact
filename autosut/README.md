@@ -54,6 +54,16 @@ It also ships `results/COMPATIBILITY_RULE_SURFACE.md`, which exposes the exact
 deterministic keywords and regexes behind the CF/VMR/ID compatibility rules
 used by the measurement pipeline.
 
+It also ships `measurement/sut/scripts/results/audit/compatibility_validation_sample.csv`,
+a 36-row stratified adjudication packet for the CF/VMR/ID taxonomy. The manual
+label columns are intentionally blank in the submitted artifact; after an
+independent reviewer fills `manual_expected_class`, `manual_verdict_match`,
+`manual_notes`, and `reviewer`, rerun
+`python3 measurement/sut/scripts/evaluate_compatibility_validation.py` to
+regenerate the agreement summary, confusion table, disagreements file, and
+Cohen's kappa. Until those labels are added, the packet is a construct-audit
+surface rather than a completed inter-rater agreement result.
+
 The current published subset is still conservative: the shipped campaign/SUT
 pairs currently use single target-host examples, even though the IaC path is
 designed to lift multi-host topologies when a declared SUT profile requires
@@ -188,6 +198,8 @@ feedback from faster campaigns; use `--catalog-order` to preserve catalog order.
 - The released reports include a compatibility-rule audit surface in
   `results/COMPATIBILITY_RULE_SURFACE.md` and
   `results/compatibility_rule_surface.json`.
+- The compatibility-validation packet is regenerated and evaluated as
+  `pending_manual_labels` unless an independent reviewer supplies manual labels.
 - The repository can list available campaigns.
 - The canonical runner can execute campaign definitions from both:
   - `data/campaigns/*.yml`

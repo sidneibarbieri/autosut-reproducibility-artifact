@@ -35,6 +35,7 @@ TEXT_EVIDENCE_SUFFIXES = {".json", ".log", ".txt", ".md", ".csv", ".tsv", ".yml"
 PRIMARY_REPLAY_REPORTS = (
     "orchestrated_replay_full_19_after_repairs.tsv",
 )
+STYLE_VERSION = "20260531-responsive-tables"
 
 
 # Reuse the provenance report's collectors and display labels (source order,
@@ -171,8 +172,8 @@ header { background: rgba(255,255,255,0.86); border-bottom: 1px solid var(--bord
 h1 { margin: 0; font-size: 25px; font-weight: 650; letter-spacing: -0.35px; }
 header p { margin: 5px 0 0; color: var(--fg-dim); font-size: 13px; }
 nav { background: rgba(231,240,241,0.92); border-bottom: 1px solid var(--border);
-  padding: 10px 40px; }
-nav a { color: var(--accent-strong); text-decoration: none; margin-right: 22px;
+  padding: 10px 40px; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+nav a { color: var(--accent-strong); text-decoration: none; margin-right: 0;
   font-size: 13px; font-weight: 600; }
 nav a:hover { text-decoration: underline; }
 main { max-width: 1180px; margin: 0 auto; padding: 28px 40px; }
@@ -181,15 +182,17 @@ h2 { font-size: 19px; font-weight: 650; margin: 0 0 14px; padding-bottom: 6px;
   border-bottom: 1px solid var(--border); }
 h3 { font-size: 14px; font-weight: 600; margin: 18px 0 6px; }
 table { width: 100%; border-collapse: collapse; background: var(--bg-elev);
-  border: 1px solid var(--border); margin: 10px 0; table-layout: auto; }
+  border: 0; margin: 0; table-layout: auto; }
 th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border);
-  font-size: 13px; vertical-align: top; }
+  font-size: 13px; vertical-align: top; overflow-wrap: anywhere; }
 th { background: var(--accent-soft); font-weight: 600; color: var(--accent); }
 tr:last-child td { border-bottom: none; }
 td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
 td.mono, code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 12px; }
-.table-wrap { width: 100%; overflow-x: auto; border-radius: 8px; }
+.table-wrap { width: 100%; max-width: 100%; overflow-x: auto; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--bg-elev); margin: 10px 0;
+  box-shadow: 0 1px 2px rgba(20,40,70,0.05); -webkit-overflow-scrolling: touch; }
 .table-wrap table { min-width: 680px; }
 .table-wrap.compact table { min-width: 520px; }
 .table-wrap.wide table { min-width: 920px; }
@@ -240,8 +243,7 @@ details.evidence-group { background: var(--bg-elev); border: 1px solid var(--bor
 details.evidence-group summary { cursor: pointer; font-weight: 600; color: var(--accent); }
 details.evidence-group p { margin: 8px 0 6px; }
 details.evidence-group ul { margin: 8px 0 0; columns: 2; }
-table { border-radius: 8px; overflow: hidden;
-  box-shadow: 0 1px 2px rgba(20,40,70,0.05); }
+.table-wrap table { border-radius: 8px; overflow: hidden; }
 .finding { transition: box-shadow .15s ease; }
 .finding:hover { box-shadow: 0 3px 10px rgba(20,40,70,0.09); }
 #nonuniqueness { background: var(--bg-elev); border: 1px solid var(--border);
@@ -251,9 +253,13 @@ table { border-radius: 8px; overflow: hidden;
 .real { color: var(--ok); font-weight: 600; }
 @media (max-width: 850px) {
   header, nav { padding-left: 22px; padding-right: 22px; }
-  main { padding: 22px; }
+  main { padding: 22px; max-width: 100%; overflow-x: hidden; }
   .overview-grid { grid-template-columns: 1fr; }
   .recipe-grid { grid-template-columns: 1fr; }
+  .table-wrap table { min-width: 560px; }
+  .table-wrap.compact table { min-width: 480px; }
+  .table-wrap.wide table { min-width: 760px; }
+  #nonuniqueness { padding: 18px; }
 }
 """
 
@@ -304,10 +310,34 @@ def copy_replay_reports() -> None:
         if not src.exists():
             continue
         shutil.copy2(src, replay_dest / src.name)
+        normalize_replay_tsv(replay_dest / src.name)
         json_src = src.with_suffix(".json")
         if json_src.exists():
             shutil.copy2(json_src, replay_dest / json_src.name)
     scrub_local_paths(replay_dest)
+
+
+def normalize_replay_tsv(path: Path) -> None:
+    """Keep copied replay TSVs parseable and whitespace-clean for review."""
+    if path.suffix != ".tsv" or not path.exists():
+        return
+    with path.open(newline="", encoding="utf-8") as handle:
+        rows = list(csv.reader(handle, delimiter="\t"))
+    if not rows or "notes" not in rows[0]:
+        return
+    notes_idx = rows[0].index("notes")
+    status_idx = rows[0].index("status") if "status" in rows[0] else None
+    normalized = [rows[0]]
+    for row in rows[1:]:
+        while len(row) <= notes_idx:
+            row.append("")
+        if not row[notes_idx].strip():
+            status = row[status_idx].strip().upper() if status_idx is not None and len(row) > status_idx else ""
+            row[notes_idx] = "ok" if status == "PASS" else "see JSON"
+        normalized.append(row)
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle, delimiter="\t", lineterminator="\n")
+        writer.writerows(normalized)
 
 
 def copy_curated_evidence_files() -> None:
@@ -1049,10 +1079,10 @@ def render_subdetermination_section() -> str:
     # SUTs, same outcome", not the free fraction (which is only a property of
     # the partition, never the count of compatible models).
     table = (
-        "<table><thead><tr><th>Campaign</th><th>Invariant fingerprint</th>"
+        "<div class='table-wrap'><table><thead><tr><th>Campaign</th><th>Invariant fingerprint</th>"
         "<th>Generated variants</th><th>Result</th><th>Corpus-fixed</th>"
         "<th>Free</th></tr></thead>"
-        f"<tbody>{''.join(rows)}</tbody></table>")
+        f"<tbody>{''.join(rows)}</tbody></table></div>")
     conclusion = (
         "<p><strong>Conclusion:</strong> structured CTI constrains the "
         "environment but does not uniquely determine it. Every variant preserves "
@@ -1091,7 +1121,7 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
 <head>
   <meta charset='utf-8'>
   <title>AutoSUT Evidence Dashboard</title>
-  <link rel='stylesheet' href='style.css'>
+  <link rel='stylesheet' href='style.css?v={STYLE_VERSION}'>
 </head>
 <body>
 <header>

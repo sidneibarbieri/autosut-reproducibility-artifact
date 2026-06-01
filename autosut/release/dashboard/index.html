@@ -3,13 +3,13 @@
 <head>
   <meta charset='utf-8'>
   <title>AutoSUT Evidence Dashboard</title>
-  <link rel='stylesheet' href='style.css'>
+  <link rel='stylesheet' href='style.css?v=20260531-responsive-tables'>
 </head>
 <body>
 <header>
   <h1>AutoSUT Evidence Dashboard</h1>
   <p>Static snapshot of the artifact outputs that back the study claims.
-     Generated May 31, 2026.</p>
+     Generated June 01, 2026.</p>
 </header>
 <nav>
   <a href='#overview'>Reviewer path</a>
@@ -86,7 +86,7 @@
     <code>0.apt41_dust</code> is the structural witness — a large free region
     with materially distinct services. Source:
     <code>release/subdetermination_proof.json</code>.</p>
-  <table><thead><tr><th>Campaign</th><th>Invariant fingerprint</th><th>Generated variants</th><th>Result</th><th>Corpus-fixed</th><th>Free</th></tr></thead><tbody><tr><td><code>0.cve_2021_41773</code></td><td><code>aeeab0a0eee11732…</code></td><td>2</td><td>canonical and variants execute (real_controlled)</td><td>4</td><td>1</td></tr><tr><td><code>0.apt41_dust</code></td><td><code>25cf8df29d62c9e5…</code></td><td>3</td><td>all variants remain compatible (structural)</td><td>1</td><td>10</td></tr></tbody></table><p><strong>Conclusion:</strong> structured CTI constrains the environment but does not uniquely determine it. Every variant preserves the same corpus fingerprint while varying only non-corpus elements.</p><p><strong>Executable witness:</strong> 3 compatible SUT realisations for CVE-2021-41773 (the canonical SUT plus generated variants) preserve the same corpus fingerprint and successfully execute the same real vulnerability: the path traversal leaking <code>/etc/passwd</code> — each with <code>declared_mode == executed_mode</code>.</p><p class='muted'>Scope: the non-uniqueness result rests on the executable witnesses above. Campaigns carrying <code>naive_simulated</code> techniques are included to study environment reconstruction and compatibility — declared behavioral coverage, never counted as procedural-execution evidence — so the simulated-technique ratio does not bear on the non-uniqueness claim.</p><p class='muted'>Interpretation: ATT&amp;CK models adversary behaviour and STIX models threat intelligence; neither is designed to specify a complete executable environment. The result shows where downstream emulation must reconstruct the environment beyond the structured intelligence.</p>
+  <div class='table-wrap'><table><thead><tr><th>Campaign</th><th>Invariant fingerprint</th><th>Generated variants</th><th>Result</th><th>Corpus-fixed</th><th>Free</th></tr></thead><tbody><tr><td><code>0.cve_2021_41773</code></td><td><code>aeeab0a0eee11732…</code></td><td>2</td><td>canonical and variants execute (real_controlled)</td><td>4</td><td>1</td></tr><tr><td><code>0.apt41_dust</code></td><td><code>25cf8df29d62c9e5…</code></td><td>3</td><td>all variants remain compatible (structural)</td><td>1</td><td>10</td></tr></tbody></table></div><p><strong>Conclusion:</strong> structured CTI constrains the environment but does not uniquely determine it. Every variant preserves the same corpus fingerprint while varying only non-corpus elements.</p><p><strong>Executable witness:</strong> 3 compatible SUT realisations for CVE-2021-41773 (the canonical SUT plus generated variants) preserve the same corpus fingerprint and successfully execute the same real vulnerability: the path traversal leaking <code>/etc/passwd</code> — each with <code>declared_mode == executed_mode</code>.</p><p class='muted'>Scope: the non-uniqueness result rests on the executable witnesses above. Campaigns carrying <code>naive_simulated</code> techniques are included to study environment reconstruction and compatibility — declared behavioral coverage, never counted as procedural-execution evidence — so the simulated-technique ratio does not bear on the non-uniqueness claim.</p><p class='muted'>Interpretation: ATT&amp;CK models adversary behaviour and STIX models threat intelligence; neither is designed to specify a complete executable environment. The result shows where downstream emulation must reconstruct the environment beyond the structured intelligence.</p>
 </section>
 <section id='provenance'>
   <h2>Environment reconstruction boundary — what CTI fixes and what must be reconstructed</h2>
