@@ -1,1 +1,1 @@
-# STICKS Framework Package
+# AutoSUT framework package.

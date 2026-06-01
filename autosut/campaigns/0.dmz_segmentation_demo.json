@@ -1,6 +1,6 @@
 {
   "campaign_id": "0.dmz_segmentation_demo",
-  "description": "S28 topology-realism reference. Three Docker bridge networks (internet_edge, dmz, enterprise) materialise three explicit trust zones. The attacker is in internet_edge only; nginx is dual-homed between internet_edge and dmz; app_server is dual-homed between dmz and enterprise; db is in enterprise only. The campaign verifies (a) the attacker has L2 reachability to nginx, (b) the attacker has NO L2 path to db, (c) nginx and app_server can pivot inward. This is declarative topology parity with the frozen sticks-docker dual-homed nginx without claiming firewall enforcement.",
+  "description": "S28 topology-realism reference. Three Docker bridge networks (internet_edge, dmz, enterprise) materialise three explicit trust zones. The attacker is in internet_edge only; nginx is dual-homed between internet_edge and dmz; app_server is dual-homed between dmz and enterprise; db is in enterprise only. The campaign verifies (a) the attacker has L2 reachability to nginx, (b) the attacker has NO L2 path to db, (c) nginx and app_server can pivot inward. This is declarative topology parity with the predecessor dual-homed-gateway shape without claiming firewall enforcement.",
   "plan_origin": "autosut_internal_topology_demo",
   "sut": {
     "topology": "internet_edge -> nginx -> dmz -> app_server -> enterprise -> db",

@@ -439,7 +439,7 @@ class UnifiedCampaignRunner:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="STICKS Unified Campaign Runner (formal model)",
+        description="AutoSUT unified campaign runner (formal model)",
     )
     parser.add_argument(
         "--campaign",

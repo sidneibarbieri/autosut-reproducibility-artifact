@@ -62,15 +62,15 @@ ns1 IN A 172.21.0.20
 hostb IN A 172.22.0.20
 EOF
 if pgrep -x "named" > /dev/null; then
-    echo "✅ named is running. Restarting..."
+    echo "OK named is running. Restarting..."
     pkill named
     sleep 2
     named -g -c /etc/bind/named.conf &
-    echo "✅ named restarted"
+    echo "OK named restarted"
 else
-    echo "❌ named is not running. Starting..."
+    echo "WARN named is not running. Starting..."
     named -g -c /etc/bind/named.conf &
-    echo "✅ named started"
+    echo "OK named started"
 fi
 
 # T1560.001
@@ -103,18 +103,17 @@ ns      IN      A       172.21.0.20
 @       IN      A       172.21.0.20
 EOF
 if pgrep -x "named" > /dev/null; then
-    echo "✅ named is running. Restarting..."
+    echo "OK named is running. Restarting..."
     pkill named
     sleep 2
     named -g -c /etc/bind/named.conf &
-    echo "✅ named restarted"
+    echo "OK named restarted"
 else
-    echo "❌ named is not running. Starting..."
+    echo "WARN named is not running. Starting..."
     named -g -c /etc/bind/named.conf &
-    echo "✅ named started"
+    echo "OK named started"
 fi
 
 # T1105
 echo "bad file" > /var/www/html/maliciousfile.sh
-
 

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Multi-VM QEMU Manager for STICKS — 2-VM Setup (Attacker + Target).
+Multi-VM QEMU manager for AutoSUT 2-VM setup (attacker + target).
 
 Caldera server runs on the Mac host (not in a VM).
 VMs reach the host via QEMU user-mode NAT gateway at 10.0.2.2.
 
 Architecture:
-    Mac host  → caldera_mock.py → localhost:8888
-    attacker VM (port 2224) → sandcat agent → http://10.0.2.2:8888
-    target   VM (port 2223) → sandcat agent → http://10.0.2.2:8888
+    Mac host -> caldera_mock.py -> localhost:8888
+    attacker VM (port 2224) -> sandcat agent -> http://10.0.2.2:8888
+    target   VM (port 2223) -> sandcat agent -> http://10.0.2.2:8888
 """
 
 import os
@@ -156,15 +156,15 @@ def _prepare_artifacts(vm_name: str, config: Dict) -> bool:
         log(f"Reusing overlay for {vm_name} (fast boot)")
     else:
         if not _create_overlay(config):
-            log(f"❌ Failed to create overlay for {vm_name}")
+            log(f"FAIL failed to create overlay for {vm_name}")
             return False
         if not _create_vars_fd(config):
-            log(f"❌ Failed to create vars for {vm_name}")
+            log(f"FAIL failed to create vars for {vm_name}")
             return False
 
     # Always regenerate seed so cloud-init reflects current config
     if not _create_seed_iso(vm_name, config):
-        log(f"❌ Failed to create seed ISO for {vm_name}")
+        log(f"FAIL failed to create seed ISO for {vm_name}")
         return False
 
     return True
@@ -198,7 +198,7 @@ def _start_vm(config: Dict) -> bool:
     time.sleep(2)
 
     if proc.poll() is not None:
-        log(f"❌ QEMU exited immediately (code {proc.poll()}) for {config['name']}")
+        log(f"FAIL QEMU exited immediately (code {proc.poll()}) for {config['name']}")
         return False
 
     pid_file = EVIDENCE_DIR / f"{config['name']}-pid.txt"
@@ -227,11 +227,11 @@ def _wait_for_ssh(port: int, vm_name: str, timeout: int = SSH_TIMEOUT) -> bool:
             capture_output=True, text=True, timeout=10,
         )
         if result.returncode == 0 and "ok" in result.stdout:
-            log(f"✅ SSH ready on port {port} ({elapsed}s)")
+            log(f"OK SSH ready on port {port} ({elapsed}s)")
             return True
         time.sleep(SSH_POLL_INTERVAL)
         elapsed += SSH_POLL_INTERVAL
-    log(f"❌ SSH not ready on port {port} after {timeout}s")
+    log(f"FAIL SSH not ready on port {port} after {timeout}s")
     return False
 
 
@@ -253,7 +253,7 @@ def _validate_ssh(config: Dict) -> bool:
     evidence_file.write_text(
         f"{'successful' if success else 'failed'} for {config['name']}\n{content}"
     )
-    log(f"{'✅' if success else '❌'} {config['name']} SSH {'OK' if success else 'FAILED'}")
+    log(f"{'OK' if success else 'FAIL'} {config['name']} SSH {'OK' if success else 'FAILED'}")
     return success
 
 
@@ -272,7 +272,7 @@ def _validate_agent_reachability(config: Dict) -> bool:
     # 200 or 401 both mean the server is reachable
     reachable = result.returncode == 0 and result.stdout.strip() in ("200", "401")
     log(
-        f"{'✅' if reachable else '⚠️'} {config['name']} → Caldera host "
+        f"{'OK' if reachable else 'WARN'} {config['name']} -> Caldera host "
         f"{'reachable' if reachable else 'not reachable'} "
         f"(HTTP {result.stdout.strip() or 'no response'})"
     )
@@ -347,7 +347,7 @@ def collect_status() -> Dict[str, object]:
 
 def status() -> None:
     snapshot = collect_status()
-    print("STICKS 2-VM status")
+    print("AutoSUT 2-VM status")
     for row in snapshot["vms"]:
         pid_text = row["pid"] if row["pid"] is not None else "missing"
         process_text = "up" if row["process_up"] else "down"
@@ -381,7 +381,7 @@ def stop_all() -> None:
 
 def up() -> bool:
     """Start 2-VM environment (attacker + target)."""
-    log("Starting STICKS 2-VM environment (attacker + target)...")
+    log("Starting AutoSUT 2-VM environment (attacker + target)...")
 
     RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
     EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
@@ -397,7 +397,7 @@ def up() -> bool:
     log("Starting VMs in background...")
     for vm_name, config in VM_CONFIG.items():
         if not _start_vm(config):
-            log(f"❌ Failed to start {vm_name}")
+            log(f"FAIL failed to start {vm_name}")
             return False
         time.sleep(VM_STARTUP_STAGGER)
 
@@ -409,7 +409,7 @@ def up() -> bool:
             all_ssh_ready = False
 
     if not all_ssh_ready:
-        log("❌ Some VMs failed SSH readiness")
+        log("FAIL some VMs failed SSH readiness")
         return False
 
     # Validate SSH and agent reachability
@@ -420,7 +420,7 @@ def up() -> bool:
     }
 
     success = all(ssh_results.values()) and all(agents_reachable.values())
-    log(f"2-VM setup: {'✅ SUCCESS' if success else '❌ FAILED'}")
+    log(f"2-VM setup: {'SUCCESS' if success else 'FAILED'}")
     return success
 
 

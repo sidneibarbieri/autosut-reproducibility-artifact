@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Fidelity Decision Rubric for STICKS artifact.
+Fidelity decision rubric for AutoSUT.
 
 Implements a 5-criterion rubric per technique to determine whether the
 execution fidelity is faithful, adapted, or inspired.  This is the
-artifact's OWN methodological taxonomy — not ACM terminology.
+artifact's own methodological taxonomy, not ACM terminology.
 
 The rubric answers five questions per technique:
   Q1. Was the central mechanism preserved?
@@ -294,7 +294,7 @@ def generate_latex_legend() -> str:
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="STICKS Fidelity Rubric")
+    parser = argparse.ArgumentParser(description="AutoSUT fidelity rubric")
     parser.add_argument("--campaign", help="Campaign ID to evaluate")
     parser.add_argument("--all", action="store_true", help="Evaluate all campaigns")
     parser.add_argument("--latex", action="store_true", help="Output LaTeX table")

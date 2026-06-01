@@ -2,7 +2,7 @@
 
 ## Context
 
-The STICKS artifact uses Vagrant with multiple virtualization backends to provision the lab infrastructure. On macOS ARM64 (Apple Silicon), the available backends differ significantly from x86_64 Linux, which impacts network configuration, performance, and experimental validity.
+AutoSUT uses Vagrant with multiple virtualization backends to provision the lab infrastructure. On macOS ARM64 (Apple Silicon), the available backends differ significantly from x86_64 Linux, which impacts network configuration, performance, and experimental validity.
 
 ## Provider Comparison
 

@@ -440,7 +440,7 @@ main() {
     # Generate summary
     echo ""
     echo "======================================================================"
-    echo "📊 CAMPAIGN EXECUTION SUMMARY"
+    echo "CAMPAIGN EXECUTION SUMMARY"
     echo "======================================================================"
     log_info "Total techniques: $total"
     log_info "Successful: $success_count"

@@ -5,7 +5,7 @@
       "user": "vulnuser",
       "secret": "vulnpass123",
       "location": null,
-      "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the frozen sticks/data/sut_profiles/0.c0011.yml declares.",
+      "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares.",
       "source": "autosut_concretized"
     }
   ],

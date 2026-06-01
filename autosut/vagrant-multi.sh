@@ -1,36 +1,35 @@
 #!/bin/bash
-# STICKS Multi-VM Vagrant Interface for QEMU Sandbox
-# Tudo dentro do QEMU como sandbox Vagrant-like
+# AutoSUT Multi-VM Vagrant interface for the QEMU sandbox.
 
 case "$1" in
     "up")
-        echo "🚀 Starting STICKS Multi-VM Sandbox..."
+        echo "Starting AutoSUT multi-VM sandbox..."
         python3 multi_vm_manager.py multi-up
         ;;
     "destroy"|"down")
-        echo "🛑 Destroying STICKS Sandbox..."
+        echo "Destroying AutoSUT sandbox..."
         python3 multi_vm_manager.py multi-down
         ;;
     "status")
-        echo "📊 STICKS Sandbox Status:"
+        echo "AutoSUT sandbox status:"
         python3 multi_vm_manager.py multi-status
         ;;
     "ssh")
         shift
         if [ $# -eq 0 ]; then
-            echo "🔗 Connecting to Caldera (C2)..."
+            echo "Connecting to Caldera (C2)..."
             sshpass -p ubuntu ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 8888 ubuntu@localhost
         elif [ "$1" = "attacker" ]; then
-            echo "🔗 Connecting to Attacker (Kali)..."
+            echo "Connecting to attacker..."
             sshpass -p ubuntu ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 2222 ubuntu@localhost
         elif [ "$1" = "target-1" ]; then
-            echo "🔗 Connecting to Target-1 (NGINX)..."
+            echo "Connecting to target-1..."
             sshpass -p ubuntu ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 2223 ubuntu@localhost
         elif [ "$1" = "target-2" ]; then
-            echo "🔗 Connecting to Target-2 (Data)..."
+            echo "Connecting to target-2..."
             sshpass -p ubuntu ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 2224 ubuntu@localhost
         else
-            echo "🔗 Executing on $1..."
+            echo "Executing on $1..."
             vm_name="$1"
             shift
             port="2222"
@@ -44,7 +43,7 @@ case "$1" in
         fi
         ;;
     "provision")
-        echo "🔧 Installing NGINX + PHP-FPM..."
+        echo "Installing NGINX + PHP-FPM..."
         python3 nginx_manager.py install
         ;;
     "configure")
@@ -52,7 +51,7 @@ case "$1" in
             echo "Usage: $0 configure <campaign>"
             exit 1
         fi
-        echo "🎯 Configuring campaign: $2"
+        echo "Configuring campaign: $2"
         python3 nginx_manager.py configure "$2"
         ;;
     "campaign")
@@ -60,7 +59,7 @@ case "$1" in
             echo "Usage: $0 campaign <campaign_id>"
             exit 1
         fi
-        echo "🎪 Starting STICKS Campaign: $2"
+        echo "Starting AutoSUT campaign: $2"
         echo "Step 1: Starting VMs..."
         python3 multi_vm_manager.py multi-up
         echo "Step 2: Installing stack..."
@@ -69,16 +68,16 @@ case "$1" in
         python3 nginx_manager.py configure "$2"
         echo "Step 4: Applying SUT profile..."
         python3 src/apply_sut_profile.py --campaign="$2" --base-dir="."
-        echo "✅ Campaign $2 ready!"
+        echo "Campaign $2 ready."
         echo ""
-        echo "🌐 Access points:"
+        echo "Access points:"
         echo "  Caldera (C2): http://localhost:8888"
         echo "  Attacker: vagrant ssh attacker"
         echo "  Target-1: vagrant ssh target-1"
         echo "  Target-2: vagrant ssh target-2"
         ;;
     *)
-        echo "STICKS Multi-VM Sandbox Commands:"
+        echo "AutoSUT multi-VM sandbox commands:"
         echo "  up                    - Start all 4 VMs"
         echo "  down/destroy          - Stop all VMs"
         echo "  status                - Check VM status"

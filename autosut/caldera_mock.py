@@ -85,9 +85,9 @@ def start_mock_server():
 
 
 if __name__ == "__main__":
-    print("🎯 Starting Mock Caldera Server for Testing")
+    print("[caldera-mock] Starting mock Caldera server")
     server = start_mock_server()
-    print("✅ Mock Caldera running on http://localhost:8888")
+    print("[caldera-mock] Mock Caldera running on http://localhost:8888")
 
     try:
         # Test API
@@ -97,14 +97,14 @@ if __name__ == "__main__":
         req.add_header("KEY", "REDAPIKEY123")
         with urllib.request.urlopen(req) as response:
             data = json.loads(response.read().decode())
-            print(f"✅ API Test: {len(data)} abilities available")
+            print(f"[caldera-mock] API test: {len(data)} abilities available")
 
-        print("🚀 Mock server ready for pipeline testing!")
+        print("[caldera-mock] Mock server ready for pipeline testing")
 
         # Keep running
         while True:
             time.sleep(1)
 
     except KeyboardInterrupt:
-        print("\n🛑 Stopping mock server")
+        print("\n[caldera-mock] Stopping mock server")
         server.shutdown()

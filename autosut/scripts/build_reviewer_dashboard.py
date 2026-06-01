@@ -166,7 +166,7 @@ html, body { margin: 0; padding: 0; font-family: "Avenir Next", Avenir,
   background:
     radial-gradient(circle at 12% -10%, rgba(36,84,111,0.12), transparent 30%),
     linear-gradient(180deg, #fbfaf6 0%, var(--bg) 220px);
-  font-size: 15px; line-height: 1.56; }
+  font-size: 15px; line-height: 1.56; overflow-x: hidden; }
 header { background: rgba(255,255,255,0.86); border-bottom: 1px solid var(--border);
   padding: 26px 40px 22px; }
 h1 { margin: 0; font-size: 25px; font-weight: 650; letter-spacing: -0.35px; }
@@ -189,7 +189,8 @@ th { background: var(--accent-soft); font-weight: 600; color: var(--accent); }
 tr:last-child td { border-bottom: none; }
 td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
 td.mono, code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: 12px; }
+  font-size: 12px; overflow-wrap: anywhere; word-break: break-word; }
+a { overflow-wrap: anywhere; }
 .table-wrap { width: 100%; max-width: 100%; overflow-x: auto; border: 1px solid var(--border);
   border-radius: 8px; background: var(--bg-elev); margin: 10px 0;
   box-shadow: 0 1px 2px rgba(20,40,70,0.05); -webkit-overflow-scrolling: touch; }
@@ -225,13 +226,13 @@ footer { margin: 40px 0 0; padding: 20px 40px; border-top: 1px solid var(--borde
   gap: 14px; margin: 18px 0 4px; }
 .overview-card { background: var(--bg-elev); border: 1px solid var(--border);
   border-top: 3px solid var(--accent); border-radius: 10px; padding: 14px 16px;
-  box-shadow: 0 2px 12px rgba(20,40,70,0.06); }
+  box-shadow: 0 2px 12px rgba(20,40,70,0.06); min-width: 0; }
 .overview-card strong { display: block; margin-bottom: 5px; font-size: 13px; }
 .overview-card span { display: block; color: var(--fg-dim); font-size: 12px; }
 .recipe-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px; margin: 18px 0 4px; }
 .recipe-card { background: var(--panel); border: 1px solid var(--border);
-  border-radius: 10px; padding: 14px 16px; }
+  border-radius: 10px; padding: 14px 16px; min-width: 0; }
 .recipe-card strong { display: block; margin-bottom: 6px; }
 .recipe-card p { margin: 6px 0; color: var(--fg-dim); font-size: 12px; }
 .recipe-card code { display: inline-block; margin-top: 5px; white-space: normal;
@@ -242,7 +243,12 @@ details.evidence-group { background: var(--bg-elev); border: 1px solid var(--bor
   border-radius: 8px; margin: 10px 0; padding: 11px 14px; }
 details.evidence-group summary { cursor: pointer; font-weight: 600; color: var(--accent); }
 details.evidence-group p { margin: 8px 0 6px; }
-details.evidence-group ul { margin: 8px 0 0; columns: 2; }
+details.evidence-group ul { margin: 8px 0 0; columns: 2; column-gap: 24px;
+  padding-left: 18px; }
+details.evidence-group li { break-inside: avoid; margin-bottom: 3px; }
+details.evidence-group a,
+details.evidence-group code { max-width: 100%; white-space: normal;
+  overflow-wrap: anywhere; word-break: break-word; }
 .table-wrap table { border-radius: 8px; overflow: hidden; }
 .finding { transition: box-shadow .15s ease; }
 .finding:hover { box-shadow: 0 3px 10px rgba(20,40,70,0.09); }
@@ -256,9 +262,16 @@ details.evidence-group ul { margin: 8px 0 0; columns: 2; }
   main { padding: 22px; max-width: 100%; overflow-x: hidden; }
   .overview-grid { grid-template-columns: 1fr; }
   .recipe-grid { grid-template-columns: 1fr; }
-  .table-wrap table { min-width: 560px; }
-  .table-wrap.compact table { min-width: 480px; }
-  .table-wrap.wide table { min-width: 760px; }
+  .table-wrap table,
+  .table-wrap.compact table,
+  .table-wrap.wide table { min-width: 100%; }
+  .recipe-card code { display: block; max-width: 100%; white-space: normal;
+    word-break: break-word; overflow-wrap: anywhere; }
+  p, .overview-card span, .recipe-card p { overflow-wrap: anywhere; }
+  details.evidence-group ul { columns: 1; padding-left: 16px; }
+  details.evidence-group li { max-width: 100%; }
+  .finding-meta .kbd { display: inline-block; max-width: 100%;
+    white-space: normal; word-break: break-word; }
   #nonuniqueness { padding: 18px; }
 }
 """
@@ -1101,7 +1114,7 @@ def render_subdetermination_section() -> str:
             "<code>declared_mode == executed_mode</code>.</p>")
     coverage_note = (
         "<p class='muted'>Scope: the non-uniqueness result rests on the "
-        "executable witnesses above. Campaigns carrying "
+        "executable CVE-2021-41773 witness above. Campaigns carrying "
         "<code>naive_simulated</code> techniques are included to study "
         "environment reconstruction and compatibility — declared behavioral "
         "coverage, never counted as procedural-execution evidence — so the "
@@ -1120,6 +1133,7 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
 <html lang='en'>
 <head>
   <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
   <title>AutoSUT Evidence Dashboard</title>
   <link rel='stylesheet' href='style.css?v={STYLE_VERSION}'>
 </head>
@@ -1145,7 +1159,7 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
 <section id='nonuniqueness'>
   <h2>Environment Non-Uniqueness Proof</h2>
   <p class='muted'>The core result: the same CTI admits multiple distinct,
-    compatible SUTs — including executable witnesses. Each variant preserves
+    compatible SUTs — including an executable witness. Each variant preserves
     every <code>corpus_supported</code>
     element (identical invariant fingerprint) and varies only the free region.
     <code>0.cve_2021_41773</code> is the executable witness — each of its

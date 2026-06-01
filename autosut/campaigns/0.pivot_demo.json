@@ -1,6 +1,6 @@
 {
   "campaign_id": "0.pivot_demo",
-  "description": "Multi-host pivot demonstration — the canonical S14 reference. Exercises real SSH lateral movement between three networked hosts (attacker → target1 → target2) on a private Docker bridge. Every technique runs on a declared host and produces per-host evidence. This closes the gap the frozen sticks/ documented but never demonstrated in published evidence (single-host examples only).",
+  "description": "Multi-host pivot demonstration — the canonical S14 reference. Exercises real SSH lateral movement between three networked hosts (attacker → target1 → target2) on a private Docker bridge. Every technique runs on a declared host and produces per-host evidence. This closes the gap the predecessor artifact documented but never demonstrated in published evidence (single-host examples only).",
   "plan_origin": "autosut_internal",
   "sut": {
     "topology": "three-host",

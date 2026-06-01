@@ -2,7 +2,7 @@
   "campaign_id": "0.c0011",
   "name": "0.c0011",
   "description": "Transparent Tribe baseline campaign for the canonical smoke validation path.",
-  "objective": "Exercise the end-to-end STICKS execution and evidence pipeline with one adapted Linux path and several explicitly inspired Windows-compatible steps.",
+  "objective": "Exercise the end-to-end AutoSUT execution and evidence pipeline with one adapted Linux path and several explicitly inspired Windows-compatible steps.",
   "sut": {
     "required_vms": ["caldera", "attacker", "target-base"],
     "min_hosts": 3,

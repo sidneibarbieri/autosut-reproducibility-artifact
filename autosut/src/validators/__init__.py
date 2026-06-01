@@ -1,1 +1,1 @@
-"""Validation utilities for STICKS campaigns."""
+"""Validation utilities for AutoSUT campaigns."""

@@ -1,5 +1,5 @@
 # =============================================================================
-# STICKS SUT Profiles - Campaign-Specific System Under Test Configurations
+# AutoSUT SUT profiles - campaign-specific System Under Test configurations.
 #
 # Each profile defines the minimal environment required for a campaign.
 # Profiles are declarative and reproducible.

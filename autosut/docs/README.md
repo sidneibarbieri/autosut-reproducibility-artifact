@@ -1,6 +1,6 @@
 # Documentation Index
 
-This directory contains supporting documentation for the STICKS artifact.
+This directory contains supporting documentation for the AutoSUT artifact.
 
 ## Start Here
 
@@ -20,6 +20,6 @@ This directory contains supporting documentation for the STICKS artifact.
 
 ## Notes
 
-- Some older documents in this directory are retained for author reference.
-- Reviewer-facing claims should always be grounded in the top-level documents
-  first, not in historical or exploratory notes.
+- Reviewer-facing claims should be grounded in the top-level documents first:
+  `README.md`, `REVIEWER_GUIDE.md`, `REPRODUCIBILITY.md`, `ARCHITECTURE.md`,
+  and `PUBLIC_REPOSITORY_SCOPE.md`.

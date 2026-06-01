@@ -1,7 +1,7 @@
-"""Fidelity rubric — adopted from the frozen STICKS methodology.
+"""Fidelity rubric adopted from the frozen predecessor methodology.
 
-The frozen STICKS artifact
-introduces a 5-question rubric for classifying each technique execution as
+The frozen predecessor artifact introduces a 5-question rubric for classifying
+each technique execution as
 ``faithful`` / ``adapted`` / ``inspired``. AutoSUT adopts the same rubric for
 methodological parity, with the same decision logic, and applies it against
 :class:`TechniqueOutcome` records produced by our orchestrator.

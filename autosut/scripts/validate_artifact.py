@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Official STICKS artifact validation pipeline.
+AutoSUT artifact validation pipeline.
 
 Runs the full lifecycle for one or more campaigns:
   destroy → up → apply_sut → run → validate_evidence → (cleanup)
@@ -263,7 +263,7 @@ def write_report(results: list[CampaignValidation]) -> Path:
     json_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
 
     md_lines = [
-        "# STICKS Artifact Validation Report",
+        "# AutoSUT Artifact Validation Report",
         "",
         f"Generated: `{report['generated_at']}`",
         "",
@@ -309,7 +309,7 @@ def write_report(results: list[CampaignValidation]) -> Path:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="STICKS artifact validation pipeline")
+    parser = argparse.ArgumentParser(description="AutoSUT artifact validation pipeline")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument(
         "--campaign", metavar="ID", help="Single campaign ID to validate"

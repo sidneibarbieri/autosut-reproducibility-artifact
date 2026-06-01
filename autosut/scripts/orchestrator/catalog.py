@@ -138,8 +138,8 @@ def shadowray_cves(prefer_real: bool = True) -> list[CVEInjection]:
 
 def c0011_sut() -> SUTProfile:
     """c0011 SUT — realistic Linux workstation with the same SUT shape the
-    frozen ``sticks/data/sut_profiles/0.c0011.yml`` *declares*, now
-    actually applied by AutoSUT's composer.
+    predecessor profile *declares*, now actually applied by AutoSUT's
+    composer.
 
     The frozen YAML lists a vulnuser/vulnpass123 weak-credential profile,
     confidential.txt + passwords.txt staged files, and an ssh service.
@@ -155,8 +155,7 @@ def c0011_sut() -> SUTProfile:
             Credential(
                 kind="password", user="vulnuser", secret="vulnpass123",
                 purpose="T1078 lab pre-staged weak credentials — the same "
-                        "user/password pair the frozen sticks/data/sut_profiles"
-                        "/0.c0011.yml declares.",
+                        "user/password pair the predecessor profile declares.",
                 # T1078/Valid-Accounts implies a usable credential exists; the
                 # literal vulnuser:vulnpass123 is AutoSUT's concretization.
                 source=ProvenanceSource.autosut_concretized,
@@ -426,9 +425,8 @@ def dmz_segmentation_attacker() -> AttackerProfile:
 
 
 def dmz_segmentation_sut() -> SUTProfile:
-    """Three-zone topology mirroring the enterprise-design shape that the
-    frozen sticks-docker modelled with its dual-homed nginx, but here
-    declared explicitly and materialised as three Docker networks.
+    """Three-zone topology mirroring the predecessor enterprise-design shape,
+    but here declared explicitly and materialised as three Docker networks.
     """
     from .models import (
         Credential, NetworkExposure, SUTComposition, SUTHost,
@@ -531,8 +529,8 @@ def dmz_segmentation_sut() -> SUTProfile:
         notes="Three-zone topology with two dual-homed gateways (nginx, "
               "app_server). Attacker has L2 reachability to nginx only; "
               "db has L2 reachability from app_server only. Mirrors the "
-              "shape of frozen sticks-docker's dual-homed nginx but "
-              "declared explicitly via SUTProfile.topology + SUTHost.zones.",
+              "predecessor dual-homed-gateway shape while declaring the "
+              "topology explicitly via SUTProfile.topology + SUTHost.zones.",
     )
 
 
@@ -684,7 +682,7 @@ def pivot_demo_sut() -> SUTProfile:
 # S26 prep: per-campaign SUT functions for the 10 remaining frozen campaigns.
 #
 # Each function declares a SUTComposition that mirrors the corresponding
-# frozen YAML under sticks/data/sut_profiles/<id>.yml. Three patterns are
+# predecessor profile snapshots. Three patterns are
 # in use:
 #
 #   * Linux-credentialed (c0011-shape): vulnuser-style + ssh + decoy files.
@@ -999,7 +997,7 @@ def resolve(campaign_id: str, *,
     if campaign_id == "0.cve_2021_41773":
         return cve_2021_41773_attacker(), cve_2021_41773_sut(), []
     # Each frozen-inherited campaign now resolves to its own SUT with the
-    # composition declared from its sticks/data/sut_profiles/<id>.yml shape.
+    # composition declared from its predecessor profile shape.
     # Two campaigns (caldera_linux_demo, fin6_emulation) keep the c0011
     # baseline because they are AutoSUT-native references, not frozen ports.
     _PER_CAMPAIGN_SUT: dict[str, tuple] = {

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T21:14:38",
+  "generated_at": "2026-05-31T22:53:37",
   "policy": "hybrid_3category",
   "dimensions": [
     "platform",
@@ -205,7 +205,7 @@
         "value": "password:vulnuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the frozen sticks/data/sut_profiles/0.c0011.yml declares."
+        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
       },
       {
         "dimension": "exposures",
@@ -845,7 +845,7 @@
         "value": "password:vulnuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the frozen sticks/data/sut_profiles/0.c0011.yml declares."
+        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
       },
       {
         "dimension": "exposures",
@@ -901,7 +901,7 @@
         "value": "password:vulnuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the frozen sticks/data/sut_profiles/0.c0011.yml declares."
+        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
       },
       {
         "dimension": "exposures",
@@ -1456,7 +1456,7 @@
           "value": "password:vulnuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the frozen sticks/data/sut_profiles/0.c0011.yml declares."
+          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
         },
         {
           "dimension": "exposures",
@@ -2840,7 +2840,7 @@
           "value": "password:vulnuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the frozen sticks/data/sut_profiles/0.c0011.yml declares."
+          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
         },
         {
           "dimension": "exposures",
@@ -2958,7 +2958,7 @@
           "value": "password:vulnuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the frozen sticks/data/sut_profiles/0.c0011.yml declares."
+          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
         },
         {
           "dimension": "exposures",

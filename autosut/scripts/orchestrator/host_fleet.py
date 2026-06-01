@@ -57,7 +57,7 @@ class HostFleet:
       network is created per zone. Each host joins exactly the zones listed
       in :attr:`SUTHost.zones`. Hosts attached to multiple zones are
       gateways (dual-homed), bridging those zones — exactly the shape the
-      frozen ``sticks-docker`` modelled with its dual-homed nginx.
+      the predecessor modelled with its dual-homed gateway.
 
     What this DOES claim: declarative topology parity with enterprise
     designs, audit-friendly per-zone networks visible in `docker network

@@ -1,8 +1,8 @@
-# STICKS Campaign Coverage Matrix
+# AutoSUT Campaign Coverage Matrix
 
-Generated: `2026-05-29T08:23:07`
+Generated: `2026-05-31T22:40:12`
 
-Compares the eight legacy sticks-docker campaigns against the current STICKS artifact.
+Compares the eight legacy Docker campaigns against the current AutoSUT artifact.
 
 **Status definitions**
 - `COMPLETE` — zero failed techniques, evidence generated, provenance consistent
@@ -20,7 +20,7 @@ Compares the eight legacy sticks-docker campaigns against the current STICKS art
 
 ## Matrix
 
-| Legacy Campaign | STICKS ID | Campaign File | SUT Profile | Docker Steps | STICKS Steps | Executor Coverage | Status |
+| Legacy Campaign | AutoSUT ID | Campaign File | SUT Profile | Docker Steps | AutoSUT Steps | Executor Coverage | Status |
 |---|---|:---:|:---:|---:|---:|---:|:---:|
 | APT41 DUST | `0.apt41_dust` | ✓ | ✓ | 24 | 23 | 100% | **COMPLETE** |
 | C0010 | `0.c0010` | ✓ | ✓ | 10 | 9 | 100% | **COMPLETE** |
@@ -65,7 +65,7 @@ Compares the eight legacy sticks-docker campaigns against the current STICKS art
 
 ## Latest Execution Results
 
-| STICKS ID | Status | Successful | Failed | Total | Success Rate |
+| AutoSUT ID | Status | Successful | Failed | Total | Success Rate |
 |---|:---:|---:|---:|---:|---:|
 | `0.apt41_dust` | **COMPLETE** | 10 | 0 | 10 | 100.0% |
 | `0.c0010` | **COMPLETE** | 9 | 0 | 9 | 100.0% |

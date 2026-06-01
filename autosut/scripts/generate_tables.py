@@ -55,7 +55,7 @@ def generate_corpus_table() -> str:
 
     table = "\\begin{table}[htbp]\n"
     table += "\\centering\n"
-    table += "\\caption{Published STICKS Campaign Corpus}\n"
+    table += "\\caption{Published AutoSUT Campaign Corpus}\n"
     table += "\\label{tab:corpus}\n"
     table += "\\begin{tabular}{lccc}\n"
     table += "\\toprule\n"

@@ -78,7 +78,7 @@
       "executor": {
         "platform": "linux",
         "command": "echo 'aWQgJiYgaG9zdG5hbWU=' | base64 -d | bash",
-        "cleanup": "rm -f /tmp/sticks_obfuscated_*",
+        "cleanup": "rm -f /tmp/autosut_obfuscated_*",
         "timeout": 30
       }
     },
@@ -90,8 +90,8 @@
       "description": "Create hidden directory to store staged files",
       "executor": {
         "platform": "linux",
-        "command": "mkdir -p /tmp/.sticks_stage && touch /tmp/.sticks_stage/.beacon && ls -la /tmp/.sticks_stage/",
-        "cleanup": "rm -rf /tmp/.sticks_stage",
+        "command": "mkdir -p /tmp/.autosut_stage && touch /tmp/.autosut_stage/.beacon && ls -la /tmp/.autosut_stage/",
+        "cleanup": "rm -rf /tmp/.autosut_stage",
         "timeout": 30
       }
     },
@@ -104,7 +104,7 @@
       "executor": {
         "platform": "linux",
         "command": "find /etc -name '*.conf' -readable 2>/dev/null | head -10 | xargs ls -la 2>/dev/null",
-        "cleanup": "rm -f /tmp/sticks_collected_*",
+        "cleanup": "rm -f /tmp/autosut_collected_*",
         "timeout": 30
       }
     },
@@ -116,8 +116,8 @@
       "description": "Stage collected data for exfiltration",
       "executor": {
         "platform": "linux",
-        "command": "tar czf /tmp/sticks_exfil_$(date +%s).tar.gz /etc/hostname /etc/os-release 2>/dev/null && ls -la /tmp/sticks_exfil_*.tar.gz",
-        "cleanup": "rm -f /tmp/sticks_exfil_*.tar.gz",
+        "command": "tar czf /tmp/autosut_exfil_$(date +%s).tar.gz /etc/hostname /etc/os-release 2>/dev/null && ls -la /tmp/autosut_exfil_*.tar.gz",
+        "cleanup": "rm -f /tmp/autosut_exfil_*.tar.gz",
         "timeout": 30
       }
     },

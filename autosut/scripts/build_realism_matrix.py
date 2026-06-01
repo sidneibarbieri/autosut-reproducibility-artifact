@@ -213,7 +213,7 @@ def _render_markdown(rows: list[dict[str, Any]]) -> str:
         "Objective per-campaign comparison. Every cell links to an artefact "
         "the reviewer can grep against:",
         "",
-        "- **Frozen columns**: declared in `sticks/data/sut_profiles/*.yml`.",
+        "- **Predecessor columns**: declared in the predecessor profile snapshots.",
         "- **AutoSUT columns**: actually applied; sourced from the golden run "
         "under `release/evidence/<run>/`.",
         "- **Tier**: `tier_1_full_real` means every technique ran via "

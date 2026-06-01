@@ -5,6 +5,7 @@ __pycache__/
 .venv/
 .vagrant/
 paper/build_artifacts/
+autosut/data/artifacts/
 autosut/release/evidence/
 autosut/results/evidence/
 autosut/results/PUBLIC_SURFACE_REPORT.md

@@ -1,8 +1,8 @@
 # Live Reviewer Console
 
 `scripts/reviewer_server.py` is AutoSUT's live counterpart to the static
-`release/dashboard/index.html`. It is the TPC-facing surface that
-replaces the static screenshot model the frozen artifact uses.
+`release/dashboard/index.html`. It is a reviewer-facing surface for monitoring
+local runs without leaving the browser.
 
 ## What it adds over the static dashboard
 

@@ -208,7 +208,7 @@ def write_markdown(report: dict) -> None:
         "",
         f"- Generated at: `{report['generated_at']}`",
         f"- Docker campaigns: `{report['docker_campaign_count']}`",
-        f"- Published STICKS campaigns: `{report['published_campaign_count']}`",
+        f"- Published predecessor campaigns: `{report['published_campaign_count']}`",
         f"- Legacy campaigns with direct published counterpart: `{report['mapped_legacy_campaigns']}`",
         f"- Docker technique universe: `{report['docker_technique_universe']}`",
         f"- Matched Docker techniques in published corpus: `{report['matched_docker_techniques']}`",

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-STICKS Campaign Public API - Provides stable programmatic interface
+AutoSUT Campaign Public API - Provides stable programmatic interface
 """
 
 from pathlib import Path

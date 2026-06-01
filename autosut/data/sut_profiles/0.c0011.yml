@@ -65,7 +65,7 @@ fidelity_expectations:
   T1574: "INSPIRED"        # DLL Hijack (Windows - fake DLL)
 
 methodology_notes: |
-  This baseline campaign demonstrates the STICKS methodology with minimal
+  This baseline campaign demonstrates the AutoSUT methodology with minimal
   infrastructure. Windows techniques are included for completeness but
   explicitly marked as INSPIRED due to Linux substrate limitations.
   

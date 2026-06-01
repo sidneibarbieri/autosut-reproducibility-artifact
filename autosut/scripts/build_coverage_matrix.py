@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Build a machine-readable comparison matrix between the legacy sticks-docker
-campaigns and the current STICKS artifact.
+Build a machine-readable comparison matrix between the legacy Docker campaign
+set and the current AutoSUT artifact.
 
 For each legacy campaign the matrix records:
   - sticks_campaign_id     : corresponding campaign ID in current artifact
@@ -47,7 +47,7 @@ def display_path(path: Path) -> str:
     except ValueError:
         return str(path)
 
-# Legacy sticks-docker campaigns with their published technique counts.
+# Legacy Docker campaigns with their published technique counts.
 DOCKER_CAMPAIGNS: dict[str, dict] = {
     "apt41_dust": {
         "docker_techniques": 24,
@@ -225,11 +225,11 @@ def build_matrix() -> list[CampaignRow]:
 
 def write_markdown(rows: list[CampaignRow], generated_at: str) -> None:
     lines = [
-        "# STICKS Campaign Coverage Matrix",
+        "# AutoSUT Campaign Coverage Matrix",
         "",
         f"Generated: `{generated_at}`",
         "",
-        "Compares the eight legacy sticks-docker campaigns against the current STICKS artifact.",
+        "Compares the eight legacy Docker campaigns against the current AutoSUT artifact.",
         "",
         "**Status definitions**",
         "- `COMPLETE` — zero failed techniques, evidence generated, provenance consistent",
@@ -253,7 +253,7 @@ def write_markdown(rows: list[CampaignRow], generated_at: str) -> None:
         "",
         "## Matrix",
         "",
-        "| Legacy Campaign | STICKS ID | Campaign File | SUT Profile | Docker Steps | STICKS Steps | Executor Coverage | Status |",
+        "| Legacy Campaign | AutoSUT ID | Campaign File | SUT Profile | Docker Steps | AutoSUT Steps | Executor Coverage | Status |",
         "|---|---|:---:|:---:|---:|---:|---:|:---:|",
     ]
     for r in rows:
@@ -275,7 +275,7 @@ def write_markdown(rows: list[CampaignRow], generated_at: str) -> None:
 
     lines += ["", "## Latest Execution Results", ""]
     lines += [
-        "| STICKS ID | Status | Successful | Failed | Total | Success Rate |",
+        "| AutoSUT ID | Status | Successful | Failed | Total | Success Rate |",
         "|---|:---:|---:|---:|---:|---:|",
     ]
     for r in rows:

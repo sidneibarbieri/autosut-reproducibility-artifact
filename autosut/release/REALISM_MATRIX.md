@@ -2,7 +2,7 @@
 
 Objective per-campaign comparison. Every cell links to an artefact the reviewer can grep against:
 
-- **Frozen columns**: declared in `sticks/data/sut_profiles/*.yml`.
+- **Frozen columns**: declared in the predecessor profile snapshots.
 - **AutoSUT columns**: actually applied; sourced from the golden run under `release/evidence/<run>/`.
 - **Tier**: `tier_1_full_real` means every technique ran via real_controlled / caldera_driven / atomic_red_team. `tier_2_declared_limitations` means the run was 100% successful but contains naive_simulated markers for techniques the Linux substrate cannot execute (Windows-only TTPs etc.) — an honest limitation, not a failure.
 - **Scope**: `campaign` = specific historical event with CVE-anchored attribution; `intrusion_set` = behavioral aggregate of a documented adversary group (less specific by design).

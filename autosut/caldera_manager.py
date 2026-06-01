@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Caldera Server Manager for STICKS.
+Caldera server manager for AutoSUT.
 
 Manages the MITRE Caldera server running locally on the Mac host.
 VMs connect to the host via QEMU user-mode gateway (10.0.2.2).
 
 Architecture:
-    Mac host: caldera server → localhost:8888
-    QEMU VMs: sandcat agent → http://10.0.2.2:8888
+    Mac host: Caldera server -> localhost:8888
+    QEMU VMs: Sandcat agent -> http://10.0.2.2:8888
 """
 
 import json
@@ -20,7 +20,7 @@ import time
 from pathlib import Path
 from typing import Optional
 
-# Caldera installation path — adjust if different
+# Caldera installation path; adjust if different.
 CALDERA_DIR = Path.home() / "caldera"
 CALDERA_SERVER_SCRIPT = CALDERA_DIR / "server.py"
 CALDERA_MOCK_SCRIPT = Path(__file__).resolve().parent / "caldera_mock.py"
@@ -80,11 +80,11 @@ def wait_for_api(timeout: int = SERVER_STARTUP_TIMEOUT) -> bool:
         if result.returncode == 0 and result.stdout.strip():
             data = json.loads(result.stdout)
             if isinstance(data, list):
-                log(f"✅ Caldera API ready — {len(data)} abilities ({elapsed}s)")
+                log(f"OK Caldera API ready: {len(data)} abilities ({elapsed}s)")
                 return True
         time.sleep(SERVER_POLL_INTERVAL)
         elapsed += SERVER_POLL_INTERVAL
-    log(f"❌ Caldera API not ready after {timeout}s")
+    log(f"FAIL Caldera API not ready after {timeout}s")
     return False
 
 
@@ -108,7 +108,7 @@ def start() -> bool:
         return wait_for_api()
 
     if not CALDERA_SERVER_SCRIPT.exists():
-        log(f"❌ Caldera not found at {CALDERA_DIR}")
+        log(f"FAIL Caldera not found at {CALDERA_DIR}")
         log("Install with: git clone --recursive https://github.com/mitre/caldera.git ~/caldera")
         return False
 
@@ -140,7 +140,7 @@ def start_mock() -> bool:
         return wait_for_api()
 
     if not CALDERA_MOCK_SCRIPT.exists():
-        log(f"❌ Mock server script not found: {CALDERA_MOCK_SCRIPT}")
+        log(f"FAIL mock server script not found: {CALDERA_MOCK_SCRIPT}")
         return False
 
     CALDERA_LOG.parent.mkdir(parents=True, exist_ok=True)

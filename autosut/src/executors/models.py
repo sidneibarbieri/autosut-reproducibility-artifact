@@ -1,5 +1,5 @@
 """
-Formal domain model for the STICKS artifact.
+Formal domain model for AutoSUT.
 
 Four-layer architecture:
   1. Campaign — defines what happens: techniques, order, dependencies, fidelity expectations.

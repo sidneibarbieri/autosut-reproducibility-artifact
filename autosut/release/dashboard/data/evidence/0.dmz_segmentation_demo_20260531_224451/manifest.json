@@ -186,7 +186,7 @@
       ],
       "notes": "Frozen-style segmentation declared at the SUT level."
     },
-    "notes": "Three-zone topology with two dual-homed gateways (nginx, app_server). Attacker has L2 reachability to nginx only; db has L2 reachability from app_server only. Mirrors the shape of frozen sticks-docker's dual-homed nginx but declared explicitly via SUTProfile.topology + SUTHost.zones."
+    "notes": "Three-zone topology with two dual-homed gateways (nginx, app_server). Attacker has L2 reachability to nginx only; db has L2 reachability from app_server only. Mirrors the shape of the predecessor dual-homed-gateway shape but declared explicitly via SUTProfile.topology + SUTHost.zones."
   },
   "cves_injected": [],
   "techniques": [
