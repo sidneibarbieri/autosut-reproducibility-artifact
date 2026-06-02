@@ -557,13 +557,13 @@ def render_audit_overview(merged) -> str:
       <strong>2. Small execution trace</strong>
       <p>Runs one repository-local campaign and validates the resulting JSON
         evidence manifest.</p>
-      <code>bash artifact/setup.sh &amp;&amp; bash artifact/run.sh &amp;&amp; bash artifact/validate.sh</code>
+      <code>cd autosut &amp;&amp; bash artifact/setup.sh &amp;&amp; bash artifact/run.sh &amp;&amp; bash artifact/validate.sh</code>
     </div>
     <div class='recipe-card'>
       <strong>3. Executable non-uniqueness witness</strong>
       <p>Runs the CVE-2021-41773 witness variants and checks that declared and
         executed modes match.</p>
-      <code>.venv/bin/python3 scripts/prove_subdetermination.py 0.cve_2021_41773 --variants 2 --execute</code>
+      <code>cd autosut &amp;&amp; .venv/bin/python3 scripts/prove_subdetermination.py 0.cve_2021_41773 --variants 2 --execute</code>
     </div>
   </div>
 </section>"""
