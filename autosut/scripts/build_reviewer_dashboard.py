@@ -186,6 +186,7 @@ table { width: 100%; border-collapse: collapse; background: var(--bg-elev);
 th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border);
   font-size: 13px; vertical-align: top; overflow-wrap: anywhere; }
 th { background: var(--accent-soft); font-weight: 600; color: var(--accent); }
+th { overflow-wrap: normal; word-break: normal; }
 tr:last-child td { border-bottom: none; }
 td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
 td.mono, code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -877,7 +878,7 @@ def render_replay_reports() -> str:
             (f"<a href='{escape(row[6])}' title='{escape(row[6])}'><code>JSON</code></a>"
              if row[6] else ""),
         ])
-    header = ["Report", "Status", "Campaigns", "Techniques", "Elapsed", "TSV", "JSON"]
+    header = ["Report", "Status", "Campaigns", "Planned steps", "Elapsed", "TSV", "JSON"]
     head = "".join(f"<th>{escape(col)}</th>" for col in header)
     body = []
     for row in linked_rows:
@@ -895,6 +896,190 @@ def render_replay_reports() -> str:
     return (
         "<div class='table-wrap wide'><table><thead><tr>"
         f"{head}</tr></thead><tbody>{''.join(body)}</tbody></table></div>"
+    )
+
+
+def _campaign_external_id(campaign_id: str) -> str | None:
+    match = re.fullmatch(r"0\.(c\d{4})", campaign_id, flags=re.IGNORECASE)
+    return match.group(1).upper() if match else None
+
+
+def _load_attack_campaign_techniques() -> dict[str, dict[str, object]]:
+    """Return ATT&CK campaign -> unique linked technique IDs from the frozen bundle."""
+    bundle = PROJECT_ROOT / "data" / "stix" / "enterprise-attack.json"
+    if not bundle.exists():
+        bundle = PROJECT_ROOT / "measurement" / "sut" / "scripts" / "data" / "enterprise-attack.json"
+    if not bundle.exists():
+        return {}
+    try:
+        objects = json.loads(bundle.read_text(encoding="utf-8")).get("objects", [])
+    except json.JSONDecodeError:
+        return {}
+
+    by_id = {obj.get("id"): obj for obj in objects}
+    campaign_meta: dict[str, dict[str, object]] = {}
+    for obj in objects:
+        if obj.get("type") != "campaign":
+            continue
+        if obj.get("revoked") or obj.get("x_mitre_deprecated"):
+            continue
+        external_id = None
+        for ref in obj.get("external_references", []):
+            if ref.get("source_name") == "mitre-attack" and ref.get("external_id"):
+                external_id = ref["external_id"].upper()
+                break
+        if external_id:
+            campaign_meta[external_id] = {"name": obj.get("name", external_id), "techniques": set()}
+
+    for obj in objects:
+        if obj.get("type") != "relationship" or obj.get("relationship_type") != "uses":
+            continue
+        if obj.get("revoked") or obj.get("x_mitre_deprecated"):
+            continue
+        source = by_id.get(obj.get("source_ref"))
+        target = by_id.get(obj.get("target_ref"))
+        if not source or not target:
+            continue
+        if source.get("type") != "campaign" or target.get("type") != "attack-pattern":
+            continue
+
+        campaign_id = None
+        technique_id = None
+        for ref in source.get("external_references", []):
+            if ref.get("source_name") == "mitre-attack" and ref.get("external_id"):
+                campaign_id = ref["external_id"].upper()
+                break
+        for ref in target.get("external_references", []):
+            if ref.get("source_name") == "mitre-attack" and ref.get("external_id"):
+                technique_id = ref["external_id"]
+                break
+        if campaign_id in campaign_meta and technique_id:
+            campaign_meta[campaign_id]["techniques"].add(technique_id)
+    return campaign_meta
+
+
+def _canonical_campaign_entries() -> list[dict]:
+    canonical_runs_file = PROJECT_ROOT / "release" / "golden_runs.json"
+    if not canonical_runs_file.exists():
+        return []
+    try:
+        data = json.loads(canonical_runs_file.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return []
+    return [entry for entry in data.get("campaigns", []) if entry.get("campaign_id")]
+
+
+def _canonical_manifest_techniques(entry: dict) -> list[str]:
+    evidence_path = entry.get("evidence_path", "")
+    candidates = []
+    if evidence_path:
+        candidates.append(DATA_DIR / "evidence" / Path(evidence_path).name / "manifest.json")
+        candidates.append(PROJECT_ROOT / evidence_path / "manifest.json")
+    for manifest_path in candidates:
+        if not manifest_path.exists():
+            continue
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        techniques = manifest.get("techniques", [])
+        return [
+            item.get("technique_id")
+            for item in techniques
+            if item.get("technique_id")
+        ]
+
+    # Fallback only for incomplete local builds; packaged dashboards use the
+    # canonical manifest denominator above.
+    campaign_path = PROJECT_ROOT / "campaigns" / f"{entry.get('campaign_id')}.json"
+    if not campaign_path.exists():
+        return []
+    try:
+        campaign = json.loads(campaign_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return []
+    return [
+        item.get("technique_id")
+        for item in campaign.get("techniques", [])
+        if item.get("technique_id")
+    ]
+
+
+def _campaign_scope_rows() -> list[list[str]]:
+    attack_campaigns = _load_attack_campaign_techniques()
+    rows: list[list[str]] = []
+    for entry in _canonical_campaign_entries():
+        campaign_id = entry["campaign_id"]
+        planned = _canonical_manifest_techniques(entry)
+        planned_unique = set(planned)
+        external_id = _campaign_external_id(campaign_id)
+        if external_id and external_id in attack_campaigns:
+            attack_techniques = set(attack_campaigns[external_id]["techniques"])
+            overlap = planned_unique & attack_techniques
+            if len(planned_unique) == len(attack_techniques) and len(overlap) == len(attack_techniques):
+                interpretation = "ATT&CK campaign technique set covered in this planned replay."
+            elif len(overlap) == len(attack_techniques):
+                interpretation = "ATT&CK set plus local or subtechnique replay steps."
+            else:
+                interpretation = "Partial planned replay; not full ATT&CK campaign coverage."
+            attack_label = f"{external_id}: {attack_campaigns[external_id]['name']}"
+            attack_count = str(len(attack_techniques))
+            overlap_count = str(len(overlap))
+        elif external_id:
+            attack_label = external_id
+            attack_count = "0"
+            overlap_count = "0"
+            interpretation = "No ATT&CK uses-links found in the frozen bundle."
+        else:
+            attack_label = "not a Cxxxx ATT&CK campaign object"
+            attack_count = "n/a"
+            overlap_count = "n/a"
+            interpretation = "Curated witness, demo, or intrusion-set run; not a full MITRE campaign denominator."
+        rows.append([
+            campaign_id,
+            attack_label,
+            str(len(planned)),
+            attack_count,
+            overlap_count,
+            interpretation,
+        ])
+    return rows
+
+
+def write_campaign_scope_csv() -> None:
+    rows = _campaign_scope_rows()
+    if not rows:
+        return
+    with (DATA_DIR / "campaign_scope_check.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle, lineterminator="\n")
+        writer.writerow([
+            "campaign_id",
+            "attack_campaign",
+            "autosut_planned_steps",
+            "attack_linked_techniques",
+            "overlap_unique_techniques",
+            "scope_interpretation",
+        ])
+        writer.writerows(rows)
+
+
+def render_campaign_scope_check() -> str:
+    rows = _campaign_scope_rows()
+    if not rows:
+        return "<p class='muted'>No campaign-scope rows could be computed.</p>"
+    return render_table(
+        [
+            "Run",
+            "ATT&CK campaign denominator",
+            "AutoSUT planned steps",
+            "ATT&CK linked techniques",
+            "Match",
+            "Scope interpretation",
+        ],
+        rows,
+        numeric_cols={2, 3, 4},
+        mono_cols={0},
+        wide=True,
     )
 
 
@@ -1037,7 +1222,7 @@ def render_execution_tour() -> str:
             "<article class='run-card'>"
             f"<h3>{escape(manifest.get('campaign_id', '?'))} "
             f"<span class='muted'>· {escape(manifest.get('run_id', run_dir.name))}</span></h3>"
-            f"<p><strong>{n_succ}/{n_total}</strong> techniques succeeded.</p>"
+            f"<p><strong>{n_succ}/{n_total}</strong> planned steps completed.</p>"
             f"{realism}"
             f"{topo_note}"
             f"{rubric_summary}"
@@ -1055,7 +1240,7 @@ def render_execution_tour() -> str:
     banner = (
         "<p class='realism-summary'>Across these "
         f"<strong>{len(cards)}</strong> canonical run(s): "
-        f"<strong>{agg_real}/{agg_total}</strong> technique executions are real "
+        f"<strong>{agg_real}/{agg_total}</strong> planned steps are real executions "
         "(real_controlled / caldera_driven / atomic_red_team)"
     )
     if agg_sim:
@@ -1155,6 +1340,7 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
   <a href='#provenance'>Reconstruction boundary</a>
   <a href='#findings'>Claim map</a>
   <a href='#replay'>Replay reports</a>
+  <a href='#scope'>Campaign scope</a>
   <a href='#execution'>Execution evidence</a>
   <a href='#worked'>Worked examples</a>
   <a href='#rules'>Compatibility rules</a>
@@ -1203,11 +1389,21 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
     interface.</p>
   {render_replay_reports()}
 </section>
+<section id='scope'>
+  <h2>Campaign Scope Sanity Check</h2>
+  <p class='muted'>This table prevents a common denominator error. AutoSUT
+    replay counts are planned campaign/SUT steps from the artifact manifest;
+    they are not automatically the full set of ATT&amp;CK techniques linked to
+    a MITRE campaign object. For Cxxxx runs, the table compares the planned
+    replay against the frozen Enterprise ATT&amp;CK bundle. Source:
+    <code>data/campaign_scope_check.csv</code>.</p>
+  {render_campaign_scope_check()}
+</section>
 <section id='execution'>
   <h2>Curated Canonical Runs</h2>
   <p class='muted'>
-    Only complete, canonical runs are shown here: every technique succeeded and
-    the manifest, summary, and fidelity rubric are all present. Selection
+    Only complete, canonical runs are shown here: every planned step completed
+    and the manifest, summary, and fidelity rubric are all present. Selection
     criteria are copied into <code>data/canonical_runs.json</code>. Partial,
     empty, or superseded development runs are excluded, so experimental and
     publishable evidence are never mixed. Execution is split into realism tiers:
@@ -1254,6 +1450,7 @@ def main() -> int:
     copy_data_files()
     copy_replay_reports()
     copy_curated_evidence_files()
+    write_campaign_scope_csv()
     # Provenance is computed once from the catalog and fed to both the download
     # artifacts and the rendered summary, so the page and the files agree.
     summaries, skipped = gpr.collect_summaries()

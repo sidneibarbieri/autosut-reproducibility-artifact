@@ -39,6 +39,10 @@ The dashboard summarizes the claim map, replay report, canonical
 execution evidence, and raw CSV/JSON anchors without requiring a
 server beyond the optional local static-file command above.
 
+Dashboard preview:
+
+![AutoSUT evidence dashboard](autosut/release/dashboard/dashboard-preview.png)
+
 ## Full Docker Replay
 
 ```bash
