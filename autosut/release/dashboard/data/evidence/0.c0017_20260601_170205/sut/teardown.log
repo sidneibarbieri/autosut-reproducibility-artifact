@@ -1,5 +1,0 @@
-docker stop autosut-7cbd3db0de
-exit_code: 0
-stdout: autosut-7cbd3db0de
-
-stderr: 

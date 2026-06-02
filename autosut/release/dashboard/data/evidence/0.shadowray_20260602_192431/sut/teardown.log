@@ -1,0 +1,5 @@
+docker stop autosut-dc5b697cd7
+exit_code: 0
+stdout: autosut-dc5b697cd7
+
+stderr: 

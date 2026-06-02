@@ -1,0 +1,5 @@
+docker stop autosut-target-cb5e23
+exit_code: 0
+stdout: autosut-target-cb5e23
+
+stderr: 

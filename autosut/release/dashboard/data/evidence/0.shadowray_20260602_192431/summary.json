@@ -1,0 +1,10 @@
+{
+  "campaign_id": "0.shadowray",
+  "timestamp": "2026-06-02T19:28:55+00:00",
+  "total_techniques": 3,
+  "successful": 3,
+  "fidelity_distribution": {
+    "adapted": 3
+  },
+  "evidence_directory": "release/evidence/0.shadowray_20260602_192431"
+}

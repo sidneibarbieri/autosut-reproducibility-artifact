@@ -35,7 +35,7 @@ TEXT_EVIDENCE_SUFFIXES = {".json", ".log", ".txt", ".md", ".csv", ".tsv", ".yml"
 PRIMARY_REPLAY_REPORTS = (
     "orchestrated_replay_full_19.tsv",
 )
-STYLE_VERSION = "20260531-responsive-tables"
+STYLE_VERSION = "20260602-realism-scrolltables"
 
 
 # Reuse the provenance report's collectors and display labels (source order,
@@ -59,8 +59,9 @@ SIMULATED_MODE = "naive_simulated"
 # naive_simulated supports only a representation claim, never an execution one.
 EXECUTION_MODE_CLAIMS: tuple[tuple[str, str, str], ...] = (
     ("real_controlled", "real",
-     "The vulnerability mechanism was exercised against the live SUT: the "
-     "actual exploit ran and left a verifiable effect."),
+     "A bounded command, procedure, or vulnerability mechanism ran against "
+     "the live SUT and left a verifiable effect. CVE witnesses identify "
+     "when that effect is an actual exploit."),
     ("caldera_driven", "real",
      "The adversary procedure was dispatched by the MITRE Caldera C2 and the "
      "operation fired against the SUT."),
@@ -191,6 +192,7 @@ tr:last-child td { border-bottom: none; }
 td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
 td.mono, code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   font-size: 12px; overflow-wrap: anywhere; word-break: break-word; }
+.table-wrap td.mono { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
 a { overflow-wrap: anywhere; }
 .table-wrap { width: 100%; max-width: 100%; overflow-x: auto; border: 1px solid var(--border);
   border-radius: 8px; background: var(--bg-elev); margin: 10px 0;
@@ -263,9 +265,6 @@ details.evidence-group code { max-width: 100%; white-space: normal;
   main { padding: 22px; max-width: 100%; overflow-x: hidden; }
   .overview-grid { grid-template-columns: 1fr; }
   .recipe-grid { grid-template-columns: 1fr; }
-  .table-wrap table,
-  .table-wrap.compact table,
-  .table-wrap.wide table { min-width: 100%; }
   .recipe-card code { display: block; max-width: 100%; white-space: normal;
     word-break: break-word; overflow-wrap: anywhere; }
   p, .overview-card span, .recipe-card p { overflow-wrap: anywhere; }

@@ -410,6 +410,80 @@ def _adapted_file_discovery(target: DockerEnvironment, tid: str, run_dir: Path) 
     )
 
 
+def _adapted_network_discovery(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1016 - System Network Configuration Discovery."""
+    start = _now()
+    r = target.run_shell(
+        f"(hostname -a 2>/dev/null || hostname) > /tmp/{tid}_network.txt; "
+        f"(hostname -I 2>/dev/null || true) >> /tmp/{tid}_network.txt; "
+        f"(ip addr show 2>/dev/null || ifconfig -a 2>/dev/null || true) >> /tmp/{tid}_network.txt; "
+        f"(ip route show 2>/dev/null || route -n 2>/dev/null || true) >> /tmp/{tid}_network.txt; "
+        f"cat /etc/hosts >> /tmp/{tid}_network.txt; "
+        f"cat /tmp/{tid}_network.txt",
+        log_name=f"techniques/{tid}_network.log", timeout=30,
+    )
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if r.ok else "failure",
+        evidence_files=[f"techniques/{tid}_network.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: real host/network configuration discovery in the bounded SUT.",
+    )
+
+
+def _adapted_service_discovery(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1007 - System Service Discovery."""
+    start = _now()
+    r = target.run_shell(
+        f"ps -eo pid,comm,args | head -30 > /tmp/{tid}_services.txt; "
+        f"(cat /proc/1/comm 2>/dev/null || true) >> /tmp/{tid}_services.txt; "
+        f"(ss -ltnp 2>/dev/null || netstat -ltnp 2>/dev/null || true) >> /tmp/{tid}_services.txt; "
+        f"cat /tmp/{tid}_services.txt",
+        log_name=f"techniques/{tid}_services.log", timeout=30,
+    )
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if r.ok else "failure",
+        evidence_files=[f"techniques/{tid}_services.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: real process and listener enumeration in the bounded SUT.",
+    )
+
+
+def _adapted_user_discovery(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1033 - System Owner/User Discovery."""
+    start = _now()
+    r = target.run_shell(
+        f"whoami > /tmp/{tid}_users.txt; "
+        f"id >> /tmp/{tid}_users.txt; "
+        f"(getent passwd 2>/dev/null || cat /etc/passwd) >> /tmp/{tid}_users.txt; "
+        f"cat /tmp/{tid}_users.txt",
+        log_name=f"techniques/{tid}_users.log", timeout=30,
+    )
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if r.ok else "failure",
+        evidence_files=[f"techniques/{tid}_users.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: real user and ownership discovery in the bounded SUT.",
+    )
+
+
 def _adapted_unix_shell(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
     """T1059.004 / .006 — Command and Scripting Interpreter: Unix Shell / Python."""
     start = _now()
@@ -430,6 +504,88 @@ def _adapted_unix_shell(target: DockerEnvironment, tid: str, run_dir: Path) -> T
         evidence_files=[f"techniques/{tid}_shell.log"],
         duration_sec=_now() - start,
         notes="Adapted: real shell + python interpreter execution.",
+    )
+
+
+def _adapted_obfuscation(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1027 - Obfuscated Files or Information."""
+    start = _now()
+    r = target.run_shell(
+        f"mkdir -p /var/lab/{tid}; "
+        f"printf 'AutoSUT bounded payload for {tid}\\n' > /var/lab/{tid}/payload.txt; "
+        f"python3 - <<'PY' > /var/lab/{tid}/payload.b64\n"
+        f"import base64, pathlib\n"
+        f"p = pathlib.Path('/var/lab/{tid}/payload.txt')\n"
+        f"print(base64.b64encode(p.read_bytes()).decode())\n"
+        f"PY\n"
+        f"sha256sum /var/lab/{tid}/payload.txt /var/lab/{tid}/payload.b64",
+        log_name=f"techniques/{tid}_obfuscation.log", timeout=30,
+    )
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if r.ok else "failure",
+        evidence_files=[f"techniques/{tid}_obfuscation.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: real bounded payload obfuscated with base64 and hashed.",
+    )
+
+
+def _adapted_hidden_artifact(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1564 / T1564.001 - Hide Artifacts."""
+    start = _now()
+    safe_tid = tid.replace(".", "_")
+    r = target.run_shell(
+        f"mkdir -p /tmp/.autosut_{safe_tid}; "
+        f"printf 'hidden artifact for {tid}\\n' > /tmp/.autosut_{safe_tid}/.beacon; "
+        f"ls -la /tmp/.autosut_{safe_tid}; "
+        f"sha256sum /tmp/.autosut_{safe_tid}/.beacon",
+        log_name=f"techniques/{tid}_hidden_artifact.log", timeout=30,
+    )
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if r.ok else "failure",
+        evidence_files=[f"techniques/{tid}_hidden_artifact.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: real dot-prefixed hidden artifact created in the bounded SUT.",
+    )
+
+
+def _adapted_scheduled_job(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1053 - Scheduled Task/Job."""
+    start = _now()
+    safe_tid = tid.replace(".", "_")
+    r = target.run_shell(
+        f"mkdir -p /etc/cron.d /var/lab; "
+        f"printf '#!/bin/sh\\necho autosut-{safe_tid} >> /tmp/autosut_{safe_tid}.log\\n' "
+        f"> /var/lab/autosut_{safe_tid}.sh; "
+        f"chmod +x /var/lab/autosut_{safe_tid}.sh; "
+        f"printf '* * * * * root /var/lab/autosut_{safe_tid}.sh\\n' "
+        f"> /etc/cron.d/autosut_{safe_tid}; "
+        f"cat /etc/cron.d/autosut_{safe_tid}; "
+        f"sha256sum /var/lab/autosut_{safe_tid}.sh /etc/cron.d/autosut_{safe_tid}",
+        log_name=f"techniques/{tid}_scheduled_job.log", timeout=30,
+    )
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if r.ok else "failure",
+        evidence_files=[f"techniques/{tid}_scheduled_job.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: real cron entry and executable staged inside the bounded SUT.",
     )
 
 
@@ -528,6 +684,9 @@ _ADAPTED_RECIPES: dict[str, str] = {
     "T1588.003": "cert",            # Code Signing Cert acquisition
     "T1105": "stage",               # Ingress Tool Transfer
     "T1046": "port_scan",           # Network Service Discovery
+    "T1016": "network_discovery",    # System Network Configuration Discovery
+    "T1007": "service_discovery",    # System Service Discovery
+    "T1033": "user_discovery",       # System Owner/User Discovery
     "T1083": "file_discovery",      # File and Directory Discovery
     "T1119": "archive",             # Automated Collection
     "T1560.001": "archive",         # Archive Collected Data: Archive via Utility
@@ -542,6 +701,10 @@ _ADAPTED_RECIPES: dict[str, str] = {
     "T1059.004": "unix_shell",      # Unix Shell
     "T1059.006": "unix_shell",      # Python
     "T1059.007": "unix_shell",      # JavaScript (proxy)
+    "T1027": "obfuscation",         # Obfuscated Files or Information
+    "T1564": "hidden_artifact",      # Hide Artifacts
+    "T1564.001": "hidden_artifact",  # Hide Artifacts: Hidden Files and Directories
+    "T1053": "scheduled_job",        # Scheduled Task/Job
     "T1036": "masquerade",          # Masquerading
     "T1036.004": "masquerade",      # Masquerade Task/Service
     "T1543.003": "masquerade",      # Create or Modify System Process: Systemd Service
@@ -645,9 +808,18 @@ def _campaign_aware_walker(campaign_id: str):
         for tech in spec.get("techniques", []):
             tid = tech["technique_id"]
             name = tech.get("name", "")
-            declared = (FidelityLevel.adapted
-                        if tech.get("expected_fidelity") == "adapted"
-                        else FidelityLevel.inspired)
+            expected_fidelity = tech.get("expected_fidelity")
+            if expected_fidelity == "adapted":
+                declared = FidelityLevel.adapted
+            elif expected_fidelity == "inspired":
+                declared = FidelityLevel.inspired
+            elif tech.get("platform") in {"linux", "any"} and tid in _ADAPTED_RECIPES:
+                # Older campaign specs carry concrete Linux commands but no
+                # expected_fidelity field. Treat only recipe-backed, bounded
+                # Linux actions as adapted; explicit limitations still win.
+                declared = FidelityLevel.adapted
+            else:
+                declared = FidelityLevel.inspired
             expected_mode = tech.get("expected_mode") or ""
 
             # Caldera-driven dispatch takes precedence over the local recipe
@@ -669,10 +841,22 @@ def _campaign_aware_walker(campaign_id: str):
                 outcomes.append(_adapted_archive_collect(target, tid, run_dir))
             elif recipe == "port_scan":
                 outcomes.append(_adapted_port_scan(target, tid, run_dir))
+            elif recipe == "network_discovery":
+                outcomes.append(_adapted_network_discovery(target, tid, run_dir))
+            elif recipe == "service_discovery":
+                outcomes.append(_adapted_service_discovery(target, tid, run_dir))
+            elif recipe == "user_discovery":
+                outcomes.append(_adapted_user_discovery(target, tid, run_dir))
             elif recipe == "file_discovery":
                 outcomes.append(_adapted_file_discovery(target, tid, run_dir))
             elif recipe == "unix_shell":
                 outcomes.append(_adapted_unix_shell(target, tid, run_dir))
+            elif recipe == "obfuscation":
+                outcomes.append(_adapted_obfuscation(target, tid, run_dir))
+            elif recipe == "hidden_artifact":
+                outcomes.append(_adapted_hidden_artifact(target, tid, run_dir))
+            elif recipe == "scheduled_job":
+                outcomes.append(_adapted_scheduled_job(target, tid, run_dir))
             elif recipe == "masquerade":
                 outcomes.append(_adapted_masquerading(target, tid, run_dir))
             elif recipe == "crm_query":

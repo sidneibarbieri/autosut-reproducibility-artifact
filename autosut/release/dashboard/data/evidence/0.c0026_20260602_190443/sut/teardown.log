@@ -1,0 +1,5 @@
+docker stop autosut-ab87b76deb
+exit_code: 0
+stdout: autosut-ab87b76deb
+
+stderr: 
