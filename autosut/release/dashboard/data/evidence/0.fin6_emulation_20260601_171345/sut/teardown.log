@@ -1,0 +1,5 @@
+docker stop autosut-b0db24c3ba
+exit_code: 0
+stdout: autosut-b0db24c3ba
+
+stderr: 

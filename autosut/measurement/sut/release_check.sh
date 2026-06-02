@@ -94,6 +94,12 @@ log "1ea) Generating infrastructure and SUT automation coverage report"
   fail "infrastructure automation report generation failed"
 }
 
+log "1eaa) Generating environment provenance report"
+"$PYTHON_BIN" "$AUTOSUT_ROOT/scripts/generate_provenance_report.py" >/tmp/measurement_provenance_release.log 2>&1 || {
+  cat /tmp/measurement_provenance_release.log >&2
+  fail "environment provenance report generation failed"
+}
+
 log "1eb) Generating compatibility rule surface report"
 "$PYTHON_BIN" "$AUTOSUT_ROOT/scripts/generate_compatibility_rule_surface.py" >/tmp/measurement_rule_surface_release.log 2>&1 || {
   cat /tmp/measurement_rule_surface_release.log >&2
@@ -106,6 +112,8 @@ if [[ "$HAS_MANUSCRIPT_DIR" == "1" ]]; then
     cat /tmp/measurement_sync_release.log >&2
     fail "manuscript value synchronization failed"
   }
+  mkdir -p "$PAPER_DIR/results"
+  cp "$AUTOSUT_ROOT/release/provenance/provenance_values.tex" "$PAPER_DIR/results/provenance_values.tex"
 else
   log "1f) No manuscript tree detected; skipping manuscript synchronization"
 fi
@@ -153,6 +161,10 @@ done
 [[ -f "$AUTOSUT_ROOT/results/infra_automation_coverage.csv" ]] || fail "missing artifact: $AUTOSUT_ROOT/results/infra_automation_coverage.csv"
 [[ -f "$AUTOSUT_ROOT/release/infra_automation_coverage.json" ]] || fail "missing artifact: $AUTOSUT_ROOT/release/infra_automation_coverage.json"
 [[ -f "$AUTOSUT_ROOT/release/INFRA_AUTOMATION_COVERAGE.md" ]] || fail "missing artifact: $AUTOSUT_ROOT/release/INFRA_AUTOMATION_COVERAGE.md"
+[[ -f "$AUTOSUT_ROOT/release/provenance/environment_provenance.json" ]] || fail "missing artifact: $AUTOSUT_ROOT/release/provenance/environment_provenance.json"
+[[ -f "$AUTOSUT_ROOT/release/provenance/support_matrix.csv" ]] || fail "missing artifact: $AUTOSUT_ROOT/release/provenance/support_matrix.csv"
+[[ -f "$AUTOSUT_ROOT/release/provenance/ENVIRONMENT_PROVENANCE.md" ]] || fail "missing artifact: $AUTOSUT_ROOT/release/provenance/ENVIRONMENT_PROVENANCE.md"
+[[ -f "$AUTOSUT_ROOT/release/provenance/provenance_values.tex" ]] || fail "missing artifact: $AUTOSUT_ROOT/release/provenance/provenance_values.tex"
 [[ -f "$AUTOSUT_ROOT/results/compatibility_rule_surface.json" ]] || fail "missing artifact: $AUTOSUT_ROOT/results/compatibility_rule_surface.json"
 [[ -f "$AUTOSUT_ROOT/results/COMPATIBILITY_RULE_SURFACE.md" ]] || fail "missing artifact: $AUTOSUT_ROOT/results/COMPATIBILITY_RULE_SURFACE.md"
 [[ -f "$AUTOSUT_ROOT/release/compatibility_rule_surface.json" ]] || fail "missing artifact: $AUTOSUT_ROOT/release/compatibility_rule_surface.json"
@@ -267,7 +279,7 @@ with open(Path(os.environ['AUTOSUT_ROOT'])/'results'/'infra_automation_coverage.
 infra_totals = infra['totals']
 evidence_root = Path(os.environ['AUTOSUT_ROOT']) / 'release' / 'evidence'
 dashboard_evidence_root = Path(os.environ['AUTOSUT_ROOT']) / 'release' / 'dashboard' / 'data' / 'evidence'
-if not evidence_root.exists():
+if dashboard_evidence_root.exists():
     evidence_root = dashboard_evidence_root
 expected_evidence_campaigns = 0
 if evidence_root.exists():
@@ -495,6 +507,8 @@ log "6) Ensuring manuscript imports generated measurement macros"
 # Paper now uses results/values.tex (local copy of generated macros)
 rg -n '\\input\{results/values\.tex\}' main.tex >/dev/null || \
   fail "main.tex is not importing results/values.tex"
+rg -n '\\input\{results/provenance_values\.tex\}' main.tex >/dev/null || \
+  fail "main.tex is not importing results/provenance_values.tex"
 
 log "6b) Ensuring rendered ablation figure template exists"
 [[ -f "$PAPER_DIR/figures/ablation_template.tex" ]] || fail "missing ablation_template.tex"
@@ -533,19 +547,23 @@ import re, sys
 from pathlib import Path
 
 paper_dir = Path(os.environ["PAPER_DIR"])
-latex_file = paper_dir / 'results' / 'values.tex'
+latex_files = [
+    paper_dir / 'results' / 'values.tex',
+    paper_dir / 'results' / 'provenance_values.tex',
+]
 main_file  = paper_dir / 'main.tex'
 
-if not latex_file.exists() or not main_file.exists():
+if any(not path.exists() for path in latex_files) or not main_file.exists():
     print('[release-check][WARN] cannot run macro consistency check (files missing)')
     sys.exit(0)
 
-# Extract defined macros from todo_values_latex.tex
+# Extract defined macros from generated LaTeX value files.
 defined = set()
-for line in latex_file.read_text(encoding='utf-8').splitlines():
-    m = re.match(r'\\newcommand\{\\([A-Za-z]+)\}', line)
-    if m:
-        defined.add(m.group(1))
+for latex_file in latex_files:
+    for line in latex_file.read_text(encoding='utf-8').splitlines():
+        m = re.match(r'\\newcommand\{\\([A-Za-z]+)\}', line)
+        if m:
+            defined.add(m.group(1))
 
 # Extract macro uses from main.tex (backslash + alphabetic name)
 main_text = main_file.read_text(encoding='utf-8')
@@ -569,6 +587,7 @@ for name in used_all:
             'enterprise', 'campaign', 'software', 'compatibility',
             'threshold', 'bootstrap', 'null', 'cve', 'sut', 'delta',
             'capec', 'fight', 'ics', 'mobile', 'jaccard', 'profile',
+            'provenance',
         ]):
             used_but_undefined.add(name)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the curated S32 subdetermination proof artifact.
+"""Generate the curated subdetermination proof artifact.
 
 Writes release/subdetermination_proof.json with two proofs:
   - 0.cve_2021_41773 : executable witness (runs the real CVE when Docker is
@@ -8,7 +8,7 @@ Writes release/subdetermination_proof.json with two proofs:
     substitution; never claimed to execute).
 
 The reviewer dashboard and the release gate read this file; neither recomputes
-the proof. Pattern matches scripts/build_coverage_matrix.py.
+the proof. The script is intentionally deterministic and self-contained.
 """
 
 from __future__ import annotations

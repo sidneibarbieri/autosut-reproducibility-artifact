@@ -77,7 +77,7 @@ def convert_json_to_yaml_files(json_file_path, output_directory):
         with open(filepath, 'w') as f:
             yaml.dump([yaml_ability], f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=1000)
         
-        print(f"✓ Created: {filename}")
+        print(f"OK Created: {filename}")
 
 def batch_convert_directory(input_directory, output_directory):
     """Convert all JSON files in a directory"""

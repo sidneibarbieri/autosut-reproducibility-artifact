@@ -1,4 +1,4 @@
-"""Provenance aggregation over a SUTProfile (S29/S30).
+"""Provenance aggregation over a SUTProfile.
 
 The orchestrator tags every concrete SUT element with a
 :class:`~.models.ProvenanceSource` — ``corpus_supported``,

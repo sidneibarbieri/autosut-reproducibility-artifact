@@ -1,6 +1,6 @@
 """End-to-end Caldera dispatch smoke test.
 
-Verifies the S9 sandcat-deployment + REST-API operation flow:
+Verifies the sandcat-deployment + REST-API operation flow:
 
   1. Probe Caldera (must be reachable).
   2. Pick a Caldera ability with a Linux executor for a chosen technique.

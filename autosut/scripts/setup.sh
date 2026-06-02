@@ -51,7 +51,7 @@ install_python_deps() {
         pip3 install -q pyyaml 2>/dev/null || pip3 install -q pyyaml --break-system-packages 2>/dev/null || true
     }
     
-    log_info "✓ Python dependencies installed"
+    log_info "OK Python dependencies installed"
 }
 
 install_virtualbox_macos() {
@@ -90,7 +90,7 @@ install_qemu_macos() {
         log_warn "vagrant-qemu plugin installation may require manual steps"
     }
     
-    log_info "✓ QEMU provider configured for ARM64"
+    log_info "OK QEMU provider configured for ARM64"
 }
 
 install_virtualbox_macos_manual() {
@@ -109,7 +109,7 @@ install_virtualbox_macos_manual() {
     sudo installer -pkg "/Volumes/VirtualBox/VirtualBox.pkg" -target / 2>/dev/null || true
     hdiutil detach "/Volumes/VirtualBox" 2>/dev/null || true
     rm -f /tmp/virtualbox.dmg
-    log_info "✓ VirtualBox installed"
+    log_info "OK VirtualBox installed"
 }
 
 install_vagrant_macos() {
@@ -140,7 +140,7 @@ install_vagrant_macos_manual() {
     sudo installer -pkg "/Volumes/Vagrant/vagrant.pkg" -target / 2>/dev/null || true
     hdiutil detach "/Volumes/Vagrant" 2>/dev/null || true
     rm -f /tmp/vagrant.dmg
-    log_info "✓ Vagrant installed"
+    log_info "OK Vagrant installed"
 }
 
 install_virtualbox_linux() {
@@ -160,7 +160,7 @@ install_virtualbox_linux() {
         log_warn "Unknown package manager. Install VirtualBox manually."
         return 1
     fi
-    log_info "✓ VirtualBox installed"
+    log_info "OK VirtualBox installed"
 }
 
 install_vagrant_linux() {
@@ -181,14 +181,14 @@ install_vagrant_linux() {
         log_warn "Unknown package manager. Install Vagrant manually."
         return 1
     fi
-    log_info "✓ Vagrant installed"
+    log_info "OK Vagrant installed"
 }
 
 main() {
     echo ""
-    echo "╔══════════════════════════════════════════════════════════════╗"
-    echo "║        STICKS Optional VM Lab Bootstrap                      ║"
-    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo "+==============================================================+"
+    echo "|        STICKS Optional VM Lab Bootstrap                      |"
+    echo "+==============================================================+"
     echo ""
 
     log_warn "This script prepares optional VM-backed lab helpers."
@@ -201,7 +201,7 @@ main() {
         log_error "Python3 required. Install from https://python.org/"
         exit 1
     fi
-    log_info "✓ Python3: $(python3 --version)"
+    log_info "OK Python3: $(python3 --version)"
     
     # Install Python deps
     install_python_deps
@@ -215,7 +215,7 @@ main() {
             install_virtualbox_linux || log_warn "VBox install failed"
         fi
     else
-        log_info "✓ VirtualBox: $(VBoxManage --version 2>/dev/null | head -1)"
+        log_info "OK VirtualBox: $(VBoxManage --version 2>/dev/null | head -1)"
     fi
     
     # Install Vagrant if missing
@@ -227,7 +227,7 @@ main() {
             install_vagrant_linux || log_warn "Vagrant install failed"
         fi
     else
-        log_info "✓ Vagrant: $(vagrant --version)"
+        log_info "OK Vagrant: $(vagrant --version)"
     fi
     
     # Final verification
@@ -235,41 +235,41 @@ main() {
     local ready=true
     
     if ! command_exists python3; then
-        log_error "✗ Python3 missing"
+        log_error "FAIL Python3 missing"
         ready=false
     fi
     if ! command_exists vagrant; then
-        log_error "✗ Vagrant missing - install from https://www.vagrantup.com/"
+        log_error "FAIL Vagrant missing - install from https://www.vagrantup.com/"
         ready=false
     fi
     
     # Check for VirtualBox or QEMU (for ARM64)
     if [[ "$OS" == "macos" && "$ARCH" == "arm64" ]]; then
         if command_exists qemu-system-aarch64 || vagrant plugin list | grep -q vagrant-qemu; then
-            log_info "✓ QEMU provider available for ARM64"
+            log_info "OK QEMU provider available for ARM64"
         else
-            log_error "✗ QEMU provider missing"
+            log_error "FAIL QEMU provider missing"
             ready=false
         fi
     else
         if ! command_exists VBoxManage; then
-            log_error "✗ VirtualBox missing - install from https://www.virtualbox.org/"
+            log_error "FAIL VirtualBox missing - install from https://www.virtualbox.org/"
             ready=false
         fi
     fi
     
     echo ""
     if [[ "$ready" == true ]]; then
-        echo "╔══════════════════════════════════════════════════════════════╗"
-        echo "║              ✓ SETUP COMPLETE - READY TO USE                 ║"
-        echo "╚══════════════════════════════════════════════════════════════╝"
+        echo "+==============================================================+"
+        echo "|              OK SETUP COMPLETE - READY TO USE                 |"
+        echo "+==============================================================+"
         echo ""
         echo "Next: ./artifact.sh doctor"
         exit 0
     else
-        echo "╔══════════════════════════════════════════════════════════════╗"
-        echo "║           ✗ SETUP INCOMPLETE - MANUAL INSTALL NEEDED         ║"
-        echo "╚══════════════════════════════════════════════════════════════╝"
+        echo "+==============================================================+"
+        echo "|           FAIL SETUP INCOMPLETE - MANUAL INSTALL NEEDED         |"
+        echo "+==============================================================+"
         exit 1
     fi
 }

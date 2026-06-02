@@ -123,7 +123,7 @@ def main():
 
     print("\nDetailed Results:")
     for result in results:
-        status = "✓" if result.get("error") is None else "✗"
+        status = "ok" if result.get("error") is None else "FAIL"
         print(
             f"  {status} {result['campaign']}: {result['successful']}/{result['total']} ({result['success_rate']:.1f}%)"
         )

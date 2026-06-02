@@ -169,7 +169,7 @@ def apply_weak_credentials(
     )
 
     if success:
-        log_info(f"✓ Weak credentials applied: {username}:{password}")
+        log_info(f"OK Weak credentials applied: {username}:{password}")
         return True
     else:
         log_error(f"Failed to apply weak credentials: {stderr}")
@@ -206,7 +206,7 @@ def apply_vulnerable_service(
             if not success and "already" not in stderr.lower():
                 log_warn(f"Command may have failed: {stderr}")
 
-        log_info("✓ Vulnerable Apache configured")
+        log_info("OK Vulnerable Apache configured")
         return True
 
     if name == "ray-dashboard":
@@ -266,7 +266,7 @@ HTTPServer(("0.0.0.0", 8265), Handler).serve_forever()
                 log_error(f"Failed to configure Ray dashboard: {stderr}")
                 return False
 
-        log_info("✓ Ray dashboard configured")
+        log_info("OK Ray dashboard configured")
         return True
 
     return True
@@ -312,7 +312,7 @@ def apply_staged_file(
             log_error(f"Failed to stage file {path}: {stderr}")
             return False
 
-    log_info(f"✓ Staged file: {path}")
+    log_info(f"OK Staged file: {path}")
     return True
 
 
@@ -711,7 +711,7 @@ def main():
     with open(report_path, "w") as f:
         json.dump(report, f, indent=2)
 
-    log_info("✓ SUT profile applied successfully")
+    log_info("OK SUT profile applied successfully")
     log_info(f"  Hosts configured: {len(all_results)}")
     log_info(f"  Report saved to: {report_path}")
 

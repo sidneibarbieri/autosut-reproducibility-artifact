@@ -6,7 +6,7 @@ stylesheet) under `release/dashboard/`. A reviewer opens it locally and
 navigates the claim summaries, raw evidence CSVs, auxiliary metrics, worked
 examples, and experiment log.
 
-No JavaScript framework, no server, no third-party CDN — just one
+No JavaScript framework, no server, no third-party CDN: just one
 HTML + CSS + the source CSV/JSON files copied into `release/dashboard/data/`.
 """
 
@@ -33,7 +33,7 @@ DATA_DIR = DASHBOARD_DIR / "data"
 MACRO_PATTERN = re.compile(r"\\newcommand\{\\([A-Za-z][A-Za-z0-9]+)\}\{([^}]*)\}")
 TEXT_EVIDENCE_SUFFIXES = {".json", ".log", ".txt", ".md", ".csv", ".tsv", ".yml", ".yaml"}
 PRIMARY_REPLAY_REPORTS = (
-    "orchestrated_replay_full_19_after_repairs.tsv",
+    "orchestrated_replay_full_19.tsv",
 )
 STYLE_VERSION = "20260531-responsive-tables"
 
@@ -573,8 +573,8 @@ def copy_provenance_files(summaries: list, merged, skipped: list[str]) -> None:
     """Write the provenance artifacts into data/ from the live computation.
 
     Reuses the report generator's writers so the downloadable JSON/CSV/MD are
-    byte-for-byte what generate_provenance_report.py would emit, and — because
-    they share the in-memory summaries/merged — they cannot disagree with the
+    byte-for-byte what generate_provenance_report.py would emit. Because
+    they share the in-memory summaries/merged, they cannot disagree with the
     table rendered on the page.
     """
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -584,12 +584,12 @@ def copy_provenance_files(summaries: list, merged, skipped: list[str]) -> None:
 
 
 def render_provenance_summary(summaries: list, merged) -> str:
-    """Environment-provenance summary — the dashboard's lead measurement.
+    """Environment-provenance summary: the dashboard's lead measurement.
 
     Answers the question almost no adversary-emulation paper answers explicitly:
     how much of the executable environment actually came from the CTI corpus,
     versus had to be concretized by AutoSUT or authored by the analyst. This
-    leads the dashboard on purpose — the main result is the environment gap,
+    leads the dashboard on purpose: the main result is the environment gap,
     not the execution success rate.
     """
     if not summaries:
@@ -607,7 +607,7 @@ def render_provenance_summary(summaries: list, merged) -> str:
         f"choice the corpus does not constrain."
     )
 
-    # Dimension x source (global) — the load-bearing environment-gap table.
+    # Dimension x source (global): the load-bearing environment-gap table.
     dim_header = ["Dimension", *(gpr._SOURCE_LABEL[s] for s in shown), "Total"]
     dim_rows: list[list[str]] = []
     for dim in provenance.DIMENSIONS:
@@ -650,7 +650,7 @@ def render_provenance_summary(summaries: list, merged) -> str:
         "named-product surrogate with no disclosed CVE. <strong>Analyst</strong> = "
         "no corpus signal; pure lab construction (generic inherited services, "
         "topology zones, decoy files). Provenance is <strong>counted, never "
-        "computed</strong> — the aggregator only tallies tags set in "
+        "computed</strong>: the aggregator only tallies tags set in "
         "<code>catalog.py</code>; the sole derived tags are definitional (a real "
         "CVE id <em>is</em> corpus evidence; an OS family <em>is</em> an ATT&amp;CK "
         "platform).</p>"
@@ -661,7 +661,7 @@ def render_provenance_summary(summaries: list, merged) -> str:
         "<a href='data/ENVIRONMENT_PROVENANCE.md'><code>ENVIRONMENT_PROVENANCE.md</code></a>, "
         "<a href='data/support_matrix.csv'><code>support_matrix.csv</code></a>, "
         "<a href='data/environment_provenance.json'><code>environment_provenance.json</code></a> "
-        "(per-element audit trail — every count traces to one concrete SUT element).</p>"
+        "(per-element audit trail; every count traces to one concrete SUT element).</p>"
     )
 
     return (
@@ -908,7 +908,13 @@ def render_execution_tour() -> str:
     but never represent the artifact.
     """
     canonical_runs_file = PROJECT_ROOT / "release" / "golden_runs.json"
-    evidence_root = PROJECT_ROOT / "release" / "evidence"
+    dashboard_evidence_root = DATA_DIR / "evidence"
+    release_evidence_root = PROJECT_ROOT / "release" / "evidence"
+    evidence_root = (
+        dashboard_evidence_root
+        if dashboard_evidence_root.exists()
+        else release_evidence_root
+    )
 
     if not canonical_runs_file.exists():
         return ("<p class='muted'>No canonical runs yet. Run "
@@ -924,7 +930,7 @@ def render_execution_tour() -> str:
     candidates = [evidence_root / Path(entry["evidence_path"]).name
                   for entry in canonical_entries]
     if not candidates:
-        return "<p class='muted'>No campaign runs found under release/evidence/.</p>"
+        return "<p class='muted'>No canonical campaign evidence found.</p>"
 
     cards = []
     agg_real = agg_sim = agg_total = 0
@@ -952,7 +958,7 @@ def render_execution_tour() -> str:
                 dist_str = ", ".join(f"{k}: {v}" for k, v in sorted(dist.items()))
                 rubric_summary = (
                     f"<p><strong>Fidelity rubric</strong> (five-question, per technique): "
-                    f"{escape(dist_str)} — {consistent}/{total} consistent</p>"
+                    f"{escape(dist_str)}; {consistent}/{total} consistent</p>"
                 )
             except (json.JSONDecodeError, KeyError):
                 pass
@@ -975,7 +981,7 @@ def render_execution_tour() -> str:
                         ])
                 if rows:
                     caldera_block = (
-                        "<p><strong>Caldera-driven evidence</strong> — every "
+                        "<p><strong>Caldera-driven evidence</strong>: every "
                         "row is a real MITRE Caldera operation; copied stdout "
                         "logs are under "
                         f"<code>data/evidence/{escape(run_dir.name)}/caldera</code>:</p>"
@@ -1044,7 +1050,7 @@ def render_execution_tour() -> str:
     if not cards:
         return "<p class='muted'>No parseable evidence found.</p>"
 
-    # Aggregate realism banner — leads the run cards so the reviewer reads the
+    # Aggregate realism banner: leads the run cards so the reviewer reads the
     # real-vs-simulated split before any per-campaign success count.
     banner = (
         "<p class='realism-summary'>Across these "
@@ -1055,7 +1061,7 @@ def render_execution_tour() -> str:
     if agg_sim:
         banner += (
             f", and <strong>{agg_sim}/{agg_total}</strong> are "
-            "<span class='sim'>simulated</span> — recorded as declared "
+            "<span class='sim'>simulated</span>: recorded as declared "
             "coverage, not counted as execution evidence"
         )
     banner += ".</p>"
@@ -1110,14 +1116,14 @@ def render_subdetermination_section() -> str:
             "generated variants) "
             "preserve the same corpus fingerprint and successfully execute the "
             "same real vulnerability: the path traversal leaking "
-            "<code>/etc/passwd</code> — each with "
+            "<code>/etc/passwd</code>, each with "
             "<code>declared_mode == executed_mode</code>.</p>")
     coverage_note = (
         "<p class='muted'>Scope: the non-uniqueness result rests on the "
         "executable CVE-2021-41773 witness above. Campaigns carrying "
         "<code>naive_simulated</code> techniques are included to study "
-        "environment reconstruction and compatibility — declared behavioral "
-        "coverage, never counted as procedural-execution evidence — so the "
+        "environment reconstruction and compatibility; declared behavioral "
+        "coverage is never counted as procedural-execution evidence, so the "
         "simulated-technique ratio does not bear on the non-uniqueness claim.</p>")
     interpretation = (
         "<p class='muted'>Interpretation: ATT&amp;CK models adversary behaviour "
@@ -1159,22 +1165,22 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
 <section id='nonuniqueness'>
   <h2>Environment Non-Uniqueness Proof</h2>
   <p class='muted'>The core result: the same CTI admits multiple distinct,
-    compatible SUTs — including an executable witness. Each variant preserves
+    compatible SUTs, including an executable witness. Each variant preserves
     every <code>corpus_supported</code>
     element (identical invariant fingerprint) and varies only the free region.
-    <code>0.cve_2021_41773</code> is the executable witness — each of its
+    <code>0.cve_2021_41773</code> is the executable witness: each of its
     variants runs the real CVE with <code>declared_mode == executed_mode</code>;
-    <code>0.apt41_dust</code> is the structural witness — a large free region
+    <code>0.apt41_dust</code> is the structural witness: a large free region
     with materially distinct services. Source:
     <code>release/subdetermination_proof.json</code>.</p>
   {render_subdetermination_section()}
 </section>
 <section id='provenance'>
-  <h2>Environment reconstruction boundary — what CTI fixes and what must be reconstructed</h2>
+  <h2>Environment reconstruction boundary: what CTI fixes and what must be reconstructed</h2>
   <p class='muted'>Why non-uniqueness exists: structured CTI fixes only part of
     the executable environment; the rest must be reconstructed. Every concrete
     SUT element is tagged by where it came from, then rolled up into a dimension
-    &times; source table — the fixed (corpus) vs free (reconstructed) partition
+    &times; source table: the fixed (corpus) vs free (reconstructed) partition
     that the non-uniqueness result exploits. Computed live from <code>orchestrator/catalog.py</code>
     (deterministic, no live run required).</p>
   {provenance_section}
@@ -1184,7 +1190,7 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
   <p class='muted'>Each card shows a study claim, the macros that produce its
     numbers, and the CSV files that back the macros. Click any file name to
     open the raw evidence under <code>data/</code>.</p>
-  {render_findings(macros)}
+{render_findings(macros)}
 </section>
 <section id='replay'>
   <h2>End-to-End Replay Reports</h2>
@@ -1227,7 +1233,7 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
   {render_rule_breakdown()}
 </section>
 <section id='raw'>
-  <h2>Raw evidence — grouped by analysis topic</h2>
+  <h2>Raw evidence grouped by analysis topic</h2>
   <p class='muted'>All {len(list(DATA_DIR.glob('*.csv')))} CSVs produced by the measurement pipeline,
     grouped by the question they answer. Open any file to verify a study claim
     directly against the underlying rows.</p>

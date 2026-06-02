@@ -54,7 +54,7 @@ def apply_user_config(vm_name, users_config):
             cmd = f"echo '{sudoers_line}' | sudo tee /etc/sudoers.d/{username}-sut"
             run_vagrant_ssh(vm_name, cmd)
         
-        print(f"  ✓ User {username} configured")
+        print(f"  OK User {username} configured")
 
 
 def apply_service_config(vm_name, services_config):
@@ -96,11 +96,11 @@ EOF'
             cmd = "sudo systemctl restart apache2 || sudo service apache2 restart"
             run_vagrant_ssh(vm_name, cmd)
             
-            print(f"  ✓ Apache {version} configured ({config})")
+            print(f"  OK Apache {version} configured ({config})")
         
         elif name == "ssh":
             # SSH is already installed in base
-            print(f"  ✓ SSH already available")
+            print(f"  OK SSH already available")
 
         elif name == "ray-dashboard":
             dashboard_source = """from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -141,7 +141,7 @@ sleep 2
 curl -fsS http://127.0.0.1:8265/api/version >/tmp/sticks-ray-dashboard-version.json
 """.replace("__ENCODED_DASHBOARD__", encoded_dashboard)
             run_vagrant_ssh(vm_name, cmd, timeout=60)
-            print(f"  ✓ Ray dashboard configured")
+            print(f"  OK Ray dashboard configured")
 
 
 def apply_network_config(vm_name, network_config):
@@ -158,7 +158,7 @@ def apply_network_config(vm_name, network_config):
         cmd = f"sudo ufw allow {port}/tcp 2>/dev/null || true"
         run_vagrant_ssh(vm_name, cmd)
     
-    print(f"  ✓ Network configured: ingress={ingress}, egress={egress}")
+    print(f"  OK Network configured: ingress={ingress}, egress={egress}")
 
 
 def apply_files_config(vm_name, files_config):
@@ -184,7 +184,7 @@ def apply_files_config(vm_name, files_config):
         cmd = f"sudo chmod {permissions} {path} && sudo chown {owner} {path} 2>/dev/null || true"
         run_vagrant_ssh(vm_name, cmd)
         
-        print(f"  ✓ File {path} created")
+        print(f"  OK File {path} created")
 
 
 def apply_weaknesses(vm_name, weaknesses_config):
@@ -196,14 +196,14 @@ def apply_weaknesses(vm_name, weaknesses_config):
         
         if weakness_type == "cve-2021-41773":
             # Apache path traversal - already configured in service section
-            print(f"  ✓ Apache CVE-2021-41773 enabled")
+            print(f"  OK Apache CVE-2021-41773 enabled")
         
         elif weakness_type == "weak_ssh_password":
             # Weak passwords applied in user section
-            print(f"  ✓ Weak SSH passwords configured")
+            print(f"  OK Weak SSH passwords configured")
 
         elif weakness_type == "exposed_ray_jobs_api":
-            print(f"  ✓ Ray Jobs API exposure configured")
+            print(f"  OK Ray Jobs API exposure configured")
         
         elif weakness_type == "world_writable_suid":
             # Create world-writable SUID binary
@@ -227,7 +227,7 @@ int main() {
             cmd = "sudo chmod u+s /usr/local/bin/vuln_suid && sudo chmod 777 /usr/local/bin/vuln_suid 2>/dev/null || true"
             run_vagrant_ssh(vm_name, cmd)
             
-            print(f"  ✓ World-writable SUID binary created")
+            print(f"  OK World-writable SUID binary created")
 
 
 def validate_sut(vm_name, profile):
@@ -237,10 +237,10 @@ def validate_sut(vm_name, profile):
     # Check basic connectivity
     success, stdout, stderr = run_vagrant_ssh(vm_name, "echo 'SUT_VALID'", timeout=10)
     if success and "SUT_VALID" in stdout:
-        print(f"  ✓ {vm_name} responsive")
+        print(f"  OK {vm_name} responsive")
         return True
     else:
-        print(f"  ✗ {vm_name} validation failed: {stderr}")
+        print(f"  FAIL {vm_name} validation failed: {stderr}")
         return False
 
 
@@ -284,7 +284,7 @@ def apply_profile(profile_path):
         # Validate
         validate_sut(vm_name, profile)
     
-    print(f"[SUT] ✓ Profile applied successfully")
+    print(f"[SUT] OK Profile applied successfully")
     return True
 
 

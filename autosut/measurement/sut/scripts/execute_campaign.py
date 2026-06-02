@@ -196,7 +196,7 @@ class RealCampaignExecutor:
                 )
                 
                 if not operation:
-                    print("✗ (operation failed)")
+                    print("FAIL (operation failed)")
                     continue
                 
                 operation_id = operation.get("id")
@@ -212,10 +212,10 @@ class RealCampaignExecutor:
                     "result": result,
                 })
                 
-                print("✓")
+                print("OK")
                 
             except Exception as e:
-                print(f"✗ ({str(e)})")
+                print(f"FAIL ({str(e)})")
         
         return self.results
 

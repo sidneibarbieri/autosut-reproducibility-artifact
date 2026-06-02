@@ -3,7 +3,7 @@
 AutoSUT artifact validation pipeline.
 
 Runs the full lifecycle for one or more campaigns:
-  destroy → up → apply_sut → run → validate_evidence → (cleanup)
+  destroy -> up -> apply_sut -> run -> validate_evidence -> (cleanup)
 
 Usage:
   python3 scripts/validate_artifact.py --campaign 0.c0011

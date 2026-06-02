@@ -118,7 +118,7 @@ check_dependencies() {
                 exit 1
             }
         fi
-        log_info "✓ QEMU provider ready"
+        log_info "OK QEMU provider ready"
     fi
 
     # Check for libvirt provider
@@ -132,7 +132,7 @@ check_dependencies() {
                 exit 1
             }
         fi
-        log_info "✓ libvirt provider ready"
+        log_info "OK libvirt provider ready"
     fi
     
     # Check for VirtualBox provider
@@ -141,7 +141,7 @@ check_dependencies() {
             log_error "VirtualBox not found. Install from https://www.virtualbox.org/"
             exit 1
         fi
-        log_info "✓ VirtualBox ready"
+        log_info "OK VirtualBox ready"
     fi
 }
 
@@ -232,10 +232,10 @@ bring_up_vm() {
     done
     
     if [[ ${PIPESTATUS[0]} -eq 0 ]]; then
-        log_info "✓ $vm_name is up"
+        log_info "OK $vm_name is up"
         return 0
     else
-        log_error "✗ $vm_name failed to start"
+        log_error "FAIL $vm_name failed to start"
         return 1
     fi
 }
@@ -255,27 +255,27 @@ wait_for_caldera() {
         # - libvirt/virtualbox generally use private network IP
         if [[ "$PROVIDER" == "qemu" ]]; then
             if curl -s --connect-timeout 3 "$forwarded_url" >/dev/null 2>&1; then
-                log_info "✓ Caldera server is ready via forwarded port (127.0.0.1:8888)"
+                log_info "OK Caldera server is ready via forwarded port (127.0.0.1:8888)"
                 return 0
             fi
             if curl -s --connect-timeout 3 "$private_url" >/dev/null 2>&1; then
-                log_info "✓ Caldera server is ready via private IP (192.168.56.10:8888)"
+                log_info "OK Caldera server is ready via private IP (192.168.56.10:8888)"
                 return 0
             fi
         else
             if curl -s --connect-timeout 3 "$private_url" >/dev/null 2>&1; then
-                log_info "✓ Caldera server is ready via private IP (192.168.56.10:8888)"
+                log_info "OK Caldera server is ready via private IP (192.168.56.10:8888)"
                 return 0
             fi
             if curl -s --connect-timeout 3 "$forwarded_url" >/dev/null 2>&1; then
-                log_info "✓ Caldera server is ready via forwarded port (127.0.0.1:8888)"
+                log_info "OK Caldera server is ready via forwarded port (127.0.0.1:8888)"
                 return 0
             fi
         fi
 
         # Backward compatibility path used by some older checks
         if curl -s --connect-timeout 3 http://192.168.56.10:8888/api/rest 2>/dev/null | grep -qi "caldera"; then
-            log_info "✓ Caldera server is ready"
+            log_info "OK Caldera server is ready"
             return 0
         fi
 
@@ -287,7 +287,7 @@ wait_for_caldera() {
                 VAGRANT_DEFAULT_PROVIDER="$PROVIDER" \
                 vagrant ssh -c "systemctl is-active --quiet caldera || pgrep -f server.py >/dev/null" >/dev/null 2>&1
             ); then
-                log_info "✓ Caldera service/process is active inside VM"
+                log_info "OK Caldera service/process is active inside VM"
                 log_info "  Endpoint-level checks continue in health_check stage"
                 return 0
             fi
@@ -316,9 +316,9 @@ verify_network() {
         esac
         
         if ping -c 1 -W 2 "$ip" &>/dev/null; then
-            log_info "✓ $vm ($ip) reachable"
+            log_info "OK $vm ($ip) reachable"
         else
-            log_warn "✗ $vm ($ip) not responding to ping (may be normal)"
+            log_warn "FAIL $vm ($ip) not responding to ping (may be normal)"
         fi
     done
 }
@@ -356,12 +356,12 @@ main() {
         wait_for_caldera
     fi
     
-    # 3-level health check (VM ready → Service ready → Campaign ready)
+    # 3-level health check (VM ready -> Service ready -> Campaign ready)
     log_info "========================================"
     log_info "Running 3-level health check..."
     log_info "========================================"
     if python3 "$ROOT_DIR/lab/health_check.py" --campaign "$CAMPAIGN_ID" --provider "$PROVIDER" --output "$ROOT_DIR/release/evidence"; then
-        log_info "✓ Health check PASSED"
+        log_info "OK Health check PASSED"
     else
         log_warn "Health check detected issues (see report for details)"
         log_warn "Proceeding with SUT profile application..."
@@ -376,7 +376,7 @@ main() {
     }
     
     log_info "========================================"
-    log_info "✓ Lab infrastructure is UP and CONFIGURED"
+    log_info "OK Lab infrastructure is UP and CONFIGURED"
     log_info "========================================"
     log_info "Provider: $PROVIDER"
     log_info "Campaign: $CAMPAIGN_ID"

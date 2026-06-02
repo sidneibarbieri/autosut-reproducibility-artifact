@@ -137,15 +137,7 @@ def shadowray_cves(prefer_real: bool = True) -> list[CVEInjection]:
 
 
 def c0011_sut() -> SUTProfile:
-    """c0011 SUT — realistic Linux workstation with the same SUT shape the
-    predecessor profile *declares*, now actually applied by AutoSUT's
-    composer.
-
-    The frozen YAML lists a vulnuser/vulnpass123 weak-credential profile,
-    confidential.txt + passwords.txt staged files, and an ssh service.
-    AutoSUT's composer applies every element on bring-up and produces
-    per-element evidence under ``release/evidence/<run>/sut/``.
-    """
+    """c0011 SUT: Linux workstation with applied weak-credential evidence."""
     from .models import (
         Credential, NetworkExposure, StagedArtifact, SUTComposition,
         ApplicationStack,
@@ -154,8 +146,8 @@ def c0011_sut() -> SUTProfile:
         credentials=[
             Credential(
                 kind="password", user="vulnuser", secret="vulnpass123",
-                purpose="T1078 lab pre-staged weak credentials — the same "
-                        "user/password pair the predecessor profile declares.",
+                purpose="T1078 lab pre-staged weak credentials; AutoSUT "
+                        "materializes the usable user/password pair.",
                 # T1078/Valid-Accounts implies a usable credential exists; the
                 # literal vulnuser:vulnpass123 is AutoSUT's concretization.
                 source=ProvenanceSource.autosut_concretized,
@@ -194,8 +186,7 @@ def c0011_sut() -> SUTProfile:
                 name="openssh", version="default",
                 recipe="openssh_weak_password",
                 purpose="ssh service the lab weak credential reaches "
-                        "(matches frozen YAML's services: [name: ssh, "
-                        "config: password_auth_enabled]).",
+                        "(password authentication enabled).",
                 # Generic inherited service, no CVE — the campaign needs an
                 # affordance, not this specific product.
                 source=ProvenanceSource.analyst_authored,
@@ -205,12 +196,11 @@ def c0011_sut() -> SUTProfile:
             NetworkExposure(port=22, service="ssh",
                              expose_to="private_network",
                              purpose="SSH service the lab weak credential reaches "
-                                     "(frozen 0.c0011 YAML services: ssh).",
+                                     "(port 22).",
                              source=ProvenanceSource.analyst_authored),
         ],
-        notes="Reproduces the frozen 0.c0011 SUT YAML and actually applies "
-              "every element via the composer — frozen declares but does "
-              "not exercise these on its published single-host smoke.",
+        notes="Applies each declared weak-credential and service element through "
+              "the SUT composer and records per-element evidence.",
     )
     return SUTProfile(
         sut_id="linux_generic_workstation",
@@ -220,10 +210,8 @@ def c0011_sut() -> SUTProfile:
         smp=1,
         composition=composition,
         notes="c0011 — realistic Linux workstation with weak SSH, decoy "
-              "sensitive files, and ssh service. Direct parity + execution "
-              "delta against the frozen YAML declaration. Base is "
-              "python:3.11-slim because the existing c0011 technique recipes "
-              "assume openssl + python3 preinstalled.",
+              "sensitive files, and ssh service. Base is python:3.11-slim "
+              "because the c0011 technique recipes assume openssl and python3.",
     )
 
 
@@ -241,7 +229,7 @@ def c0011_cves() -> list[CVEInjection]:
 
 
 # ---------------------------------------------------------------------------
-# 0.pivot_demo — three-host SSH pivot reference campaign (S14)
+# 0.pivot_demo — three-host SSH pivot reference campaign
 # ---------------------------------------------------------------------------
 
 _PIVOT_BASE_IMAGE = "alpine:3.19"
@@ -289,14 +277,7 @@ def midnighteclipse_attacker() -> AttackerProfile:
 
 
 def midnighteclipse_sut() -> SUTProfile:
-    """SUT mirroring the frozen 0.operation_midnighteclipse YAML
-    declaration (eclipseops credentials + apache + mysql services).
-
-    The surrogate Palo Alto GlobalProtect install is driven by the existing
-    CVE injector. The composition adds the surrounding realism that the
-    frozen YAML declared but never applied: credentials, decoy files,
-    network exposure.
-    """
+    """SUT for the Operation MidnightEclipse GlobalProtect surrogate."""
     from .models import (
         Credential, NetworkExposure, StagedArtifact, SUTComposition,
     )
@@ -304,8 +285,7 @@ def midnighteclipse_sut() -> SUTProfile:
         credentials=[
             Credential(
                 kind="password", user="eclipseops", secret="Eclipse123!",
-                purpose="Operator account matching the frozen YAML's "
-                        "0.operation_midnighteclipse declaration "
+                purpose="Operator account for the GlobalProtect surrogate "
                         "(eclipseops:Eclipse123!).",
                 source=ProvenanceSource.autosut_concretized,
             ),
@@ -357,8 +337,7 @@ def salesforce_attacker() -> AttackerProfile:
 
 
 def salesforce_sut() -> SUTProfile:
-    """SUT mirroring the frozen 0.salesforce_data_exfiltration YAML
-    (salesops credentials + apache + ssh services)."""
+    """SUT for the Salesforce-style data-exfiltration surrogate."""
     from .models import (
         Credential, NetworkExposure, StagedArtifact, SUTComposition,
     )
@@ -366,8 +345,7 @@ def salesforce_sut() -> SUTProfile:
         credentials=[
             Credential(
                 kind="password", user="salesops", secret="SalesOps123!",
-                purpose="Operator account matching the frozen YAML's "
-                        "0.salesforce_data_exfiltration declaration.",
+                purpose="Operator account for the Salesforce-style API surrogate.",
                 source=ProvenanceSource.autosut_concretized,
             ),
             Credential(
@@ -413,7 +391,7 @@ def salesforce_sut() -> SUTProfile:
 
 
 # ---------------------------------------------------------------------------
-# 0.dmz_segmentation_demo — S28 topology-realism reference
+# 0.dmz_segmentation_demo topology-realism reference
 # ---------------------------------------------------------------------------
 
 def dmz_segmentation_attacker() -> AttackerProfile:
@@ -425,9 +403,7 @@ def dmz_segmentation_attacker() -> AttackerProfile:
 
 
 def dmz_segmentation_sut() -> SUTProfile:
-    """Three-zone topology mirroring the predecessor enterprise-design shape,
-    but here declared explicitly and materialised as three Docker networks.
-    """
+    """Three-zone topology declared explicitly as Docker networks."""
     from .models import (
         Credential, NetworkExposure, SUTComposition, SUTHost,
         Topology, Zone,
@@ -447,7 +423,7 @@ def dmz_segmentation_sut() -> SUTProfile:
                  description="Backend zone. No direct path from internet_edge.",
                  source=ProvenanceSource.analyst_authored),
         ],
-        notes="Frozen-style segmentation declared at the SUT level.",
+        notes="Three-zone segmentation declared at the SUT level.",
     )
 
     # All tools (openssh, sshpass, netcat-openbsd, curl) + the per-host
@@ -528,9 +504,9 @@ def dmz_segmentation_sut() -> SUTProfile:
         topology=topology,
         notes="Three-zone topology with two dual-homed gateways (nginx, "
               "app_server). Attacker has L2 reachability to nginx only; "
-              "db has L2 reachability from app_server only. Mirrors the "
-              "predecessor dual-homed-gateway shape while declaring the "
-              "topology explicitly via SUTProfile.topology + SUTHost.zones.",
+              "db has L2 reachability from app_server only. The dual-homed "
+              "gateway shape is declared explicitly via SUTProfile.topology "
+              "and SUTHost.zones.",
     )
 
 
@@ -559,7 +535,7 @@ def cve_2021_41773_sut() -> SUTProfile:
                 cve_pins=["CVE-2021-41773"],
                 purpose="Vulnerable web server — pre-patch httpd 2.4.49 with "
                         "the Alias+cgi-bin trigger the advisory documents.",
-                # S29: CVE-anchored version pin → version + product are
+                # CVE-anchored version pin -> version + product are
                 # corpus-supported by NVD/MITRE; the install recipe choice
                 # is autosut_concretized but that's tracked elsewhere.
                 source=ProvenanceSource.corpus_supported,
@@ -583,7 +559,7 @@ def cve_2021_41773_sut() -> SUTProfile:
                                      "exploit surface on the vulnerable httpd 2.4.49.",
                              source=ProvenanceSource.corpus_supported),
         ],
-        notes="S17 reference composition: every realism element is "
+        notes="Reference composition: every realism element is "
               "declared, applied, and audit-logged.",
     )
     attacker_startup = [
@@ -672,18 +648,17 @@ def pivot_demo_sut() -> SUTProfile:
         services=["ssh"],
         memory_mb=512, smp=1,
         hosts=hosts,
-        notes="Three-host SSH pivot reference (S14). Lab pre-stages a single "
+        notes="Three-host SSH pivot reference. Lab pre-stages a single "
               "weak password on both targets to satisfy a minimal Q3 audit "
               "trail — the attacker still has to discover it via T1110.001.",
     )
 
 
 # ---------------------------------------------------------------------------
-# S26 prep: per-campaign SUT functions for the 10 remaining frozen campaigns.
+# SUT declarations for the remaining inspired campaign profiles.
 #
-# Each function declares a SUTComposition that mirrors the corresponding
-# predecessor profile snapshots. Three patterns are
-# in use:
+# Each function declares a SUTComposition for one campaign-specific lab shape.
+# Three patterns are in use:
 #
 #   * Linux-credentialed (c0011-shape): vulnuser-style + ssh + decoy files.
 #   * Linux-web (c0010-shape): adds apache web surface.
@@ -692,7 +667,7 @@ def pivot_demo_sut() -> SUTProfile:
 # Apache and MySQL recipes are not yet registered in sut_applications.py,
 # so the composer will log a "no recipe" breadcrumb for those stacks on
 # bring-up (honest gap rather than fake success). The declarations land
-# now so the catalog is complete; S26 mass rerun + apache/mysql recipes
+# now so the catalog is complete; apache/mysql recipes
 # follow once the host disk is freed.
 # ---------------------------------------------------------------------------
 
@@ -704,13 +679,11 @@ def _generic_attacker(profile_id: str, notes: str) -> AttackerProfile:
     )
 
 
-def _frozen_inspired_sut(*, sut_id: str, user: str, password: str,
-                          file_specs: list[tuple[str, str, str]],
-                          extra_services: tuple[str, ...] = (),
-                          notes: str) -> SUTProfile:
-    """Build a single-host SUTProfile mirroring the shape the frozen YAML
-    declares for an inspired Linux SUT (ssh + weak credential + decoy
-    files + optional apache / mysql).
+def _inspired_single_host_sut(*, sut_id: str, user: str, password: str,
+                              file_specs: list[tuple[str, str, str]],
+                              extra_services: tuple[str, ...] = (),
+                              notes: str) -> SUTProfile:
+    """Build a single-host Linux SUT with ssh, weak credentials, and decoys.
 
     ``file_specs`` is a list of ``(path, owner, content_text)`` triples;
     each lands as a :class:`StagedArtifact`. ``extra_services`` may list
@@ -732,49 +705,47 @@ def _frozen_inspired_sut(*, sut_id: str, user: str, password: str,
         ApplicationStack(
             name="openssh", version="default",
             recipe="openssh_weak_password",
-            purpose="ssh service the frozen YAML declares "
-                    "(password_auth_enabled).",
+            purpose="ssh service with password authentication enabled.",
             source=ProvenanceSource.analyst_authored,
         ),
     ]
     exposures: list[NetworkExposure] = [
         NetworkExposure(port=22, service="ssh",
                          expose_to="private_network",
-                         purpose="SSH service the frozen YAML declares "
-                                 "(password_auth_enabled).",
+                         purpose="SSH service with password authentication enabled.",
                          source=ProvenanceSource.analyst_authored),
     ]
     for extra_service in extra_services:
         if extra_service == "apache2":
             applications.append(ApplicationStack(
                 name="apache_httpd", version="default",
-                recipe="apache_default_site",  # recipe pending S26 follow-up
-                purpose="HTTP web surface the frozen YAML declares.",
+                recipe="apache_default_site",  # recipe pending follow-up
+                purpose="HTTP web surface required by this lab profile.",
                 source=ProvenanceSource.analyst_authored,
             ))
             exposures.append(NetworkExposure(
                 port=80, service="http", expose_to="private_network",
-                purpose="HTTP web surface the frozen YAML declares.",
+                purpose="HTTP web surface required by this lab profile.",
                 source=ProvenanceSource.analyst_authored))
         elif extra_service == "mysql":
             applications.append(ApplicationStack(
                 name="mysql", version="default",
-                recipe="mysql_default_instance",  # recipe pending S26
-                purpose="MySQL instance the frozen YAML declares "
+                recipe="mysql_default_instance",  # recipe pending
+                purpose="MySQL instance the lab profile declares "
                         "(default_instance_exposed).",
                 source=ProvenanceSource.analyst_authored,
             ))
             exposures.append(NetworkExposure(
                 port=3306, service="mysql",
                 expose_to="private_network",
-                purpose="MySQL instance the frozen YAML declares "
+                purpose="MySQL instance the lab profile declares "
                         "(default_instance_exposed).",
                 source=ProvenanceSource.analyst_authored))
     composition = SUTComposition(
         credentials=[
             Credential(
                 kind="password", user=user, secret=password,
-                purpose=f"Operator account matching the frozen YAML "
+                purpose=f"Operator account declared by the lab profile "
                         f"declaration ({user}:{password}).",
                 source=ProvenanceSource.autosut_concretized,
             ),
@@ -782,7 +753,7 @@ def _frozen_inspired_sut(*, sut_id: str, user: str, password: str,
         artifacts=[
             StagedArtifact(
                 path=path, content_text=content, owner=owner, mode="0644",
-                purpose=f"Decoy artefact declared by the frozen YAML "
+                purpose=f"Decoy artefact declared by the lab profile "
                         f"({path}).",
                 source=ProvenanceSource.analyst_authored,
             )
@@ -803,7 +774,7 @@ def _frozen_inspired_sut(*, sut_id: str, user: str, password: str,
 
 
 def c0010_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="c0010_apt20_watering_hole",
         user="ubuntu", password="ubuntu",
         file_specs=[
@@ -819,7 +790,7 @@ def c0010_sut() -> SUTProfile:
 
 
 def c0012_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="c0012_apt28_recon",
         user="ubuntu", password="ubuntu",
         file_specs=[],
@@ -829,7 +800,7 @@ def c0012_sut() -> SUTProfile:
 
 
 def c0013_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="c0013_lazarus_tool_transfer",
         user="ubuntu", password="ubuntu",
         file_specs=[],
@@ -840,7 +811,7 @@ def c0013_sut() -> SUTProfile:
 
 
 def c0015_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="c0015_credentialed_postcompromise",
         user="testuser", password="password123",
         file_specs=[
@@ -855,7 +826,7 @@ def c0015_sut() -> SUTProfile:
 
 
 def c0017_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="c0017_apt29_stealth",
         user="testuser", password="password123",
         file_specs=[
@@ -868,7 +839,7 @@ def c0017_sut() -> SUTProfile:
 
 
 def c0026_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="c0026_collection_archive_chunk",
         user="ubuntu", password="ubuntu",
         file_specs=[
@@ -882,7 +853,7 @@ def c0026_sut() -> SUTProfile:
 
 
 def apt41_dust_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="apt41_dust_dual_ops",
         user="dustops", password="Dust2024!",
         file_specs=[
@@ -900,7 +871,7 @@ def apt41_dust_sut() -> SUTProfile:
 
 
 def apt41_dust_full_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="apt41_dust_full_chain",
         user="testuser", password="password123",
         file_specs=[
@@ -916,7 +887,7 @@ def apt41_dust_full_sut() -> SUTProfile:
 
 
 def costaricto_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="costaricto_proxy_collection",
         user="reconuser", password="reconpass123",
         file_specs=[
@@ -934,7 +905,7 @@ def costaricto_sut() -> SUTProfile:
 
 
 def outer_space_sut() -> SUTProfile:
-    return _frozen_inspired_sut(
+    return _inspired_single_host_sut(
         sut_id="outer_space_browser_discovery",
         user="clouduser", password="cloudpass123",
         file_specs=[
@@ -996,10 +967,9 @@ def resolve(campaign_id: str, *,
         return dmz_segmentation_attacker(), dmz_segmentation_sut(), []
     if campaign_id == "0.cve_2021_41773":
         return cve_2021_41773_attacker(), cve_2021_41773_sut(), []
-    # Each frozen-inherited campaign now resolves to its own SUT with the
-    # composition declared from its predecessor profile shape.
+    # Each inspired campaign resolves to its own campaign-specific SUT shape.
     # Two campaigns (caldera_linux_demo, fin6_emulation) keep the c0011
-    # baseline because they are AutoSUT-native references, not frozen ports.
+    # baseline because they are AutoSUT-native references.
     _PER_CAMPAIGN_SUT: dict[str, tuple] = {
         "0.c0010": (_generic_attacker("c0010_attacker",
                                        "ssh+http client for watering-hole flow."),
@@ -1036,7 +1006,7 @@ def resolve(campaign_id: str, *,
         attacker, sut = _PER_CAMPAIGN_SUT[campaign_id]
         return attacker, sut, []
     if campaign_id in {"0.caldera_linux_demo", "0.fin6_emulation"}:
-        # AutoSUT-native references rather than frozen ports.
+        # AutoSUT-native references that reuse the c0011 Linux workstation.
         return c0011_attacker(), c0011_sut(), []
     if campaign_id == "0.operation_midnighteclipse":
         cves = [CVEInjection(

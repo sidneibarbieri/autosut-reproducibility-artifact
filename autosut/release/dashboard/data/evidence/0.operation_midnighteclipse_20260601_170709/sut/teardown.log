@@ -1,0 +1,5 @@
+docker stop autosut-4c24deae12
+exit_code: 0
+stdout: autosut-4c24deae12
+
+stderr: 

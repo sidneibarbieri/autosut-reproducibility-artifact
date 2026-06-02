@@ -86,6 +86,7 @@ def test_teardown_runs_when_campaign_execution_fails(monkeypatch: pytest.MonkeyP
     monkeypatch.setattr(module.subprocess, "run", fake_run)
     monkeypatch.setattr(module, "_capture_derived_state", lambda: type("S", (), {"restore": lambda self: None})())
     monkeypatch.setattr(module, "_cleanup_runtime_outputs", lambda: None)
+    monkeypatch.setattr(module, "_evidence_available", lambda: True)
 
     with pytest.raises(module.subprocess.CalledProcessError):
         module.main(["--campaign", "0.c0015"])
@@ -107,6 +108,7 @@ def test_failure_still_refreshes_evidence_and_corpus_state(monkeypatch: pytest.M
     monkeypatch.setattr(module.subprocess, "run", fake_run)
     monkeypatch.setattr(module, "_capture_derived_state", lambda: type("S", (), {"restore": lambda self: None})())
     monkeypatch.setattr(module, "_cleanup_runtime_outputs", lambda: None)
+    monkeypatch.setattr(module, "_evidence_available", lambda: True)
 
     with pytest.raises(module.subprocess.CalledProcessError):
         module.main(["--campaign", "0.c0015"])

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import inspect
 import json
+import os
 import random
 import shutil
 import subprocess
@@ -227,8 +228,12 @@ def _docker_available() -> bool:
                           capture_output=True).returncode == 0
 
 
-@pytest.mark.skipif(not _docker_available(),
-                    reason="requires a running docker daemon")
+def _docker_execution_tests_enabled() -> bool:
+    return os.environ.get("AUTOSUT_RUN_DOCKER_TESTS") == "1" and _docker_available()
+
+
+@pytest.mark.skipif(not _docker_execution_tests_enabled(),
+                    reason="set AUTOSUT_RUN_DOCKER_TESTS=1 with Docker running")
 def test_cve_variants_execute_for_real():
     # The executable existence proof: two compatible variants of the rigorous
     # target both run real_controlled with declared_mode == executed_mode.

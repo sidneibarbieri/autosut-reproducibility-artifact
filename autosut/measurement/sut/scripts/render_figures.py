@@ -636,38 +636,35 @@ def render_evidence_convergence(d):
     if total == 0:
         return "% No convergence data available\n"
 
-    bar_w = 2.0  # cm
-    scale_y = 0.07  # cm per campaign
+    convergent_pct = 100 * convergent / total
+    divergent_pct = 100 * divergent / total
 
     lines = [
         "\\definecolor{acmBlue}{HTML}{4477AA}",
         "\\definecolor{acmSand}{HTML}{EE7733}",
         "\\definecolor{acmGrid}{HTML}{D9DDE2}",
-        f"\\begin{{tikzpicture}}[x={bar_w}cm,y={scale_y}cm,font=\\footnotesize]",
-        f"  \\draw[->] (0,0) -- (0,{total + 5});",
+        "\\definecolor{acmAxis}{HTML}{555555}",
+        "\\begin{tikzpicture}[x=0.075cm,y=0.82cm,font=\\footnotesize]",
+        f"  \\path[use as bounding box] (-13.5,-0.82) rectangle ({total + 3},2.25);",
+        f"  \\draw[->,acmAxis] (0,0) -- ({total + 2},0);",
+        f"  \\node[font=\\scriptsize,text=acmAxis] at ({total / 2},-0.62) {{Campaign count}};",
+        "  \\node[anchor=west,font=\\scriptsize,text=acmAxis] at (-13.2,2.02) {Agreement outcome};",
     ]
 
     # Grid
     for y in range(0, total + 1, 10):
-        lines.append(f"  \\draw[acmGrid] (-0.1,{y}) -- (2.5,{y});")
-        lines.append(f"  \\node[left] at (-0.1,{y}) {{{y}}};")
+        lines.append(f"  \\draw[acmGrid] ({y},0) -- ({y},1.75);")
+        lines.append(f"  \\node[below,font=\\scriptsize] at ({y},-0.08) {{{y}}};")
 
     # Convergent bar
-    lines.append(f"  \\fill[acmBlue] (0.2,0) rectangle (0.8,{convergent});")
-    lines.append(f"  \\node[above] at (0.5,{convergent}) {{{convergent}}};")
-    lines.append(f"  \\node[below] at (0.5,-1.0) {{Convergent}};")
+    lines.append("  \\node[anchor=east] at (-1.2,1.40) {Convergent};")
+    lines.append(f"  \\fill[acmBlue] (0,1.18) rectangle ({convergent},1.62);")
+    lines.append(f"  \\node[anchor=west,font=\\scriptsize] at ({convergent + 1},1.40) {{{convergent} ({fmt(convergent_pct)}\\%)}};")
 
     # Divergent bar
-    lines.append(f"  \\fill[acmSand] (1.2,0) rectangle (1.8,{divergent});")
-    lines.append(f"  \\node[above] at (1.5,{max(divergent, 1)}) {{{divergent}}};")
-    lines.append(f"  \\node[below] at (1.5,-1.0) {{Divergent}};")
-
-    # Annotation
-    lines.append(
-        f"  \\node[align=center,font=\\scriptsize,text width=3.6cm,text=black!70] at (1.0,-11.8) "
-        f"{{$N = {total}$ campaigns\\\\Convergence rate: {fmt(rate_pct)}\\%\\\\"
-        f"Mean signals/campaign: {fmt(data.get('mean_signal_count', 0))}}};"
-    )
+    lines.append("  \\node[anchor=east] at (-1.2,0.55) {Divergent};")
+    lines.append(f"  \\fill[acmSand] (0,0.33) rectangle ({divergent},0.77);")
+    lines.append(f"  \\node[anchor=west,font=\\scriptsize] at ({divergent + 1},0.55) {{{divergent} ({fmt(divergent_pct)}\\%)}};")
 
     lines.append("\\end{tikzpicture}")
     lines.append("")

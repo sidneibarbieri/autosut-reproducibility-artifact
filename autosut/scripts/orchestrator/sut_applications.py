@@ -18,7 +18,7 @@ Design choices
 - Recipes deliberately avoid ``apt-get`` on Alpine and ``apk add`` on
   Debian — the dispatching is per recipe, not global.
 
-The centerpiece for S17 is **Apache 2.4.49 + CVE-2021-41773** because:
+The centerpiece is **Apache 2.4.49 + CVE-2021-41773** because:
 
 - It is the most-cited unauthenticated path-traversal CVE of the last
   five years, present in every credible CVE corpus.
@@ -199,7 +199,7 @@ def install_openssh_weak_password(env: EnvironmentBackend,
     The credential itself is declared in :class:`Credential`; this recipe
     is the network surface (port 22 listening, password auth enabled).
     """
-    # Timeout bumped from 180s to 600s after S26 observed apt-get update
+    # Timeout bumped from 180s to 600s after observing apt-get update
     # serialise badly when 4 campaigns run concurrently against the same
     # mirror. 600s gives slow-network setups headroom without masking a
     # truly stuck install.
@@ -300,7 +300,7 @@ def install_apache_default_site(env: EnvironmentBackend,
                                   run_dir) -> RecipeResult:
     """Install Apache (Debian apt or Alpine apk) and start the default site.
 
-    Matches the ``apache2@default`` declaration in the frozen YAML for
+    Matches the released ``apache2@default`` SUT profile for
     c0010, c0013, apt41_dust, costaricto and outer_space.
     """
     result = env.run_shell(
@@ -348,7 +348,7 @@ def install_mysql_default_instance(env: EnvironmentBackend,
                                      run_dir) -> RecipeResult:
     """Install MySQL (or MariaDB) and start the default instance.
 
-    Matches the ``mysql@default`` declaration in the frozen YAML for
+    Matches the released ``mysql@default`` SUT profile for
     apt41_dust (``default_instance_exposed``).
     """
     result = env.run_shell(

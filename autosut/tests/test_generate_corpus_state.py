@@ -21,7 +21,9 @@ def _load_module():
 def test_missing_release_evidence_directory_returns_no_summary(tmp_path: Path) -> None:
     module = _load_module()
     module.EVIDENCE_DIR = tmp_path / "release" / "evidence"
+    module.DASHBOARD_EVIDENCE_DIR = tmp_path / "release" / "dashboard" / "data" / "evidence"
 
     assert module.EVIDENCE_DIR.exists() is False
+    assert module.DASHBOARD_EVIDENCE_DIR.exists() is False
     assert module.evidence_dirs_for_campaign("0.shadowray") == []
     assert module.latest_summary("0.shadowray") is None

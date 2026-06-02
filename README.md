@@ -11,7 +11,7 @@ on a specific conference track.
 bash run_review_check.sh
 ```
 
-The command reruns the measurement pipeline from frozen public input
+The command reruns the measurement pipeline from version-pinned public input
 bundles, regenerates figures and traceability outputs, and validates
 numeric invariants. The study manuscript itself is intentionally
 not included in this artifact; this repository is the independent
@@ -25,12 +25,19 @@ startup.
 ## Evidence Dashboard
 
 The reviewer-facing static dashboard is
-`autosut/release/dashboard/index.html`. If you view the file through
-the 4open file browser, use the page's `Raw` link to render the HTML;
-after downloading the ZIP, open the same file locally in a browser.
+`autosut/release/dashboard/index.html`. After downloading and
+extracting the ZIP, the lowest-friction local view is:
+
+```bash
+cd autosut/release/dashboard
+python3 -m http.server 8765 --bind 127.0.0.1
+```
+
+Then open `http://127.0.0.1:8765/` in a browser. Opening
+`index.html` directly also works after ZIP extraction.
 The dashboard summarizes the claim map, replay report, canonical
 execution evidence, and raw CSV/JSON anchors without requiring a
-server or external service.
+server beyond the optional local static-file command above.
 
 ## Full Docker Replay
 
@@ -58,6 +65,6 @@ for reviewers who want to inspect the execution-facing substrate.
 
 ## Layout
 
-- `autosut/`: artifact code, frozen bundles, release outputs, and reviewer scripts.
+- `autosut/`: artifact code, version-pinned bundles, release outputs, and reviewer scripts.
 - `ARTIFACT_BOUNDARY.md`: what is included and intentionally excluded.
 - `ARTIFACT_MANIFEST.md`: SHA-256 manifest for the staged repository.

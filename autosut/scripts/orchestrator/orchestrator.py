@@ -166,7 +166,7 @@ class CampaignOrchestrator:
             json.dumps(manifest_dict, indent=2, default=str), encoding="utf-8",
         )
 
-        # Per-run environment provenance (S31): roll the materialised SUT's
+        # Per-run environment provenance: roll the materialised SUT's
         # per-element tags up into a corpus/AutoSUT/analyst summary. The
         # declared CVE-injection set is threaded in so the vulnerability
         # dimension is populated. Named environment_provenance.json to avoid

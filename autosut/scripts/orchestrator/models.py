@@ -219,7 +219,7 @@ class SUTComposition(BaseModel):
 
 
 class Zone(BaseModel):
-    """A declarative network zone (S28).
+    """A declarative network zone.
 
     A zone is a Docker network in our materialization, plus a human-facing
     label (``"internet_edge"``, ``"dmz"``, ``"enterprise"``,
@@ -231,15 +231,13 @@ class Zone(BaseModel):
     zones — that would require iptables/eBPF policy injection per zone,
     which is out of scope for the artefact. The realism we ship is
     **topology declaration parity with enterprise designs**, not
-    enterprise firewall fidelity. This matches what the frozen
-    `sticks-docker` actually delivered (multi-network with `internal:
-    true` flags, no firewall policy).
+    enterprise firewall fidelity.
     """
 
     name: str  # e.g. "internet_edge", "dmz", "enterprise"
     description: str = ""
     cidr: Optional[str] = None  # human-facing, e.g. "172.30.0.0/24"
-    # S29: topology is the dimension public CTI supports least — ATT&CK/STIX
+    # Topology is the dimension public CTI supports least — ATT&CK/STIX
     # campaigns rarely pin zone counts, segmentation, or trust boundaries. A
     # zone is therefore almost always an analyst lab choice; tagging it makes
     # that explicit rather than letting topology masquerade as corpus evidence.
@@ -260,7 +258,7 @@ class Topology(BaseModel):
 class SUTHost(BaseModel):
     """One host inside a multi-host SUT topology.
 
-    A campaign that pivots between attacker → target1 → target2 declares
+    A campaign that pivots between attacker -> target1 -> target2 declares
     three :class:`SUTHost` entries in :attr:`SUTProfile.hosts`. The
     orchestrator brings up one :class:`EnvironmentBackend` per host on a
     shared private network so the executor can run techniques on any host
@@ -272,12 +270,11 @@ class SUTHost(BaseModel):
     pre-staging (Q3 of the fidelity rubric — lab preconditions are
     declared, not discovered).
 
-    ``zones`` (S28) is the list of zone names this host attaches to. A
+    ``zones`` is the list of zone names this host attaches to. A
     host listed in multiple zones is a *gateway* that bridges them — for
     example an nginx host in both ``dmz`` and ``enterprise`` zones acts
-    as the chokepoint frozen `sticks-docker` modeled with its dual-homed
-    nginx. When empty (default), the host attaches only to the per-run
-    private network (legacy single-zone path; backwards-compatible).
+    as a dual-homed chokepoint. When empty (default), the host attaches
+    only to the per-run private network.
     """
 
     name: str  # e.g. "attacker", "target1", "target2"
@@ -288,7 +285,7 @@ class SUTHost(BaseModel):
     smp: int = 1
     startup_commands: list[str] = Field(default_factory=list)
     composition: Optional[SUTComposition] = None  # declarative realism
-    zones: list[str] = Field(default_factory=list)  # S28 zone attachments
+    zones: list[str] = Field(default_factory=list)  # zone attachments
 
 
 class SUTProfile(BaseModel):
@@ -315,7 +312,7 @@ class SUTProfile(BaseModel):
     backend: Optional[str] = None  # "docker" | "qemu" | "tart" | None=>docker
     hosts: Optional[list[SUTHost]] = None
     composition: Optional[SUTComposition] = None  # single-host composition
-    topology: Optional[Topology] = None  # S28 multi-zone declaration
+    topology: Optional[Topology] = None  # multi-zone declaration
     notes: Optional[str] = None
 
     @property

@@ -1,7 +1,7 @@
 """QEMU + Vagrant execution-substrate backend.
 
 The QEMU backend is the **extended-realism** tier in AutoSUT's substrate
-hierarchy (canonical Docker → extended QEMU → experimental Tart). It
+hierarchy (canonical Docker -> extended QEMU -> experimental Tart). It
 provisions a real virtual machine (real kernel boundary, real virtual NIC,
 real filesystem layout) via Vagrant with the QEMU provider — the same path
 the frozen ``sticks/Vagrantfile`` adopts for Apple Silicon hosts and the

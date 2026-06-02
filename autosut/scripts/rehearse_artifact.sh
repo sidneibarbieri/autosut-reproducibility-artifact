@@ -2,15 +2,15 @@
 # Artifact rehearsal — prove the reviewer-facing surface rebuilds from a clean
 # working tree.
 #
-# SAFETY: this script regenerates only DERIVED state (the S32 proof artifact,
+# SAFETY: this script regenerates only DERIVED state (the subdetermination proof artifact,
 # the dashboard, LaTeX aux, __pycache__). It NEVER deletes captured evidence
 # (release/evidence/, release/golden_runs.json): those come from live
 # Caldera/Docker/VM runs and cannot be regenerated without the substrate.
 # Wiping them would silently destroy the artifact.
 #
-# Full pass requires the Docker daemon (the S32 executable proof reconstructs
+# Full pass requires the Docker daemon (the executable proof reconstructs
 # CVE-2021-41773 live). Without Docker the proof falls back to structural and
-# the release gate's S32 check (executable==true) will fail by design.
+# the release gate's subdetermination check (executable==true) will fail by design.
 #
 # Run from anywhere:  sh scripts/rehearse_artifact.sh
 set -eu
@@ -23,7 +23,7 @@ echo "[rehearse] cleaning DERIVED/TEMP only (captured golden evidence preserved)
 find . -name __pycache__ -type d -prune -exec rm -rf {} + 2>/dev/null || true
 rm -f /tmp/latexmk_*.log /tmp/rehearse_paper.log 2>/dev/null || true
 
-echo "[rehearse] 1/5 regenerate S32 subdetermination proof artifact"
+echo "[rehearse] 1/5 regenerate subdetermination proof artifact"
 "$PY" scripts/build_subdetermination_artifact.py
 
 echo "[rehearse] 2/5 rebuild reviewer dashboard"
@@ -32,7 +32,7 @@ echo "[rehearse] 2/5 rebuild reviewer dashboard"
 echo "[rehearse] 3/5 fast test suite (fail-fast pre-check)"
 "$PY" -m pytest -q -k "not execute_for_real" >/dev/null
 
-echo "[rehearse] 4/5 release gate (8 fail-fast checks, incl. S32)"
+echo "[rehearse] 4/5 release gate (8 fail-fast checks)"
 sh scripts/run_review_check.sh >/dev/null
 
 echo "[rehearse] 5/5 compile paper (if adjacent paper/ present)"

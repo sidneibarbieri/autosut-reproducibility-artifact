@@ -244,7 +244,7 @@ class RealCampaignRunner:
             result = self.run_single(campaign_name, adversary_id)
             self.results.append(result)
             
-            status = "✓" if result["success"] else "✗"
+            status = "OK" if result["success"] else "FAIL"
             print(f"{status}")
             
             if result.get("operation_id"):

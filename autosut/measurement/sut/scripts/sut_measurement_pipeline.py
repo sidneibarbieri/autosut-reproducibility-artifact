@@ -171,8 +171,8 @@ def index_objects_by_type(objects):
 
 def build_relationship_index(relationships):
     """Build indices for relationship traversal."""
-    # Forward: source_ref → [(relationship_type, target_ref)]
-    # Reverse: target_ref → [(relationship_type, source_ref)]
+    # Forward: source_ref -> [(relationship_type, target_ref)]
+    # Reverse: target_ref -> [(relationship_type, source_ref)]
     fwd = defaultdict(list)
     rev = defaultdict(list)
     by_type = defaultdict(list)
@@ -1311,12 +1311,12 @@ def infer_campaign_environment(campaign_fact_rows, software_objects, by_id,
                            NOT which OS the campaign actually targeted. Nearly
                            universal and therefore low-discriminative.
       Tier 2 (specific):   software_platforms — platforms on campaign-linked
-                           software. Reflects actual tools used → campaign-
+                           software. Reflects actual tools used -> campaign-
                            specific targeting evidence.
       Tier 3 (targeted):   description_mined — regex extraction from campaign
                            descriptions. Explicit targeting statements.
-      Heuristic:           tactic_implied — tactic → environment heuristic
-                           (e.g. credential-access → Windows domain).
+      Heuristic:           tactic_implied — tactic -> environment heuristic
+                           (e.g. credential-access -> Windows domain).
 
     Metrics:
       IEIR = fraction of campaigns with ONLY Tier 1 (generic) signals —
@@ -1343,7 +1343,7 @@ def infer_campaign_environment(campaign_fact_rows, software_objects, by_id,
         camp_name = fact_row['campaign_name']
         camp = by_id.get(camp_id, {})
 
-        signals = {}  # signal_type → set of OS families
+        signals = {}  # signal_type -> set of OS families
 
         # --- Signal 1: technique platforms (explicit) ---
         tech_platforms = set()
@@ -2111,7 +2111,7 @@ def build_sut_profiles(
 def jaccard_distance(set_a, set_b):
     """Compute Jaccard distance between two sets."""
     if not set_a and not set_b:
-        return 0.0  # Both empty → identical
+        return 0.0  # Both empty -> identical
     union = set_a | set_b
     intersection = set_a & set_b
     if not union:
@@ -2979,7 +2979,7 @@ def main():
                 'cve_id': fl['cve_id'], 'status': 'flagged',
                 'reason': fl['reason'], 'detail': fl['detail']
             })
-    print(f"  ✓ CVE validation audit saved to {AUDIT_DIR / 'cve_validation.csv'}")
+    print(f"  OK CVE validation audit saved to {AUDIT_DIR / 'cve_validation.csv'}")
 
     # ── Campaign-level profile completeness ──
     profile_completeness = analyze_campaign_profile_completeness(
@@ -3242,9 +3242,9 @@ def main():
             f"CVE-link={data.get('cve_link_pct', 'N/A')}%"
         )
 
-    # ══════════════════════════════════════════════════════════════
+    # ==============================================================
     # Assemble TODO values
-    # ══════════════════════════════════════════════════════════════
+    # ==============================================================
     raw_attack_patterns = [
         obj for obj in all_objects if obj.get('type') == 'attack-pattern'
     ]
@@ -3575,9 +3575,9 @@ def main():
         'evidence_mean_signal_count': evidence_convergence['evidence_mean_signal_count'],
     }
 
-    # ══════════════════════════════════════════════════════════════
+    # ==============================================================
     # Macro completeness and manuscript coverage checks
-    # ══════════════════════════════════════════════════════════════
+    # ==============================================================
     unresolved_values = {
         k: v for k, v in todo_values.items()
         if isinstance(v, str) and v.strip().upper() in {'', 'N/A', 'TODO', 'TBD'}
@@ -3640,7 +3640,7 @@ def main():
     # ── Save TODO values as JSON ──
     with open(RESULTS_DIR / 'todo_values.json', 'w') as f:
         json.dump(todo_values, f, indent=2)
-    print(f"\n✓ TODO values saved to {RESULTS_DIR / 'todo_values.json'}")
+    print(f"\nOK TODO values saved to {RESULTS_DIR / 'todo_values.json'}")
 
     # ── Save as LaTeX newcommands ──
     with open(RESULTS_DIR / 'todo_values_latex.tex', 'w') as f:
@@ -3650,7 +3650,7 @@ def main():
             val = todo_values[key]
             latex_key = key.replace('_', '')
             f.write(f"\\newcommand{{\\{latex_key}}}{{{val}}}\n")
-    print(f"✓ LaTeX commands saved to {RESULTS_DIR / 'todo_values_latex.tex'}")
+    print(f"OK LaTeX commands saved to {RESULTS_DIR / 'todo_values_latex.tex'}")
 
     # ── Save figure data ──
     figure_data = {
@@ -3891,7 +3891,7 @@ def main():
     with open(RESULTS_DIR / 'figures_data.json', 'w') as f:
         # Convert numpy types to native Python for JSON serialization
         json.dump(figure_data, f, indent=2, default=float)
-    print(f"✓ Figure data saved to {RESULTS_DIR / 'figures_data.json'}")
+    print(f"OK Figure data saved to {RESULTS_DIR / 'figures_data.json'}")
 
     # ── Save audit CSVs ──
     # Campaign software details
@@ -3911,7 +3911,7 @@ def main():
             writer.writeheader()
             for row in version_enrichment['enriched_examples']:
                 writer.writerow(row)
-        print(f"✓ Version enrichment audit saved to {AUDIT_DIR / 'software_version_enrichment.csv'}")
+        print(f"OK Version enrichment audit saved to {AUDIT_DIR / 'software_version_enrichment.csv'}")
 
     # Campaign platform inference details (software-only)
     with open(AUDIT_DIR / 'campaign_platforms_software_only.csv', 'w', newline='') as f:
@@ -4367,7 +4367,7 @@ def main():
         for row in serendipity_results['platform_quality_rows']:
             writer.writerow(row)
 
-    print(f"✓ Audit CSVs saved to {AUDIT_DIR}")
+    print(f"OK Audit CSVs saved to {AUDIT_DIR}")
 
     # ── Print summary ──
     print("\n" + "=" * 70)

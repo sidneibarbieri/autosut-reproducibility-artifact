@@ -14,9 +14,9 @@ The rubric answers five questions per technique:
   Q5. Can the evidence be independently audited?
 
 Decision logic:
-  - 5/5 yes → faithful
-  - Q1 yes + Q3 yes + (Q2 or Q4 partial) → adapted
-  - Otherwise → inspired
+  - 5/5 yes -> faithful
+  - Q1 yes + Q3 yes + (Q2 or Q4 partial) -> adapted
+  - Otherwise -> inspired
 
 Also generates LaTeX tables for the paper and validates existing
 fidelity labels against the rubric.
@@ -97,15 +97,15 @@ def compute_fidelity(answers: List[RubricAnswer]) -> str:
     q4 = by_id.get("Q4", False)
     q5 = by_id.get("Q5", False)
 
-    # All 5 yes → faithful (rare in lab setting)
+    # All 5 yes -> faithful (rare in lab setting)
     if all([q1, q2, q3, q4, q5]):
         return "faithful"
 
-    # Mechanism + substrate + real effect, but lab preconditions → adapted
+    # Mechanism + substrate + real effect, but lab preconditions -> adapted
     if q1 and q2 and q4:
         return "adapted"
 
-    # Mechanism preserved but substrate differs → adapted (borderline)
+    # Mechanism preserved but substrate differs -> adapted (borderline)
     if q1 and (q2 or q4) and not q2:
         return "adapted"
 
@@ -139,8 +139,8 @@ def build_rubric_for_executor(
     )
 
     # Q1: Central mechanism preserved?
-    # Real controlled on native platform → yes
-    # Simulated → depends on whether it's the same mechanism type
+    # Real controlled on native platform -> yes
+    # Simulated -> depends on whether it's the same mechanism type
     q1_yes = is_real and not plat_mismatch
     q1_just = (
         "Real execution of technique mechanism on compatible platform"

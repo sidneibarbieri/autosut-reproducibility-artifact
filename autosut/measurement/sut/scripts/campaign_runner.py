@@ -51,7 +51,7 @@ class CampaignRunner:
             result = self.simulate_execution(run)
             self.results.append(result)
             
-            status = "✓" if result["success"] else "✗"
+            status = "OK" if result["success"] else "FAIL"
             print(f"{status} ({result['execution_time_seconds']}s)")
         
         return self.results

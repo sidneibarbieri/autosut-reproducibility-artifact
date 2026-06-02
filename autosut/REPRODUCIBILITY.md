@@ -62,7 +62,6 @@ Supporting state reports can be regenerated with:
 ```bash
 python3 scripts/generate_corpus_state.py
 python3 scripts/audit_mitre_metadata.py
-python3 scripts/audit_legacy_parity.py
 python3 scripts/check_public_surface.py
 python3 scripts/generate_cve_resolution_report.py
 python3 scripts/generate_compatibility_rule_surface.py

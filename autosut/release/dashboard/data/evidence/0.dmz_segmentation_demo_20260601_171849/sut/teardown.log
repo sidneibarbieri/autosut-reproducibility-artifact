@@ -1,0 +1,5 @@
+docker stop autosut-db-17b421
+exit_code: 0
+stdout: autosut-db-17b421
+
+stderr: 

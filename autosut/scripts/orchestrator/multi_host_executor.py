@@ -5,7 +5,7 @@ of a single environment. Each recipe runs commands on the host declared
 by the technique JSON via :meth:`HostFleet.run_shell_on` and produces a
 :class:`TechniqueOutcome` with per-host evidence files.
 
-The recipe map below is intentionally small — S14 ships the canonical
+The recipe map below is intentionally small; it ships the canonical
 six-step pivot reference (``0.pivot_demo``). Adding more techniques is a
 matter of writing one function and registering it.
 """
@@ -228,7 +228,7 @@ def _t1059_004_exec_on_target2(fleet: HostFleet, tid: str,
 
 
 # ----------------------------------------------------------------------
-# CVE-2021-41773 — Apache 2.4.49 path traversal exploitation (S17)
+# CVE-2021-41773 — Apache 2.4.49 path traversal exploitation
 # ----------------------------------------------------------------------
 
 # Canonical exploitation URL pattern from the Apache Security advisory.
@@ -355,7 +355,7 @@ def _t1005_exfil_passwd_to_attacker_disk(fleet: HostFleet, tid: str,
     )
 
 
-# Recipe name → callable. Lookup is driven by the campaign JSON's `recipe`
+# Recipe name -> callable. Lookup is driven by the campaign JSON's `recipe`
 # field so adding a technique is a 2-line change (function + registry).
 _RECIPE_REGISTRY = {
     "scan_target1_ssh": _t1046_scan_target1,
@@ -364,12 +364,12 @@ _RECIPE_REGISTRY = {
     "ls_on_target1": _t1083_ls_on_target1,
     "scp_payload_to_target2": _t1570_scp_to_target2,
     "ssh_exec_payload_on_target2": _t1059_004_exec_on_target2,
-    # CVE-2021-41773 reference (S17)
+    # CVE-2021-41773 reference
     "probe_apache_version": _t1595_002_probe_apache_version,
     "exploit_cve_2021_41773": _t1190_exploit_cve_2021_41773,
     "enumerate_via_traversal": _t1083_enumerate_via_traversal,
     "exfil_passwd_to_attacker_disk": _t1005_exfil_passwd_to_attacker_disk,
-    # Topology / DMZ segmentation reference (S28)
+    # Topology / DMZ segmentation reference
     "topology_attacker_reaches_nginx": None,  # set below
     "topology_attacker_cannot_reach_db": None,
     "topology_pivot_nginx_to_app_server": None,
@@ -378,7 +378,7 @@ _RECIPE_REGISTRY = {
 
 
 # ----------------------------------------------------------------------
-# 0.dmz_segmentation_demo recipes (S28)
+# 0.dmz_segmentation_demo recipes
 # ----------------------------------------------------------------------
 
 _LAB_PASSWORD = "Zone-Demo-2026!"

@@ -370,7 +370,7 @@ class AutomatedCampaignRunner:
 
             if not operation:
                 results.append(ExecutionResult(success=False, error="Failed to create operation"))
-                print("✗")
+                print("FAIL")
                 continue
 
             operation_id = operation.get("id")
@@ -396,7 +396,7 @@ class AutomatedCampaignRunner:
                         duration_seconds=time.time() - start_time,
                     )
                     results.append(result)
-                    print("✓")
+                    print("OK")
                     break
 
                 if state in ("timeout", "failed"):
@@ -407,7 +407,7 @@ class AutomatedCampaignRunner:
                         error=f"Operation {state}",
                     )
                     results.append(result)
-                    print("✗")
+                    print("FAIL")
                     break
 
                 time.sleep(10)
@@ -419,7 +419,7 @@ class AutomatedCampaignRunner:
                         error="Timeout",
                     )
                 )
-                print("✗")
+                print("FAIL")
 
             # Cleanup
             if operation_id:

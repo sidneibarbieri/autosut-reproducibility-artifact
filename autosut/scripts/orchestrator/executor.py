@@ -680,7 +680,7 @@ def _campaign_aware_walker(campaign_id: str):
             elif recipe == "exfil":
                 outcomes.append(_adapted_exfil(target, attacker, target_ip, tid, run_dir))
             else:
-                # No adapted recipe registered → inspired marker, with the
+                # No adapted recipe registered -> inspired marker, with the
                 # manifest preserving the declared/executed gap if relevant.
                 inspired = _c0011_inspired(tid, name, target, run_dir)
                 inspired.declared_fidelity = declared

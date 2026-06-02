@@ -20,7 +20,7 @@ Golden-candidate criteria (all must hold):
 
 - ``manifest.json`` exists and parses.
 - ``summary.json`` exists.
-- ``fidelity_report.json`` exists (the S11 rubric must have run).
+- ``fidelity_report.json`` exists (the fidelity rubric must have run).
 - The manifest has at least one technique outcome.
 - Every technique status is ``success``.
 
@@ -128,7 +128,7 @@ def _classify_run(run_dir: Path) -> RunClassification:
         return RunClassification(
             **common_fields,
             classification="partial",
-            reason="rubric report missing — predates S11",
+            reason="rubric report missing — predates multi-zone topology support",
         )
 
     if not has_summary:
@@ -197,11 +197,16 @@ def _apply_archive(classifications: list[RunClassification],
     for classification in classifications:
         if classification.run_id in golden_ids:
             continue
-        source = Path(classification.path)
+        source = PROJECT_ROOT / classification.path
         if not source.exists():
             continue
         destination = ARCHIVE_ROOT / source.name
         if destination.exists():
+            if source.is_dir():
+                shutil.rmtree(source)
+            else:
+                source.unlink()
+            moved += 1
             continue
         shutil.move(str(source), str(destination))
         moved += 1
@@ -234,7 +239,7 @@ def _read_run_metrics(run_dir: Path) -> dict[str, Any]:
 
 def _aggregate_provenance(run_dir: Path) -> dict[str, dict[str, int]]:
     """Walk every ``sut/composition_*.json`` and bucket each composition
-    element by its ``source`` tag (S29 provenance taxonomy).
+    element by its ``source`` tag (provenance taxonomy).
 
     Returns a nested dict::
 
@@ -309,7 +314,7 @@ def _write_golden_runs_file(goldens: dict[str, str],
                              classifications: list[RunClassification]) -> None:
     """Persist a canonical record of the chosen golden runs.
 
-    Schema is now self-describing per the S21+ refinement: every entry
+    Schema is now self-describing: every entry
     carries pass/fail counts, fidelity distribution, execution modes,
     composition presence, teardown presence, and a tier marker.
     """
@@ -337,9 +342,9 @@ def _write_golden_runs_file(goldens: dict[str, str],
             "tier": _classify_tier(metrics["execution_modes"]),
             "has_composition": classification.has_composition,
             "has_teardown": classification.has_teardown,
-            # S29 — provenance breakdown per element class. Keyed by
+            # Provenance breakdown per element class. Keyed by
             # element class (credentials/artifacts/applications/exposures)
-            # → source tag (corpus_supported/analyst_authored/...) → count.
+            # -> source tag (corpus_supported/analyst_authored/...) -> count.
             "provenance_per_element_class":
                 metrics["provenance_per_element_class"],
         })

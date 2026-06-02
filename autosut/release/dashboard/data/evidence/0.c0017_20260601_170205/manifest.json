@@ -1,0 +1,174 @@
+{
+  "campaign_id": "0.c0017",
+  "run_id": "0.c0017_20260601_170205",
+  "timestamp": "2026-06-01T17:02:44.255165Z",
+  "attacker": {
+    "profile_id": "c0017_attacker",
+    "capabilities": [
+      "ssh_client",
+      "http_client"
+    ],
+    "notes": "ssh client for APT29 stealth flow."
+  },
+  "sut": {
+    "sut_id": "c0017_apt29_stealth",
+    "base_image": "python:3.11-slim",
+    "services": [
+      "ssh"
+    ],
+    "memory_mb": 1024,
+    "smp": 1,
+    "backend": null,
+    "hosts": null,
+    "composition": {
+      "credentials": [
+        {
+          "kind": "password",
+          "user": "testuser",
+          "secret": "password123",
+          "location": null,
+          "purpose": "Operator account declared by the lab profile declaration (testuser:password123).",
+          "source": "autosut_concretized"
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "/tmp/phishing_context.txt",
+          "content_text": "Phishing payload context \u2014 staging\n",
+          "content_b64": null,
+          "owner": "testuser",
+          "mode": "0644",
+          "purpose": "Decoy artefact declared by the lab profile (/tmp/phishing_context.txt).",
+          "source": "analyst_authored"
+        }
+      ],
+      "exposures": [
+        {
+          "port": 22,
+          "protocol": "tcp",
+          "service": "ssh",
+          "expose_to": "private_network",
+          "purpose": "SSH service with password authentication enabled.",
+          "source": "analyst_authored"
+        }
+      ],
+      "applications": [
+        {
+          "name": "openssh",
+          "version": "default",
+          "recipe": "openssh_weak_password",
+          "cve_pins": [],
+          "config": {},
+          "image_override": null,
+          "purpose": "ssh service with password authentication enabled.",
+          "source": "analyst_authored"
+        }
+      ],
+      "notes": "0.c0017 \u2014 APT29-style stealth execution and persistence flow on a minimal Linux SUT."
+    },
+    "topology": null,
+    "notes": "0.c0017 \u2014 APT29-style stealth execution and persistence flow on a minimal Linux SUT."
+  },
+  "cves_injected": [],
+  "techniques": [
+    {
+      "technique_id": "T1059.004",
+      "declared_fidelity": "inspired",
+      "executed_fidelity": "inspired",
+      "declared_mode": "naive_simulated",
+      "executed_mode": "naive_simulated",
+      "realization": "generic_primitive",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1059.004_inspired.log"
+      ],
+      "duration_sec": 0.035169499984476715,
+      "notes": "Inspired emulation of Unix Shell: marker recorded so the campaign DAG can advance; no specific protocol or product invoked.",
+      "caldera_ability_id": "b1d41972-3ad9-4aa1-8f7f-05f049a2980e",
+      "caldera_ability_name": "Start 54ndc47"
+    },
+    {
+      "technique_id": "T1083",
+      "declared_fidelity": "inspired",
+      "executed_fidelity": "inspired",
+      "declared_mode": "naive_simulated",
+      "executed_mode": "naive_simulated",
+      "realization": "generic_primitive",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1083_inspired.log"
+      ],
+      "duration_sec": 0.029481459001544863,
+      "notes": "Inspired emulation of File and Directory Discovery: marker recorded so the campaign DAG can advance; no specific protocol or product invoked.",
+      "caldera_ability_id": "52177cc1-b9ab-4411-ac21-2eadc4b5d3b8",
+      "caldera_ability_name": "List Directory"
+    },
+    {
+      "technique_id": "T1053",
+      "declared_fidelity": "inspired",
+      "executed_fidelity": "inspired",
+      "declared_mode": "naive_simulated",
+      "executed_mode": "naive_simulated",
+      "realization": "generic_primitive",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1053_inspired.log"
+      ],
+      "duration_sec": 0.02686395903583616,
+      "notes": "Inspired emulation of Scheduled Task/Job: marker recorded so the campaign DAG can advance; no specific protocol or product invoked.",
+      "caldera_ability_id": null,
+      "caldera_ability_name": null
+    },
+    {
+      "technique_id": "T1543",
+      "declared_fidelity": "inspired",
+      "executed_fidelity": "inspired",
+      "declared_mode": "naive_simulated",
+      "executed_mode": "naive_simulated",
+      "realization": "generic_primitive",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1543_inspired.log"
+      ],
+      "duration_sec": 0.029581042006611824,
+      "notes": "Inspired emulation of Create or Modify System Service: marker recorded so the campaign DAG can advance; no specific protocol or product invoked.",
+      "caldera_ability_id": null,
+      "caldera_ability_name": null
+    },
+    {
+      "technique_id": "T1027",
+      "declared_fidelity": "inspired",
+      "executed_fidelity": "inspired",
+      "declared_mode": "naive_simulated",
+      "executed_mode": "naive_simulated",
+      "realization": "generic_primitive",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1027_inspired.log"
+      ],
+      "duration_sec": 0.029499208030756563,
+      "notes": "Inspired emulation of Obfuscated Files or Information: marker recorded so the campaign DAG can advance; no specific protocol or product invoked.",
+      "caldera_ability_id": null,
+      "caldera_ability_name": null
+    },
+    {
+      "technique_id": "T1564",
+      "declared_fidelity": "inspired",
+      "executed_fidelity": "inspired",
+      "declared_mode": "naive_simulated",
+      "executed_mode": "naive_simulated",
+      "realization": "generic_primitive",
+      "status": "success",
+      "evidence_files": [
+        "techniques/T1564_inspired.log"
+      ],
+      "duration_sec": 0.030247958027757704,
+      "notes": "Inspired emulation of Hide Artifacts: marker recorded so the campaign DAG can advance; no specific protocol or product invoked.",
+      "caldera_ability_id": null,
+      "caldera_ability_name": null
+    }
+  ],
+  "teardown_clean": true,
+  "manifest_path": "<local-workspace>/release/evidence/0.c0017_20260601_170205/manifest.json",
+  "summary_path": "<local-workspace>/release/evidence/0.c0017_20260601_170205/summary.json"
+}

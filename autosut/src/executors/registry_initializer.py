@@ -12,7 +12,7 @@ MODULES_TO_LOAD: List[str] = [
     "executors.simple_working_executors",
     "executors.legacy_campaign_executors",
     "executors.campaign_expansion_executors",
-    "executors.legacy_parity_expansion_executors",
+    "executors.extended_campaign_executors",
     "executors.simple_working_executors_shadowray",
     "executors.working_executors",
     "executors.shadowray_additional_executors",

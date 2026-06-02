@@ -25,11 +25,18 @@ The fastest top-level validation path is
 `bash run_review_check.sh`. The `artifact/` wrappers remain the smallest
 repository-local execution example.
 
-The static evidence dashboard is `release/dashboard/index.html`. In the 4open
-file browser, click the file's `Raw` link to render the HTML; in a downloaded
-ZIP or clone, open the file locally in a browser. The dashboard is designed as
-the reviewer-first visual map of claims, replay reports, canonical evidence,
-and raw CSV/JSON anchors.
+The static evidence dashboard is `release/dashboard/index.html`. After a ZIP
+download or clone, the lowest-friction local view is:
+
+```bash
+cd release/dashboard
+python3 -m http.server 8765 --bind 127.0.0.1
+```
+
+Then open `http://127.0.0.1:8765/` in a browser. Opening `index.html` directly
+also works after extraction. The dashboard is designed as the reviewer-first
+visual map of claims, replay reports, canonical evidence, and raw CSV/JSON
+anchors.
 
 The public repository scope intended for GitHub publication and artifact
 distribution is defined in `PUBLIC_REPOSITORY_SCOPE.md`.
@@ -247,8 +254,8 @@ feedback from faster campaigns; use `--catalog-order` to preserve catalog order.
   measured ATT&CK outputs plus curated CVE rules; it does not synthesize
   exploits or infer target products online, and it should not be read as a
   complete measurement of the `apt` or `pip` package ecosystems.
-- Public release/results reports are shipped in synthesized form; heavyweight
-  frozen evidence trees are intentionally excluded from the GitHub handoff.
+- Public release/results reports are shipped in regenerated, reviewer-facing
+  form from this checkout rather than as opaque local runtime traces.
 - The current GitHub handoff may ship representative VM-backed evidence for a
   subset of campaigns; broader corpus and pair-validation coverage remain
   visible in the synthesized reports without pretending that every historical

@@ -36,7 +36,7 @@ def main() -> int:
 
     if args.list:
         for cid in known_campaigns():
-            marker = "✓" if cid in implemented_campaigns() else " "
+            marker = "x" if cid in implemented_campaigns() else " "
             print(f" [{marker}] {cid}")
         return 0
 

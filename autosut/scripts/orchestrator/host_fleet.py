@@ -51,9 +51,9 @@ class HostFleet:
 
     - **Single-network (legacy)**: when ``sut.topology`` is None, one Docker
       network ``autosut-net-<uuid>`` is created and every host joins it.
-      Backwards-compatible with every multi-host campaign that predates S28.
+      Backwards-compatible with every multi-host campaign that predates multi-zone topology support.
 
-    - **Multi-zone (S28)**: when ``sut.topology`` declares zones, one Docker
+    - **Multi-zone**: when ``sut.topology`` declares zones, one Docker
       network is created per zone. Each host joins exactly the zones listed
       in :attr:`SUTHost.zones`. Hosts attached to multiple zones are
       gateways (dual-homed), bridging those zones — exactly the shape the
@@ -83,7 +83,7 @@ class HostFleet:
     def network_name(self) -> Optional[str]:
         """Backwards-compat: return the first network in the fleet.
 
-        Pre-S28 callers (e.g. composer, executors) only knew about one
+        Earlier callers (e.g. composer, executors) only knew about one
         network. They still work; multi-zone-aware callers should use
         :attr:`network_names` instead.
         """
@@ -138,7 +138,7 @@ class HostFleet:
                         timeout=600,
                     )
                 # Apply declarative SUT composition (credentials, artifacts,
-                # applications, exposures) — this is the S17 realism layer.
+                # applications, exposures) — this is the realism layer.
                 if host_spec.composition is not None:
                     from . import sut_composer
                     sut_composer.apply_composition(
@@ -367,7 +367,7 @@ def _bring_up_docker_host(host_spec: SUTHost, network_name: str,
 
     Mirrors :meth:`DockerEnvironment.bring_up` but joins the per-run
     private network and gives the container the declarative host name so
-    Docker DNS resolves ``ssh attacker`` ↔ ``ssh target1`` directly.
+    Docker DNS resolves ``ssh attacker`` <-> ``ssh target1`` directly.
     """
     container_name = f"autosut-{host_spec.name}-{uuid.uuid4().hex[:6]}"
     setup_log = run_dir / "sut" / f"{host_spec.name}_setup.log"

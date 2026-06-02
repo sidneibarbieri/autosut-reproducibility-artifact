@@ -39,32 +39,32 @@ validate_infrastructure() {
     
     # Check Caldera
     if curl -s http://192.168.56.10:8888 >/dev/null 2>&1; then
-        log_info "✓ Caldera server ready (192.168.56.10:8888)"
+        log_info "OK Caldera server ready (192.168.56.10:8888)"
     else
-        log_error "✗ Caldera server not responding"
+        log_error "FAIL Caldera server not responding"
         all_ready=false
     fi
     
     # Check vulnerable target
     if ping -c 1 192.168.56.20 >/dev/null 2>&1; then
-        log_info "✓ Vulnerable target ready (192.168.56.20)"
+        log_info "OK Vulnerable target ready (192.168.56.20)"
     else
-        log_error "✗ Vulnerable target not reachable"
+        log_error "FAIL Vulnerable target not reachable"
         all_ready=false
     fi
     
     # Check Apache on target
     if curl -s http://192.168.56.20/ >/dev/null 2>&1; then
-        log_info "✓ Apache web server responding"
+        log_info "OK Apache web server responding"
     else
         log_warn "⚠ Apache may not be fully ready (proceeding anyway)"
     fi
     
     # Check attacker
     if ping -c 1 192.168.56.30 >/dev/null 2>&1; then
-        log_info "✓ Attacker host ready (192.168.56.30)"
+        log_info "OK Attacker host ready (192.168.56.30)"
     else
-        log_error "✗ Attacker host not reachable"
+        log_error "FAIL Attacker host not reachable"
         all_ready=false
     fi
     
@@ -428,9 +428,9 @@ main() {
         
         if execute_technique "$tech_id" "$tech_name" "$target"; then
             ((success_count++)) || true
-            log_info "✓ $tech_id completed"
+            log_info "OK $tech_id completed"
         else
-            log_warn "✗ $tech_id had issues"
+            log_warn "FAIL $tech_id had issues"
         fi
         
         # Small delay between techniques

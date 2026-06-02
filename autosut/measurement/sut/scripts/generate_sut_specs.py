@@ -58,7 +58,7 @@ INFRASTRUCTURE_CATEGORIES = [
     "Cloud Service", "Container Host", "Security Appliance",
 ]
 
-# Tactic → implied services mapping
+# Tactic -> implied services mapping
 TACTIC_SERVICE_MAP = {
     "lateral-movement": ["smb", "rdp", "ssh", "winrm"],
     "credential-access": ["lsass", "kerberos", "ldap"],
@@ -68,7 +68,7 @@ TACTIC_SERVICE_MAP = {
     "persistence": ["registry", "scheduled_tasks", "services"],
 }
 
-# Technique → privilege requirements
+# Technique -> privilege requirements
 PRIVILEGE_TECHNIQUES = {
     "T1068": "privileged_access",     # Exploitation for Privilege Escalation
     "T1548": "elevated_access",       # Abuse Elevation Control Mechanism
@@ -76,7 +76,7 @@ PRIVILEGE_TECHNIQUES = {
     "T1078": "valid_accounts",        # Valid Accounts
 }
 
-# Technique → persistence surface
+# Technique -> persistence surface
 PERSISTENCE_TECHNIQUES = {
     "T1547": ["registry_run_keys", "startup_folder"],
     "T1053": ["scheduled_tasks"],
@@ -87,7 +87,7 @@ PERSISTENCE_TECHNIQUES = {
     "T1098": ["account_manipulation"],
 }
 
-# Technique → defense evasion implications (security controls)
+# Technique -> defense evasion implications (security controls)
 EVASION_TECHNIQUES = {
     "T1562": {"defender": "disabled", "security_monitoring": "impaired"},
     "T1070": {"log_collection": "cleared"},
@@ -578,7 +578,7 @@ def main():
                                                 'missing_dimensions', 'os_variants'])
         writer.writeheader()
         writer.writerows(sorted(completeness_rows, key=lambda r: r['campaign_name']))
-    print(f"  ✓ Completeness audit: {AUDIT_DIR / 'sut_completeness.csv'}")
+    print(f"  OK Completeness audit: {AUDIT_DIR / 'sut_completeness.csv'}")
 
     # ── Validation ──
     print("\n[4/6] Validating SUT coherence...")
@@ -612,7 +612,7 @@ def main():
                                                 'warnings', 'errors'])
         writer.writeheader()
         writer.writerows(sorted(validation_rows, key=lambda r: r['campaign_name']))
-    print(f"  ✓ Validation audit: {AUDIT_DIR / 'sut_validation.csv'}")
+    print(f"  OK Validation audit: {AUDIT_DIR / 'sut_validation.csv'}")
 
     # ── Infrastructure matrix ──
     print("\n[5/6] Building infrastructure matrix...")
@@ -627,7 +627,7 @@ def main():
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(infra['matrix_rows'])
-    print(f"  ✓ Infrastructure matrix: {AUDIT_DIR / 'infrastructure_matrix.csv'}")
+    print(f"  OK Infrastructure matrix: {AUDIT_DIR / 'infrastructure_matrix.csv'}")
 
     # ── Export figure data ──
     print("\n[6/6] Exporting figure data...")
@@ -657,7 +657,7 @@ def main():
 
     with open(RESULTS_DIR / 'figures_data_sut.json', 'w') as f:
         json.dump(sut_figure_data, f, indent=2)
-    print(f"  ✓ SUT figure data: {RESULTS_DIR / 'figures_data_sut.json'}")
+    print(f"  OK SUT figure data: {RESULTS_DIR / 'figures_data_sut.json'}")
 
     # Summary
     print("\n" + "=" * 70)

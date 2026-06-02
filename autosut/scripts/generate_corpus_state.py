@@ -17,7 +17,6 @@ CAMPAIGNS_DIR = PROJECT_ROOT / "campaigns"
 SUT_DIR = PROJECT_ROOT / "data" / "sut_profiles"
 EVIDENCE_DIR = PROJECT_ROOT / "release" / "evidence"
 DASHBOARD_EVIDENCE_DIR = PROJECT_ROOT / "release" / "dashboard" / "data" / "evidence"
-PARITY_REPORT = PROJECT_ROOT / "results" / "legacy_parity_report.json"
 MITRE_AUDIT = PROJECT_ROOT / "results" / "mitre_metadata_audit.json"
 HOST_LEAKAGE = PROJECT_ROOT / "results" / "host_leakage_audit.json"
 OUTPUT_JSON = PROJECT_ROOT / "results" / "corpus_state.json"
@@ -41,19 +40,21 @@ def _load_validation_helper():
 
 def evidence_dirs_for_campaign(campaign_id: str) -> list[Path]:
     prefix = f"{campaign_id}_"
-    matches: list[Path] = []
-    evidence_dir = EVIDENCE_DIR if EVIDENCE_DIR.exists() else DASHBOARD_EVIDENCE_DIR
-    if not evidence_dir.exists():
-        return matches
-    for candidate in evidence_dir.iterdir():
-        if not candidate.is_dir():
+    for evidence_dir in (DASHBOARD_EVIDENCE_DIR, EVIDENCE_DIR):
+        matches: list[Path] = []
+        if not evidence_dir.exists():
             continue
-        if not candidate.name.startswith(prefix):
-            continue
-        suffix = candidate.name[len(prefix) :]
-        if TIMESTAMP_SUFFIX.fullmatch(suffix):
-            matches.append(candidate)
-    return matches
+        for candidate in evidence_dir.iterdir():
+            if not candidate.is_dir():
+                continue
+            if not candidate.name.startswith(prefix):
+                continue
+            suffix = candidate.name[len(prefix) :]
+            if TIMESTAMP_SUFFIX.fullmatch(suffix):
+                matches.append(candidate)
+        if matches:
+            return matches
+    return []
 
 
 def latest_summary(campaign_id: str) -> dict | None:
@@ -81,13 +82,9 @@ def build_report() -> dict:
     published = sorted(path.stem for path in CAMPAIGNS_DIR.glob("*.json"))
     sut_profiles = {path.stem for path in SUT_DIR.glob("*.yml")}
     validate_campaign_sut_pair = _load_validation_helper()
-    parity = json.loads(PARITY_REPORT.read_text()) if PARITY_REPORT.exists() else {}
     mitre = json.loads(MITRE_AUDIT.read_text()) if MITRE_AUDIT.exists() else {}
     host_leakage = json.loads(HOST_LEAKAGE.read_text()) if HOST_LEAKAGE.exists() else {}
 
-    parity_by_campaign = {
-        item["sticks_campaign"]: item for item in parity.get("campaigns", [])
-    }
     mitre_by_campaign = {
         item["campaign_id"]: item for item in mitre.get("campaigns", [])
     }
@@ -120,7 +117,6 @@ def build_report() -> dict:
                 and mitre_by_campaign.get(campaign_id, {}).get("steps_without_mitre_support", 1)
                 == 0
             ),
-            "legacy_parity": parity_by_campaign.get(campaign_id),
             "host_leakage_detected": leakage_by_campaign.get(campaign_id, {}).get(
                 "host_leakage_detected", False
             ),
@@ -150,11 +146,6 @@ def build_report() -> dict:
         "campaigns_without_host_leakage": sum(
             1 for row in evidenced_subset if not row["host_leakage_detected"]
         ),
-        "legacy_direct_counterparts": parity.get("mapped_legacy_campaigns", 0),
-        "legacy_exact_matches": parity.get("exact_technique_matches", []),
-        "legacy_technique_coverage_rate": parity.get(
-            "legacy_technique_coverage_rate", 0.0
-        ),
         "campaigns": campaign_rows,
     }
 
@@ -171,14 +162,11 @@ def write_markdown(report: dict) -> None:
         f"- Campaigns with zero failed techniques in latest evidence: `{report['campaigns_with_zero_failed_in_latest_evidence']}`",
         f"- Campaigns with clean MITRE metadata audit: `{report['mitre_metadata_clean_campaigns']}`",
         f"- Campaigns without host leakage in latest evidence: `{report['campaigns_without_host_leakage']}`",
-        f"- Legacy direct counterparts: `{report['legacy_direct_counterparts']}`",
-        f"- Legacy exact technique matches: `{', '.join(report['legacy_exact_matches']) or 'none'}`",
-        f"- Legacy technique coverage rate: `{report['legacy_technique_coverage_rate']:.1%}`",
         "",
         "## Campaign Status",
         "",
-        "| Campaign | SUT | Pair Valid | Evidence | Latest Success | MITRE Clean | Host Leakage | Legacy Match |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|",
+        "| Campaign | SUT | Pair Valid | Evidence | Latest Success | MITRE Clean | Host Leakage |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
 
     for row in report["campaigns"]:
@@ -188,18 +176,12 @@ def write_markdown(report: dict) -> None:
             if latest
             else "none"
         )
-        legacy = row["legacy_parity"]
-        legacy_match = (
-            "exact"
-            if legacy and legacy["exact_technique_match"]
-            else f"{legacy['legacy_coverage_rate']:.1%}" if legacy else "n/a"
-        )
         lines.append(
             f"| {row['campaign_id']} | {'yes' if row['has_sut'] else 'no'} | "
             f"{'yes' if row['pair_valid'] else 'no'} | "
             f"{'yes' if row['has_latest_evidence'] else 'no'} | {latest_rate} | "
             f"{'yes' if row['mitre_metadata_clean'] else 'no'} | "
-            f"{'yes' if row['host_leakage_detected'] else 'no'} | {legacy_match} |"
+            f"{'yes' if row['host_leakage_detected'] else 'no'} |"
         )
 
     invalid_rows = [row for row in report["campaigns"] if row["has_sut"] and not row["pair_valid"]]

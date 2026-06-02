@@ -126,7 +126,7 @@ def _write_summary(rows: list[BatchRow], output_path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Run AutoSUT campaigns concurrently (S18 demonstration of "
+        description="Run AutoSUT campaigns concurrently (demonstration of "
                     "architectural advantage over the frozen sequential runner)."
     )
     parser.add_argument("--campaigns", nargs="+", required=True,

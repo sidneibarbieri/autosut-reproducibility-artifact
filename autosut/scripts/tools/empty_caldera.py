@@ -24,7 +24,7 @@ headers = {"KEY": API_KEY}
 
 def delete_operations():
     """Delete all operations"""
-    print("\n🔹 Deleting all operations...")
+    print("\n- Deleting all operations...")
     
     resp = requests.get(f"{API_URL}/operations", headers=headers)
     if resp.status_code != 200:
@@ -54,7 +54,7 @@ def delete_operations():
 
 def delete_abilities():
     """Delete all abilities"""
-    print("\n🔹 Deleting all abilities...")
+    print("\n- Deleting all abilities...")
     
     resp = requests.get(f"{API_URL}/abilities", headers=headers)
     if resp.status_code != 200:
@@ -82,7 +82,7 @@ def delete_abilities():
 
 def delete_adversaries():
     """Delete all adversaries"""
-    print("\n🔹 Deleting all adversaries...")
+    print("\n- Deleting all adversaries...")
     
     resp = requests.get(f"{API_URL}/adversaries", headers=headers)
     if resp.status_code != 200:

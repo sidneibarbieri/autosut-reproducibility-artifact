@@ -1,10 +1,8 @@
-"""Fidelity rubric adopted from the frozen predecessor methodology.
+"""Fidelity rubric for campaign replay realism.
 
-The frozen predecessor artifact introduces a 5-question rubric for classifying
-each technique execution as
-``faithful`` / ``adapted`` / ``inspired``. AutoSUT adopts the same rubric for
-methodological parity, with the same decision logic, and applies it against
-:class:`TechniqueOutcome` records produced by our orchestrator.
+AutoSUT classifies each technique execution as ``faithful``, ``adapted``, or
+``inspired`` with a five-question rubric applied to :class:`TechniqueOutcome`
+records produced by the orchestrator.
 
 The rubric questions
 --------------------
@@ -15,19 +13,19 @@ The rubric questions
 - **Q4** Does the observed effect follow from the mechanism, not a semantic shortcut?
 - **Q5** Can the evidence be independently audited and verified?
 
-Decision logic (identical to frozen ``fidelity_rubric.py``)
------------------------------------------------------------
+Decision logic
+--------------
 
-- All five yes → ``faithful``
-- Q1 + Q2 + Q4 yes (lab usually has Q3 = no) → ``adapted``
-- Q1 yes + Q2 partial + Q4 partial → ``adapted`` (borderline)
-- Otherwise → ``inspired``
+- All five yes -> ``faithful``
+- Q1 + Q2 + Q4 yes (lab usually has Q3 = no) -> ``adapted``
+- Q1 yes + Q2 partial + Q4 partial -> ``adapted`` (borderline)
+- Otherwise -> ``inspired``
 
 Lab note
 --------
 
-The frozen rubric forces Q3 to ``False`` for every lab execution because
-preconditions (credentials, vulnerable services, staged files) are configured
+The rubric forces Q3 to ``False`` for lab executions whose preconditions
+(credentials, vulnerable services, staged files) are configured
 by the SUT profile rather than discovered operationally. AutoSUT preserves
 this honesty principle: a campaign that drives a *real CVE chain* with no
 pre-staging (a rare and explicitly-tagged class) is the only path to

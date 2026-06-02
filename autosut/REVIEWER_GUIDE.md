@@ -403,9 +403,9 @@ contract.
 - The repository also regenerates `results/INFRA_AUTOMATION_COVERAGE.md` so
   reviewers can see the current IaC/SUT automation boundary without reverse
   engineering it from YAML profiles and shell scripts.
-- The public repository ships synthesized reports rather than heavyweight
-  frozen evidence trees; this keeps the handoff portable without weakening the
-  reproduction path.
+- The public repository ships synthesized reports and source artifacts that can
+  be regenerated from this checkout; heavyweight local runtime traces are not
+  part of the reviewer contract.
 - A clean checkout may therefore expose representative VM-backed evidence for
   only a subset of campaigns. The matrix and corpus-state reports make that
   explicit instead of implying that every campaign already has a shipped cold-start trace.

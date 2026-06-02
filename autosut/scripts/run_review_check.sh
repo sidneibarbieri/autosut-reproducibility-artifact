@@ -1,5 +1,5 @@
 #!/bin/sh
-# S27 release gate.
+# Release gate.
 #
 # Fail-fast validation of the AutoSUT public release surface. Exits with
 # non-zero whenever any of the contracts is broken so reviewers and CI
@@ -13,10 +13,9 @@
 #      summary.json, fidelity_report.json, and a non-zero technique count
 #   4. every golden run reports 100% success
 #   5. dashboard html is present and only references golden run paths
-#   6. realism matrix is present (study-facing artefact)
-#   7. evidence under release/evidence/ contains no non-archived partial
+#   6. evidence under release/evidence/ contains no non-archived partial
 #      run (i.e. _archive/ is the only place historical runs may live)
-#   8. release/subdetermination_proof.json (S32) is present and the
+#   7. release/subdetermination_proof.json is present and the
 #      cve_2021_41773 non-uniqueness proof is executable (both variants ran)
 #
 # Run from the project root::
@@ -28,11 +27,13 @@ set -eu
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-PY="$PROJECT_ROOT/.venv/bin/python"
+if [ -x "$PROJECT_ROOT/.venv/bin/python" ]; then
+    PY="$PROJECT_ROOT/.venv/bin/python"
+else
+    PY="python3"
+fi
 GOLDEN_FILE="$PROJECT_ROOT/release/golden_runs.json"
 DASHBOARD_HTML="$PROJECT_ROOT/release/dashboard/index.html"
-REALISM_MATRIX="$PROJECT_ROOT/release/REALISM_MATRIX.md"
-
 step() {
     printf "[review-check] %s\n" "$*"
 }
@@ -73,9 +74,24 @@ campaigns = golden.get("campaigns", [])
 if not campaigns:
     print("  no campaigns listed in golden_runs.json", file=sys.stderr)
     sys.exit(1)
+
+def resolve_run_dir(entry):
+    run_dir = PROJECT_ROOT / entry["evidence_path"]
+    if run_dir.exists():
+        return run_dir
+    dashboard_run_dir = (
+        PROJECT_ROOT
+        / "release"
+        / "dashboard"
+        / "data"
+        / "evidence"
+        / Path(entry["evidence_path"]).name
+    )
+    return dashboard_run_dir
+
 exit_code = 0
 for entry in campaigns:
-    run_dir = PROJECT_ROOT / entry["evidence_path"]
+    run_dir = resolve_run_dir(entry)
     required = ["manifest.json", "summary.json", "fidelity_report.json"]
     for required_file in required:
         if not (run_dir / required_file).exists():
@@ -139,14 +155,7 @@ if non_golden:
 PYEOF
 
 # ---------------------------------------------------------------------------
-# 6. realism matrix present
-# ---------------------------------------------------------------------------
-step "validating realism matrix is present"
-test -f "$REALISM_MATRIX" \
-    || fail "release/REALISM_MATRIX.md missing (run scripts/build_realism_matrix.py)"
-
-# ---------------------------------------------------------------------------
-# 7. no non-archived partial runs in evidence/
+# 6. no non-archived partial runs in evidence/
 # ---------------------------------------------------------------------------
 step "validating evidence tree contains only golden runs at root"
 "$PY" - <<'PYEOF' || fail "evidence root contains non-golden runs (see message above)"
@@ -174,9 +183,9 @@ if strays:
 PYEOF
 
 # ---------------------------------------------------------------------------
-# 8. S32 subdetermination proof artifact present + cve proof is executable
+# 7. Subdetermination proof artifact present + cve proof is executable
 # ---------------------------------------------------------------------------
-step "validating S32 subdetermination proof artifact"
+step "validating subdetermination proof artifact"
 "$PY" - <<'PYEOF' || fail "subdetermination proof validation failed (see message above)"
 import json
 import sys

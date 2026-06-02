@@ -22,6 +22,8 @@ land under ``release/provenance/``:
     machine-readable table (always all four sources, in enum order).
   * ``ENVIRONMENT_PROVENANCE.md`` -- the human-facing dimension table the paper
     reports.
+  * ``provenance_values.tex`` -- LaTeX macros for manuscript text that reports
+    the same provenance surface.
 
 Provenance is COUNTED, never invented: the only derived tags are definitional
 (a real CVE id is corpus evidence; an OS family is an ATT&CK platform). See
@@ -69,7 +71,7 @@ _DIM_LABEL = {
     "topology": "Topology",
 }
 
-# dmz_segmentation_demo is the S28 topology reference. It is deliberately NOT in
+# dmz_segmentation_demo is the topology reference. It is deliberately NOT in
 # implemented_campaigns() (it is a topology demo, not a frozen-corpus port), but
 # it is the only campaign that exercises the topology dimension, so include it
 # explicitly --- otherwise the table's most analyst-heavy row reads empty.
@@ -141,6 +143,62 @@ def write_csv(path: Path, merged: ProvenanceSummary) -> None:
         for source in _SOURCE_ORDER:
             total_row[source] = merged.by_source.get(source, 0)
         writer.writerow(total_row)
+
+
+def _latex_macro(name: str, value: int | float) -> str:
+    return f"\\newcommand{{\\{name}}}{{{value}}}"
+
+
+def _dimension_count(merged: ProvenanceSummary, dimension: str,
+                     source: str | None = None) -> int:
+    counts = merged.by_dimension.get(dimension, {})
+    if source is None:
+        return sum(counts.values())
+    return counts.get(source, 0)
+
+
+def write_latex(path: Path, summaries: list[ProvenanceSummary],
+                merged: ProvenanceSummary) -> None:
+    pct = merged.percentages
+    lines = [
+        "% Auto-generated environment-provenance values",
+        "% Source: autosut/scripts/generate_provenance_report.py",
+        _latex_macro("provenanceprofilecount", len(summaries)),
+        _latex_macro("provenancetotalelementcount", merged.total_elements),
+        _latex_macro("provenancecorpussupportedcount",
+                     merged.by_source.get("corpus_supported", 0)),
+        _latex_macro("provenancecorpussupportedpct",
+                     pct.get("corpus_supported", 0.0)),
+        _latex_macro("provenanceautosutconcretizedcount",
+                     merged.by_source.get("autosut_concretized", 0)),
+        _latex_macro("provenanceautosutconcretizedpct",
+                     pct.get("autosut_concretized", 0.0)),
+        _latex_macro("provenanceanalystauthoredcount",
+                     merged.by_source.get("analyst_authored", 0)),
+        _latex_macro("provenanceanalystauthoredpct",
+                     pct.get("analyst_authored", 0.0)),
+        _latex_macro("provenanceplatformtotal",
+                     _dimension_count(merged, "platform")),
+        _latex_macro("provenanceplatformcorpus",
+                     _dimension_count(merged, "platform", "corpus_supported")),
+        _latex_macro("provenancetopologytotal",
+                     _dimension_count(merged, "topology")),
+        _latex_macro("provenancetopologyanalyst",
+                     _dimension_count(merged, "topology", "analyst_authored")),
+        _latex_macro("provenanceartifacttotal",
+                     _dimension_count(merged, "artifacts")),
+        _latex_macro("provenanceartifactanalyst",
+                     _dimension_count(merged, "artifacts", "analyst_authored")),
+        _latex_macro("provenancesoftwaretotal",
+                     _dimension_count(merged, "software")),
+        _latex_macro("provenancesoftwareanalyst",
+                     _dimension_count(merged, "software", "analyst_authored")),
+        _latex_macro("provenancevulnerabilitytotal",
+                     _dimension_count(merged, "vulnerability")),
+        _latex_macro("provenancevulnerabilitycorpus",
+                     _dimension_count(merged, "vulnerability", "corpus_supported")),
+    ]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def _pct(count: int, total: int) -> float:
@@ -261,11 +319,13 @@ def main() -> None:
     json_path = out_dir / "environment_provenance.json"
     csv_path = out_dir / "support_matrix.csv"
     md_path = out_dir / "ENVIRONMENT_PROVENANCE.md"
+    latex_path = out_dir / "provenance_values.tex"
     write_json(json_path, summaries, merged, skipped)
     write_csv(csv_path, merged)
     write_markdown(md_path, summaries, merged, skipped)
+    write_latex(latex_path, summaries, merged)
 
-    for path in (json_path, csv_path, md_path):
+    for path in (json_path, csv_path, md_path, latex_path):
         print(f"Wrote {path.relative_to(PROJECT_ROOT)}")
     pct = merged.percentages
     print(

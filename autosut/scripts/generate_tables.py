@@ -18,6 +18,7 @@ from loaders.campaign_loader import load_campaign
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PUBLISHED_CAMPAIGNS_DIR = PROJECT_ROOT / "campaigns"
 EVIDENCE_DIR = PROJECT_ROOT / "release" / "evidence"
+DASHBOARD_EVIDENCE_DIR = PROJECT_ROOT / "release" / "dashboard" / "data" / "evidence"
 
 
 def list_published_campaigns() -> list[str]:
@@ -33,11 +34,15 @@ def get_latest_summary(campaign_id: str) -> dict | None:
     """Load the latest summary.json for a campaign, if present."""
     # Use timestamp-prefixed pattern to avoid matching longer campaign IDs
     # (e.g. "0.apt41_dust_*" must not match "0.apt41_dust_full_*")
-    campaign_dirs = [
-        d
-        for d in EVIDENCE_DIR.glob(f"{campaign_id}_*")
-        if d.name[len(campaign_id) + 1 : len(campaign_id) + 9].isdigit()
-    ]
+    campaign_dirs = []
+    for evidence_dir in (DASHBOARD_EVIDENCE_DIR, EVIDENCE_DIR):
+        campaign_dirs = [
+            d
+            for d in evidence_dir.glob(f"{campaign_id}_*")
+            if d.name[len(campaign_id) + 1 : len(campaign_id) + 9].isdigit()
+        ]
+        if campaign_dirs:
+            break
     if not campaign_dirs:
         return None
 

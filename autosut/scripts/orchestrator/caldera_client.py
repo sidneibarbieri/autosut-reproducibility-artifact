@@ -281,7 +281,7 @@ def container_ip() -> Optional[str]:
 
 
 # ---------------------------------------------------------------------------
-# Sandcat agent download + operation lifecycle (S9)
+# Sandcat agent download + operation lifecycle
 # ---------------------------------------------------------------------------
 
 # Canonical planner ids exposed by stock Caldera 5.x. The atomic planner is

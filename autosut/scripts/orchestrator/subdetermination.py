@@ -1,4 +1,4 @@
-"""S32 — Subdetermination: construct multiple SUTs compatible with one campaign.
+"""Subdetermination: construct multiple SUTs compatible with one campaign.
 
 The provenance tags an analyst set in `catalog.py` already partition a SUT into
 a fixed region (`corpus_supported`) and a free region (`analyst_authored` +

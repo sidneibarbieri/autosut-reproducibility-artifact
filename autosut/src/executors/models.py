@@ -227,11 +227,11 @@ class SUTProfile(BaseModel):
     estimated_duration_minutes: int = 5
     hosts: Dict[str, SUTHost] = Field(
         default_factory=dict,
-        description="Mapping of host-name → host configuration",
+        description="Mapping of host-name -> host configuration",
     )
     fidelity_expectations: Dict[str, ExecutionFidelity] = Field(
         default_factory=dict,
-        description="Technique ID → expected fidelity",
+        description="Technique ID -> expected fidelity",
     )
     execution_mode: str = "real_controlled"
     methodology_notes: str = ""

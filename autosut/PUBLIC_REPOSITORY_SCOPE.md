@@ -31,7 +31,6 @@ These files and directories support the canonical artifact path:
 - `scripts/generate_tables.py`
 - `scripts/generate_corpus_state.py`
 - `scripts/audit_mitre_metadata.py`
-- `scripts/audit_legacy_parity.py`
 - `scripts/audit_host_leakage.py`
 - `campaigns/`
 - `data/campaigns/`

@@ -1,0 +1,5 @@
+docker stop autosut-d2eebad972
+exit_code: 0
+stdout: autosut-d2eebad972
+
+stderr: 

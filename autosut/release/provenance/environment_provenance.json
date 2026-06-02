@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T23:18:38",
+  "generated_at": "2026-06-02T09:08:38",
   "policy": "hybrid_3category",
   "dimensions": [
     "platform",
@@ -13,17 +13,17 @@
   "skipped_unimplemented": [],
   "global": {
     "campaign_id": "ALL",
-    "total_elements": 130,
+    "total_elements": 133,
     "by_source": {
       "corpus_supported": 32,
-      "analyst_authored": 75,
+      "analyst_authored": 78,
       "autosut_concretized": 23,
       "inferred": 0
     },
     "percentages": {
-      "corpus_supported": 24.6,
-      "analyst_authored": 57.7,
-      "autosut_concretized": 17.7,
+      "corpus_supported": 24.1,
+      "analyst_authored": 58.6,
+      "autosut_concretized": 17.3,
       "inferred": 0.0
     },
     "by_dimension": {
@@ -59,7 +59,7 @@
       },
       "artifacts": {
         "corpus_supported": 0,
-        "analyst_authored": 29,
+        "analyst_authored": 32,
         "autosut_concretized": 0,
         "inferred": 0
       },
@@ -133,7 +133,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "software",
@@ -141,7 +141,7 @@
         "value": "apache_httpd@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "credentials",
@@ -149,7 +149,7 @@
         "value": "password:ubuntu",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (ubuntu:ubuntu)."
+        "purpose": "Operator account declared by the lab profile declaration (ubuntu:ubuntu)."
       },
       {
         "dimension": "exposures",
@@ -157,7 +157,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "exposures",
@@ -165,7 +165,7 @@
         "value": "80/tcp http",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "artifacts",
@@ -173,7 +173,7 @@
         "value": "/var/www/html/index.html",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/var/www/html/index.html)."
+        "purpose": "Decoy artefact declared by the lab profile (/var/www/html/index.html)."
       },
       {
         "dimension": "artifacts",
@@ -181,7 +181,7 @@
         "value": "/home/ubuntu/shipping_notice.txt",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/ubuntu/shipping_notice.txt)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/ubuntu/shipping_notice.txt)."
       },
       {
         "dimension": "platform",
@@ -197,7 +197,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the lab weak credential reaches (matches frozen YAML's services: [name: ssh, config: password_auth_enabled])."
+        "purpose": "ssh service the lab weak credential reaches (password authentication enabled)."
       },
       {
         "dimension": "credentials",
@@ -205,7 +205,7 @@
         "value": "password:vulnuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
+        "purpose": "T1078 lab pre-staged weak credentials; AutoSUT materializes the usable user/password pair."
       },
       {
         "dimension": "exposures",
@@ -213,7 +213,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the lab weak credential reaches (frozen 0.c0011 YAML services: ssh)."
+        "purpose": "SSH service the lab weak credential reaches (port 22)."
       },
       {
         "dimension": "artifacts",
@@ -232,6 +232,14 @@
         "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
       },
       {
+        "dimension": "artifacts",
+        "identifier": "artifact./root/.ssh/known_hosts",
+        "value": "/root/.ssh/known_hosts",
+        "source": "analyst_authored",
+        "host": null,
+        "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
+      },
+      {
         "dimension": "platform",
         "identifier": "platform.linux",
         "value": "linux",
@@ -245,7 +253,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "credentials",
@@ -253,7 +261,7 @@
         "value": "password:ubuntu",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (ubuntu:ubuntu)."
+        "purpose": "Operator account declared by the lab profile declaration (ubuntu:ubuntu)."
       },
       {
         "dimension": "exposures",
@@ -261,7 +269,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "platform",
@@ -277,7 +285,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "software",
@@ -285,7 +293,7 @@
         "value": "apache_httpd@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "credentials",
@@ -293,7 +301,7 @@
         "value": "password:ubuntu",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (ubuntu:ubuntu)."
+        "purpose": "Operator account declared by the lab profile declaration (ubuntu:ubuntu)."
       },
       {
         "dimension": "exposures",
@@ -301,7 +309,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "exposures",
@@ -309,7 +317,7 @@
         "value": "80/tcp http",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "platform",
@@ -325,7 +333,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "credentials",
@@ -333,7 +341,7 @@
         "value": "password:testuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (testuser:password123)."
+        "purpose": "Operator account declared by the lab profile declaration (testuser:password123)."
       },
       {
         "dimension": "exposures",
@@ -341,7 +349,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "artifacts",
@@ -349,7 +357,7 @@
         "value": "/tmp/sensitive_data.txt",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/tmp/sensitive_data.txt)."
+        "purpose": "Decoy artefact declared by the lab profile (/tmp/sensitive_data.txt)."
       },
       {
         "dimension": "artifacts",
@@ -357,7 +365,7 @@
         "value": "/tmp/credentials.txt",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/tmp/credentials.txt)."
+        "purpose": "Decoy artefact declared by the lab profile (/tmp/credentials.txt)."
       },
       {
         "dimension": "platform",
@@ -373,7 +381,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "credentials",
@@ -381,7 +389,7 @@
         "value": "password:testuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (testuser:password123)."
+        "purpose": "Operator account declared by the lab profile declaration (testuser:password123)."
       },
       {
         "dimension": "exposures",
@@ -389,7 +397,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "artifacts",
@@ -397,7 +405,7 @@
         "value": "/tmp/phishing_context.txt",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/tmp/phishing_context.txt)."
+        "purpose": "Decoy artefact declared by the lab profile (/tmp/phishing_context.txt)."
       },
       {
         "dimension": "platform",
@@ -413,7 +421,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "credentials",
@@ -421,7 +429,7 @@
         "value": "password:ubuntu",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (ubuntu:ubuntu)."
+        "purpose": "Operator account declared by the lab profile declaration (ubuntu:ubuntu)."
       },
       {
         "dimension": "exposures",
@@ -429,7 +437,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "artifacts",
@@ -437,7 +445,7 @@
         "value": "/home/ubuntu/andromeda_notes.txt",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/ubuntu/andromeda_notes.txt)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/ubuntu/andromeda_notes.txt)."
       },
       {
         "dimension": "artifacts",
@@ -445,7 +453,7 @@
         "value": "/home/ubuntu/staged_docs/report_2021.txt",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/ubuntu/staged_docs/report_2021.txt)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/ubuntu/staged_docs/report_2021.txt)."
       },
       {
         "dimension": "platform",
@@ -461,7 +469,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "software",
@@ -469,7 +477,7 @@
         "value": "apache_httpd@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "software",
@@ -477,7 +485,7 @@
         "value": "mysql@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed)."
+        "purpose": "MySQL instance the lab profile declares (default_instance_exposed)."
       },
       {
         "dimension": "credentials",
@@ -485,7 +493,7 @@
         "value": "password:dustops",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (dustops:Dust2024!)."
+        "purpose": "Operator account declared by the lab profile declaration (dustops:Dust2024!)."
       },
       {
         "dimension": "exposures",
@@ -493,7 +501,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "exposures",
@@ -501,7 +509,7 @@
         "value": "80/tcp http",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "exposures",
@@ -509,7 +517,7 @@
         "value": "3306/tcp mysql",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed)."
+        "purpose": "MySQL instance the lab profile declares (default_instance_exposed)."
       },
       {
         "dimension": "artifacts",
@@ -517,7 +525,7 @@
         "value": "/home/dustops/intel/targets.txt",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/targets.txt)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/targets.txt)."
       },
       {
         "dimension": "artifacts",
@@ -525,7 +533,7 @@
         "value": "/home/dustops/intel/financials.csv",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/financials.csv)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/financials.csv)."
       },
       {
         "dimension": "artifacts",
@@ -533,7 +541,7 @@
         "value": "/tmp/staged_payload.sh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/tmp/staged_payload.sh)."
+        "purpose": "Decoy artefact declared by the lab profile (/tmp/staged_payload.sh)."
       },
       {
         "dimension": "platform",
@@ -549,7 +557,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "credentials",
@@ -557,7 +565,7 @@
         "value": "password:testuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (testuser:password123)."
+        "purpose": "Operator account declared by the lab profile declaration (testuser:password123)."
       },
       {
         "dimension": "exposures",
@@ -565,7 +573,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "artifacts",
@@ -573,7 +581,7 @@
         "value": "/home/testuser/documents/financial_report.xlsx",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/testuser/documents/financial_report.xlsx)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/testuser/documents/financial_report.xlsx)."
       },
       {
         "dimension": "artifacts",
@@ -581,7 +589,7 @@
         "value": "/home/testuser/.ssh/id_rsa",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/testuser/.ssh/id_rsa)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/testuser/.ssh/id_rsa)."
       },
       {
         "dimension": "platform",
@@ -597,7 +605,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "software",
@@ -605,7 +613,7 @@
         "value": "apache_httpd@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "credentials",
@@ -613,7 +621,7 @@
         "value": "password:reconuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (reconuser:reconpass123)."
+        "purpose": "Operator account declared by the lab profile declaration (reconuser:reconpass123)."
       },
       {
         "dimension": "exposures",
@@ -621,7 +629,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "exposures",
@@ -629,7 +637,7 @@
         "value": "80/tcp http",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "artifacts",
@@ -637,7 +645,7 @@
         "value": "/home/reconuser/collection/finance_notes.txt",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/reconuser/collection/finance_notes.txt)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/reconuser/collection/finance_notes.txt)."
       },
       {
         "dimension": "artifacts",
@@ -645,7 +653,7 @@
         "value": "/home/reconuser/proxy/multi_hop_proxy.conf",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/reconuser/proxy/multi_hop_proxy.conf)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/reconuser/proxy/multi_hop_proxy.conf)."
       },
       {
         "dimension": "artifacts",
@@ -653,7 +661,7 @@
         "value": "/home/reconuser/tools/network_scan.sh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/reconuser/tools/network_scan.sh)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/reconuser/tools/network_scan.sh)."
       },
       {
         "dimension": "platform",
@@ -669,7 +677,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "ssh service with password authentication enabled."
       },
       {
         "dimension": "software",
@@ -677,7 +685,7 @@
         "value": "apache_httpd@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "credentials",
@@ -685,7 +693,7 @@
         "value": "password:clouduser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML declaration (clouduser:cloudpass123)."
+        "purpose": "Operator account declared by the lab profile declaration (clouduser:cloudpass123)."
       },
       {
         "dimension": "exposures",
@@ -693,7 +701,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+        "purpose": "SSH service with password authentication enabled."
       },
       {
         "dimension": "exposures",
@@ -701,7 +709,7 @@
         "value": "80/tcp http",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "HTTP web surface the frozen YAML declares."
+        "purpose": "HTTP web surface required by this lab profile."
       },
       {
         "dimension": "artifacts",
@@ -709,7 +717,7 @@
         "value": "/home/clouduser/.mozilla/firefox/profiles.ini",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/.mozilla/firefox/profiles.ini)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/clouduser/.mozilla/firefox/profiles.ini)."
       },
       {
         "dimension": "artifacts",
@@ -717,7 +725,7 @@
         "value": "/home/clouduser/.config/google-chrome/Default/Preferences",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/.config/google-chrome/Default/Preferences)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/clouduser/.config/google-chrome/Default/Preferences)."
       },
       {
         "dimension": "artifacts",
@@ -725,7 +733,7 @@
         "value": "/home/clouduser/staging/encoded_payload.b64",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/staging/encoded_payload.b64)."
+        "purpose": "Decoy artefact declared by the lab profile (/home/clouduser/staging/encoded_payload.b64)."
       },
       {
         "dimension": "platform",
@@ -741,7 +749,7 @@
         "value": "password:eclipseops",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML's 0.operation_midnighteclipse declaration (eclipseops:Eclipse123!)."
+        "purpose": "Operator account for the GlobalProtect surrogate (eclipseops:Eclipse123!)."
       },
       {
         "dimension": "exposures",
@@ -781,7 +789,7 @@
         "value": "password:salesops",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "Operator account matching the frozen YAML's 0.salesforce_data_exfiltration declaration."
+        "purpose": "Operator account for the Salesforce-style API surrogate."
       },
       {
         "dimension": "credentials",
@@ -829,7 +837,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the lab weak credential reaches (matches frozen YAML's services: [name: ssh, config: password_auth_enabled])."
+        "purpose": "ssh service the lab weak credential reaches (password authentication enabled)."
       },
       {
         "dimension": "credentials",
@@ -837,7 +845,7 @@
         "value": "password:vulnuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
+        "purpose": "T1078 lab pre-staged weak credentials; AutoSUT materializes the usable user/password pair."
       },
       {
         "dimension": "exposures",
@@ -845,7 +853,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the lab weak credential reaches (frozen 0.c0011 YAML services: ssh)."
+        "purpose": "SSH service the lab weak credential reaches (port 22)."
       },
       {
         "dimension": "artifacts",
@@ -862,6 +870,14 @@
         "source": "analyst_authored",
         "host": null,
         "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
+      },
+      {
+        "dimension": "artifacts",
+        "identifier": "artifact./root/.ssh/known_hosts",
+        "value": "/root/.ssh/known_hosts",
+        "source": "analyst_authored",
+        "host": null,
+        "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
       },
       {
         "dimension": "platform",
@@ -877,7 +893,7 @@
         "value": "openssh@default",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "ssh service the lab weak credential reaches (matches frozen YAML's services: [name: ssh, config: password_auth_enabled])."
+        "purpose": "ssh service the lab weak credential reaches (password authentication enabled)."
       },
       {
         "dimension": "credentials",
@@ -885,7 +901,7 @@
         "value": "password:vulnuser",
         "source": "autosut_concretized",
         "host": null,
-        "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
+        "purpose": "T1078 lab pre-staged weak credentials; AutoSUT materializes the usable user/password pair."
       },
       {
         "dimension": "exposures",
@@ -893,7 +909,7 @@
         "value": "22/tcp ssh",
         "source": "analyst_authored",
         "host": null,
-        "purpose": "SSH service the lab weak credential reaches (frozen 0.c0011 YAML services: ssh)."
+        "purpose": "SSH service the lab weak credential reaches (port 22)."
       },
       {
         "dimension": "artifacts",
@@ -912,100 +928,12 @@
         "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
       },
       {
-        "dimension": "platform",
-        "identifier": "attacker.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "attacker",
-        "purpose": "materialised as alpine:3.19"
-      },
-      {
-        "dimension": "platform",
-        "identifier": "target1.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "target1",
-        "purpose": "materialised as alpine:3.19"
-      },
-      {
-        "dimension": "credentials",
-        "identifier": "target1.credential.labuser",
-        "value": "password:labuser",
-        "source": "autosut_concretized",
-        "host": "target1",
-        "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
-      },
-      {
-        "dimension": "exposures",
-        "identifier": "target1.exposure.22",
-        "value": "22/tcp ssh",
-        "source": "analyst_authored",
-        "host": "target1",
-        "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
-      },
-      {
-        "dimension": "platform",
-        "identifier": "target2.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "target2",
-        "purpose": "materialised as alpine:3.19"
-      },
-      {
-        "dimension": "credentials",
-        "identifier": "target2.credential.labuser",
-        "value": "password:labuser",
-        "source": "autosut_concretized",
-        "host": "target2",
-        "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
-      },
-      {
-        "dimension": "exposures",
-        "identifier": "target2.exposure.22",
-        "value": "22/tcp ssh",
-        "source": "analyst_authored",
-        "host": "target2",
-        "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
-      },
-      {
-        "dimension": "platform",
-        "identifier": "attacker.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "attacker",
-        "purpose": "materialised as autosut/dmz-host:s28"
-      },
-      {
-        "dimension": "platform",
-        "identifier": "target.platform.linux",
-        "value": "linux",
-        "source": "corpus_supported",
-        "host": "target",
-        "purpose": "materialised as httpd:2.4.49"
-      },
-      {
-        "dimension": "software",
-        "identifier": "target.software.apache_httpd@2.4.49",
-        "value": "apache_httpd@2.4.49",
-        "source": "corpus_supported",
-        "host": "target",
-        "purpose": "Vulnerable web server \u2014 pre-patch httpd 2.4.49 with the Alias+cgi-bin trigger the advisory documents."
-      },
-      {
-        "dimension": "exposures",
-        "identifier": "target.exposure.80",
-        "value": "80/tcp http",
-        "source": "corpus_supported",
-        "host": "target",
-        "purpose": "Documented CVE-2021-41773 path-traversal exploit surface on the vulnerable httpd 2.4.49."
-      },
-      {
         "dimension": "artifacts",
-        "identifier": "target.artifact./usr/local/apache2/cgi-bin/lab.sh",
-        "value": "/usr/local/apache2/cgi-bin/lab.sh",
+        "identifier": "artifact./root/.ssh/known_hosts",
+        "value": "/root/.ssh/known_hosts",
         "source": "analyst_authored",
-        "host": "target",
-        "purpose": "Decoy CGI to confirm script alias mounted."
+        "host": null,
+        "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
       },
       {
         "dimension": "platform",
@@ -1110,6 +1038,102 @@
         "source": "analyst_authored",
         "host": null,
         "purpose": "Backend zone. No direct path from internet_edge."
+      },
+      {
+        "dimension": "platform",
+        "identifier": "attacker.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "attacker",
+        "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "platform",
+        "identifier": "target1.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "target1",
+        "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "credentials",
+        "identifier": "target1.credential.labuser",
+        "value": "password:labuser",
+        "source": "autosut_concretized",
+        "host": "target1",
+        "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
+      },
+      {
+        "dimension": "exposures",
+        "identifier": "target1.exposure.22",
+        "value": "22/tcp ssh",
+        "source": "analyst_authored",
+        "host": "target1",
+        "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
+      },
+      {
+        "dimension": "platform",
+        "identifier": "target2.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "target2",
+        "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "credentials",
+        "identifier": "target2.credential.labuser",
+        "value": "password:labuser",
+        "source": "autosut_concretized",
+        "host": "target2",
+        "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service."
+      },
+      {
+        "dimension": "exposures",
+        "identifier": "target2.exposure.22",
+        "value": "22/tcp ssh",
+        "source": "analyst_authored",
+        "host": "target2",
+        "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
+      },
+      {
+        "dimension": "platform",
+        "identifier": "attacker.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "attacker",
+        "purpose": "materialised as autosut/dmz-host:s28"
+      },
+      {
+        "dimension": "platform",
+        "identifier": "target.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "target",
+        "purpose": "materialised as httpd:2.4.49"
+      },
+      {
+        "dimension": "software",
+        "identifier": "target.software.apache_httpd@2.4.49",
+        "value": "apache_httpd@2.4.49",
+        "source": "corpus_supported",
+        "host": "target",
+        "purpose": "Vulnerable web server \u2014 pre-patch httpd 2.4.49 with the Alias+cgi-bin trigger the advisory documents."
+      },
+      {
+        "dimension": "exposures",
+        "identifier": "target.exposure.80",
+        "value": "80/tcp http",
+        "source": "corpus_supported",
+        "host": "target",
+        "purpose": "Documented CVE-2021-41773 path-traversal exploit surface on the vulnerable httpd 2.4.49."
+      },
+      {
+        "dimension": "artifacts",
+        "identifier": "target.artifact./usr/local/apache2/cgi-bin/lab.sh",
+        "value": "/usr/local/apache2/cgi-bin/lab.sh",
+        "source": "analyst_authored",
+        "host": "target",
+        "purpose": "Decoy CGI to confirm script alias mounted."
       }
     ]
   },
@@ -1298,7 +1322,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "software",
@@ -1306,7 +1330,7 @@
           "value": "apache_httpd@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "credentials",
@@ -1314,7 +1338,7 @@
           "value": "password:ubuntu",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (ubuntu:ubuntu)."
+          "purpose": "Operator account declared by the lab profile declaration (ubuntu:ubuntu)."
         },
         {
           "dimension": "exposures",
@@ -1322,7 +1346,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "exposures",
@@ -1330,7 +1354,7 @@
           "value": "80/tcp http",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "artifacts",
@@ -1338,7 +1362,7 @@
           "value": "/var/www/html/index.html",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/var/www/html/index.html)."
+          "purpose": "Decoy artefact declared by the lab profile (/var/www/html/index.html)."
         },
         {
           "dimension": "artifacts",
@@ -1346,23 +1370,23 @@
           "value": "/home/ubuntu/shipping_notice.txt",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/ubuntu/shipping_notice.txt)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/ubuntu/shipping_notice.txt)."
         }
       ]
     },
     {
       "campaign_id": "0.c0011",
-      "total_elements": 6,
+      "total_elements": 7,
       "by_source": {
         "corpus_supported": 1,
-        "analyst_authored": 4,
+        "analyst_authored": 5,
         "autosut_concretized": 1,
         "inferred": 0
       },
       "percentages": {
-        "corpus_supported": 16.7,
-        "analyst_authored": 66.7,
-        "autosut_concretized": 16.7,
+        "corpus_supported": 14.3,
+        "analyst_authored": 71.4,
+        "autosut_concretized": 14.3,
         "inferred": 0.0
       },
       "by_dimension": {
@@ -1398,7 +1422,7 @@
         },
         "artifacts": {
           "corpus_supported": 0,
-          "analyst_authored": 2,
+          "analyst_authored": 3,
           "autosut_concretized": 0,
           "inferred": 0
         },
@@ -1424,7 +1448,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the lab weak credential reaches (matches frozen YAML's services: [name: ssh, config: password_auth_enabled])."
+          "purpose": "ssh service the lab weak credential reaches (password authentication enabled)."
         },
         {
           "dimension": "credentials",
@@ -1432,7 +1456,7 @@
           "value": "password:vulnuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
+          "purpose": "T1078 lab pre-staged weak credentials; AutoSUT materializes the usable user/password pair."
         },
         {
           "dimension": "exposures",
@@ -1440,7 +1464,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the lab weak credential reaches (frozen 0.c0011 YAML services: ssh)."
+          "purpose": "SSH service the lab weak credential reaches (port 22)."
         },
         {
           "dimension": "artifacts",
@@ -1457,6 +1481,14 @@
           "source": "analyst_authored",
           "host": null,
           "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
+        },
+        {
+          "dimension": "artifacts",
+          "identifier": "artifact./root/.ssh/known_hosts",
+          "value": "/root/.ssh/known_hosts",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
         }
       ]
     },
@@ -1534,7 +1566,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "credentials",
@@ -1542,7 +1574,7 @@
           "value": "password:ubuntu",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (ubuntu:ubuntu)."
+          "purpose": "Operator account declared by the lab profile declaration (ubuntu:ubuntu)."
         },
         {
           "dimension": "exposures",
@@ -1550,7 +1582,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         }
       ]
     },
@@ -1628,7 +1660,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "software",
@@ -1636,7 +1668,7 @@
           "value": "apache_httpd@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "credentials",
@@ -1644,7 +1676,7 @@
           "value": "password:ubuntu",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (ubuntu:ubuntu)."
+          "purpose": "Operator account declared by the lab profile declaration (ubuntu:ubuntu)."
         },
         {
           "dimension": "exposures",
@@ -1652,7 +1684,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "exposures",
@@ -1660,7 +1692,7 @@
           "value": "80/tcp http",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         }
       ]
     },
@@ -1738,7 +1770,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "credentials",
@@ -1746,7 +1778,7 @@
           "value": "password:testuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (testuser:password123)."
+          "purpose": "Operator account declared by the lab profile declaration (testuser:password123)."
         },
         {
           "dimension": "exposures",
@@ -1754,7 +1786,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "artifacts",
@@ -1762,7 +1794,7 @@
           "value": "/tmp/sensitive_data.txt",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/tmp/sensitive_data.txt)."
+          "purpose": "Decoy artefact declared by the lab profile (/tmp/sensitive_data.txt)."
         },
         {
           "dimension": "artifacts",
@@ -1770,7 +1802,7 @@
           "value": "/tmp/credentials.txt",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/tmp/credentials.txt)."
+          "purpose": "Decoy artefact declared by the lab profile (/tmp/credentials.txt)."
         }
       ]
     },
@@ -1848,7 +1880,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "credentials",
@@ -1856,7 +1888,7 @@
           "value": "password:testuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (testuser:password123)."
+          "purpose": "Operator account declared by the lab profile declaration (testuser:password123)."
         },
         {
           "dimension": "exposures",
@@ -1864,7 +1896,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "artifacts",
@@ -1872,7 +1904,7 @@
           "value": "/tmp/phishing_context.txt",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/tmp/phishing_context.txt)."
+          "purpose": "Decoy artefact declared by the lab profile (/tmp/phishing_context.txt)."
         }
       ]
     },
@@ -1950,7 +1982,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "credentials",
@@ -1958,7 +1990,7 @@
           "value": "password:ubuntu",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (ubuntu:ubuntu)."
+          "purpose": "Operator account declared by the lab profile declaration (ubuntu:ubuntu)."
         },
         {
           "dimension": "exposures",
@@ -1966,7 +1998,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "artifacts",
@@ -1974,7 +2006,7 @@
           "value": "/home/ubuntu/andromeda_notes.txt",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/ubuntu/andromeda_notes.txt)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/ubuntu/andromeda_notes.txt)."
         },
         {
           "dimension": "artifacts",
@@ -1982,7 +2014,7 @@
           "value": "/home/ubuntu/staged_docs/report_2021.txt",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/ubuntu/staged_docs/report_2021.txt)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/ubuntu/staged_docs/report_2021.txt)."
         }
       ]
     },
@@ -2060,7 +2092,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "software",
@@ -2068,7 +2100,7 @@
           "value": "apache_httpd@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "software",
@@ -2076,7 +2108,7 @@
           "value": "mysql@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed)."
+          "purpose": "MySQL instance the lab profile declares (default_instance_exposed)."
         },
         {
           "dimension": "credentials",
@@ -2084,7 +2116,7 @@
           "value": "password:dustops",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (dustops:Dust2024!)."
+          "purpose": "Operator account declared by the lab profile declaration (dustops:Dust2024!)."
         },
         {
           "dimension": "exposures",
@@ -2092,7 +2124,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "exposures",
@@ -2100,7 +2132,7 @@
           "value": "80/tcp http",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "exposures",
@@ -2108,7 +2140,7 @@
           "value": "3306/tcp mysql",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "MySQL instance the frozen YAML declares (default_instance_exposed)."
+          "purpose": "MySQL instance the lab profile declares (default_instance_exposed)."
         },
         {
           "dimension": "artifacts",
@@ -2116,7 +2148,7 @@
           "value": "/home/dustops/intel/targets.txt",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/targets.txt)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/targets.txt)."
         },
         {
           "dimension": "artifacts",
@@ -2124,7 +2156,7 @@
           "value": "/home/dustops/intel/financials.csv",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/dustops/intel/financials.csv)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/financials.csv)."
         },
         {
           "dimension": "artifacts",
@@ -2132,7 +2164,7 @@
           "value": "/tmp/staged_payload.sh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/tmp/staged_payload.sh)."
+          "purpose": "Decoy artefact declared by the lab profile (/tmp/staged_payload.sh)."
         }
       ]
     },
@@ -2210,7 +2242,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "credentials",
@@ -2218,7 +2250,7 @@
           "value": "password:testuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (testuser:password123)."
+          "purpose": "Operator account declared by the lab profile declaration (testuser:password123)."
         },
         {
           "dimension": "exposures",
@@ -2226,7 +2258,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "artifacts",
@@ -2234,7 +2266,7 @@
           "value": "/home/testuser/documents/financial_report.xlsx",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/testuser/documents/financial_report.xlsx)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/testuser/documents/financial_report.xlsx)."
         },
         {
           "dimension": "artifacts",
@@ -2242,7 +2274,7 @@
           "value": "/home/testuser/.ssh/id_rsa",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/testuser/.ssh/id_rsa)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/testuser/.ssh/id_rsa)."
         }
       ]
     },
@@ -2320,7 +2352,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "software",
@@ -2328,7 +2360,7 @@
           "value": "apache_httpd@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "credentials",
@@ -2336,7 +2368,7 @@
           "value": "password:reconuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (reconuser:reconpass123)."
+          "purpose": "Operator account declared by the lab profile declaration (reconuser:reconpass123)."
         },
         {
           "dimension": "exposures",
@@ -2344,7 +2376,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "exposures",
@@ -2352,7 +2384,7 @@
           "value": "80/tcp http",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "artifacts",
@@ -2360,7 +2392,7 @@
           "value": "/home/reconuser/collection/finance_notes.txt",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/reconuser/collection/finance_notes.txt)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/reconuser/collection/finance_notes.txt)."
         },
         {
           "dimension": "artifacts",
@@ -2368,7 +2400,7 @@
           "value": "/home/reconuser/proxy/multi_hop_proxy.conf",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/reconuser/proxy/multi_hop_proxy.conf)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/reconuser/proxy/multi_hop_proxy.conf)."
         },
         {
           "dimension": "artifacts",
@@ -2376,7 +2408,7 @@
           "value": "/home/reconuser/tools/network_scan.sh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/reconuser/tools/network_scan.sh)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/reconuser/tools/network_scan.sh)."
         }
       ]
     },
@@ -2454,7 +2486,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "ssh service with password authentication enabled."
         },
         {
           "dimension": "software",
@@ -2462,7 +2494,7 @@
           "value": "apache_httpd@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "credentials",
@@ -2470,7 +2502,7 @@
           "value": "password:clouduser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML declaration (clouduser:cloudpass123)."
+          "purpose": "Operator account declared by the lab profile declaration (clouduser:cloudpass123)."
         },
         {
           "dimension": "exposures",
@@ -2478,7 +2510,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the frozen YAML declares (password_auth_enabled)."
+          "purpose": "SSH service with password authentication enabled."
         },
         {
           "dimension": "exposures",
@@ -2486,7 +2518,7 @@
           "value": "80/tcp http",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "HTTP web surface the frozen YAML declares."
+          "purpose": "HTTP web surface required by this lab profile."
         },
         {
           "dimension": "artifacts",
@@ -2494,7 +2526,7 @@
           "value": "/home/clouduser/.mozilla/firefox/profiles.ini",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/.mozilla/firefox/profiles.ini)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/clouduser/.mozilla/firefox/profiles.ini)."
         },
         {
           "dimension": "artifacts",
@@ -2502,7 +2534,7 @@
           "value": "/home/clouduser/.config/google-chrome/Default/Preferences",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/.config/google-chrome/Default/Preferences)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/clouduser/.config/google-chrome/Default/Preferences)."
         },
         {
           "dimension": "artifacts",
@@ -2510,7 +2542,7 @@
           "value": "/home/clouduser/staging/encoded_payload.b64",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "Decoy artefact declared by the frozen YAML (/home/clouduser/staging/encoded_payload.b64)."
+          "purpose": "Decoy artefact declared by the lab profile (/home/clouduser/staging/encoded_payload.b64)."
         }
       ]
     },
@@ -2588,7 +2620,7 @@
           "value": "password:eclipseops",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML's 0.operation_midnighteclipse declaration (eclipseops:Eclipse123!)."
+          "purpose": "Operator account for the GlobalProtect surrogate (eclipseops:Eclipse123!)."
         },
         {
           "dimension": "exposures",
@@ -2690,7 +2722,7 @@
           "value": "password:salesops",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "Operator account matching the frozen YAML's 0.salesforce_data_exfiltration declaration."
+          "purpose": "Operator account for the Salesforce-style API surrogate."
         },
         {
           "dimension": "credentials",
@@ -2728,17 +2760,17 @@
     },
     {
       "campaign_id": "0.caldera_linux_demo",
-      "total_elements": 6,
+      "total_elements": 7,
       "by_source": {
         "corpus_supported": 1,
-        "analyst_authored": 4,
+        "analyst_authored": 5,
         "autosut_concretized": 1,
         "inferred": 0
       },
       "percentages": {
-        "corpus_supported": 16.7,
-        "analyst_authored": 66.7,
-        "autosut_concretized": 16.7,
+        "corpus_supported": 14.3,
+        "analyst_authored": 71.4,
+        "autosut_concretized": 14.3,
         "inferred": 0.0
       },
       "by_dimension": {
@@ -2774,7 +2806,7 @@
         },
         "artifacts": {
           "corpus_supported": 0,
-          "analyst_authored": 2,
+          "analyst_authored": 3,
           "autosut_concretized": 0,
           "inferred": 0
         },
@@ -2800,7 +2832,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the lab weak credential reaches (matches frozen YAML's services: [name: ssh, config: password_auth_enabled])."
+          "purpose": "ssh service the lab weak credential reaches (password authentication enabled)."
         },
         {
           "dimension": "credentials",
@@ -2808,7 +2840,7 @@
           "value": "password:vulnuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
+          "purpose": "T1078 lab pre-staged weak credentials; AutoSUT materializes the usable user/password pair."
         },
         {
           "dimension": "exposures",
@@ -2816,7 +2848,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the lab weak credential reaches (frozen 0.c0011 YAML services: ssh)."
+          "purpose": "SSH service the lab weak credential reaches (port 22)."
         },
         {
           "dimension": "artifacts",
@@ -2833,22 +2865,30 @@
           "source": "analyst_authored",
           "host": null,
           "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
+        },
+        {
+          "dimension": "artifacts",
+          "identifier": "artifact./root/.ssh/known_hosts",
+          "value": "/root/.ssh/known_hosts",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
         }
       ]
     },
     {
       "campaign_id": "0.fin6_emulation",
-      "total_elements": 6,
+      "total_elements": 7,
       "by_source": {
         "corpus_supported": 1,
-        "analyst_authored": 4,
+        "analyst_authored": 5,
         "autosut_concretized": 1,
         "inferred": 0
       },
       "percentages": {
-        "corpus_supported": 16.7,
-        "analyst_authored": 66.7,
-        "autosut_concretized": 16.7,
+        "corpus_supported": 14.3,
+        "analyst_authored": 71.4,
+        "autosut_concretized": 14.3,
         "inferred": 0.0
       },
       "by_dimension": {
@@ -2884,7 +2924,7 @@
         },
         "artifacts": {
           "corpus_supported": 0,
-          "analyst_authored": 2,
+          "analyst_authored": 3,
           "autosut_concretized": 0,
           "inferred": 0
         },
@@ -2910,7 +2950,7 @@
           "value": "openssh@default",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "ssh service the lab weak credential reaches (matches frozen YAML's services: [name: ssh, config: password_auth_enabled])."
+          "purpose": "ssh service the lab weak credential reaches (password authentication enabled)."
         },
         {
           "dimension": "credentials",
@@ -2918,7 +2958,7 @@
           "value": "password:vulnuser",
           "source": "autosut_concretized",
           "host": null,
-          "purpose": "T1078 lab pre-staged weak credentials \u2014 the same user/password pair the predecessor profile declares."
+          "purpose": "T1078 lab pre-staged weak credentials; AutoSUT materializes the usable user/password pair."
         },
         {
           "dimension": "exposures",
@@ -2926,7 +2966,7 @@
           "value": "22/tcp ssh",
           "source": "analyst_authored",
           "host": null,
-          "purpose": "SSH service the lab weak credential reaches (frozen 0.c0011 YAML services: ssh)."
+          "purpose": "SSH service the lab weak credential reaches (port 22)."
         },
         {
           "dimension": "artifacts",
@@ -2943,6 +2983,180 @@
           "source": "analyst_authored",
           "host": null,
           "purpose": "Decoy credentials store \u2014 collection target for T1552.001."
+        },
+        {
+          "dimension": "artifacts",
+          "identifier": "artifact./root/.ssh/known_hosts",
+          "value": "/root/.ssh/known_hosts",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Remote-system-discovery seed for Caldera T1018 (Parse SSH known_hosts). The file is an analyst-authored lab affordance, not corpus-supported CTI."
+        }
+      ]
+    },
+    {
+      "campaign_id": "0.dmz_segmentation_demo",
+      "total_elements": 13,
+      "by_source": {
+        "corpus_supported": 4,
+        "analyst_authored": 6,
+        "autosut_concretized": 3,
+        "inferred": 0
+      },
+      "percentages": {
+        "corpus_supported": 30.8,
+        "analyst_authored": 46.2,
+        "autosut_concretized": 23.1,
+        "inferred": 0.0
+      },
+      "by_dimension": {
+        "platform": {
+          "corpus_supported": 4,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "software": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "vulnerability": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "credentials": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 3,
+          "inferred": 0
+        },
+        "exposures": {
+          "corpus_supported": 0,
+          "analyst_authored": 3,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "artifacts": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "topology": {
+          "corpus_supported": 0,
+          "analyst_authored": 3,
+          "autosut_concretized": 0,
+          "inferred": 0
+        }
+      },
+      "elements": [
+        {
+          "dimension": "platform",
+          "identifier": "attacker.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "attacker",
+          "purpose": "materialised as autosut/dmz-host:s28"
+        },
+        {
+          "dimension": "platform",
+          "identifier": "nginx.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "nginx",
+          "purpose": "materialised as autosut/dmz-host:s28"
+        },
+        {
+          "dimension": "credentials",
+          "identifier": "nginx.credential.labuser",
+          "value": "password:labuser",
+          "source": "autosut_concretized",
+          "host": "nginx",
+          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
+        },
+        {
+          "dimension": "exposures",
+          "identifier": "nginx.exposure.22",
+          "value": "22/tcp ssh",
+          "source": "analyst_authored",
+          "host": "nginx",
+          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
+        },
+        {
+          "dimension": "platform",
+          "identifier": "app_server.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "app_server",
+          "purpose": "materialised as autosut/dmz-host:s28"
+        },
+        {
+          "dimension": "credentials",
+          "identifier": "app_server.credential.labuser",
+          "value": "password:labuser",
+          "source": "autosut_concretized",
+          "host": "app_server",
+          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
+        },
+        {
+          "dimension": "exposures",
+          "identifier": "app_server.exposure.22",
+          "value": "22/tcp ssh",
+          "source": "analyst_authored",
+          "host": "app_server",
+          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
+        },
+        {
+          "dimension": "platform",
+          "identifier": "db.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "db",
+          "purpose": "materialised as autosut/dmz-host:s28"
+        },
+        {
+          "dimension": "credentials",
+          "identifier": "db.credential.labuser",
+          "value": "password:labuser",
+          "source": "autosut_concretized",
+          "host": "db",
+          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
+        },
+        {
+          "dimension": "exposures",
+          "identifier": "db.exposure.22",
+          "value": "22/tcp ssh",
+          "source": "analyst_authored",
+          "host": "db",
+          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
+        },
+        {
+          "dimension": "topology",
+          "identifier": "topology.zone.internet_edge",
+          "value": "internet_edge",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Where the attacker originates. Has no enterprise access."
+        },
+        {
+          "dimension": "topology",
+          "identifier": "topology.zone.dmz",
+          "value": "dmz",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Bridges internet_edge and enterprise. Hosts edge-facing services."
+        },
+        {
+          "dimension": "topology",
+          "identifier": "topology.zone.enterprise",
+          "value": "enterprise",
+          "source": "analyst_authored",
+          "host": null,
+          "purpose": "Backend zone. No direct path from internet_edge."
         }
       ]
     },
@@ -3163,172 +3377,6 @@
           "source": "analyst_authored",
           "host": "target",
           "purpose": "Decoy CGI to confirm script alias mounted."
-        }
-      ]
-    },
-    {
-      "campaign_id": "0.dmz_segmentation_demo",
-      "total_elements": 13,
-      "by_source": {
-        "corpus_supported": 4,
-        "analyst_authored": 6,
-        "autosut_concretized": 3,
-        "inferred": 0
-      },
-      "percentages": {
-        "corpus_supported": 30.8,
-        "analyst_authored": 46.2,
-        "autosut_concretized": 23.1,
-        "inferred": 0.0
-      },
-      "by_dimension": {
-        "platform": {
-          "corpus_supported": 4,
-          "analyst_authored": 0,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "software": {
-          "corpus_supported": 0,
-          "analyst_authored": 0,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "vulnerability": {
-          "corpus_supported": 0,
-          "analyst_authored": 0,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "credentials": {
-          "corpus_supported": 0,
-          "analyst_authored": 0,
-          "autosut_concretized": 3,
-          "inferred": 0
-        },
-        "exposures": {
-          "corpus_supported": 0,
-          "analyst_authored": 3,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "artifacts": {
-          "corpus_supported": 0,
-          "analyst_authored": 0,
-          "autosut_concretized": 0,
-          "inferred": 0
-        },
-        "topology": {
-          "corpus_supported": 0,
-          "analyst_authored": 3,
-          "autosut_concretized": 0,
-          "inferred": 0
-        }
-      },
-      "elements": [
-        {
-          "dimension": "platform",
-          "identifier": "attacker.platform.linux",
-          "value": "linux",
-          "source": "corpus_supported",
-          "host": "attacker",
-          "purpose": "materialised as autosut/dmz-host:s28"
-        },
-        {
-          "dimension": "platform",
-          "identifier": "nginx.platform.linux",
-          "value": "linux",
-          "source": "corpus_supported",
-          "host": "nginx",
-          "purpose": "materialised as autosut/dmz-host:s28"
-        },
-        {
-          "dimension": "credentials",
-          "identifier": "nginx.credential.labuser",
-          "value": "password:labuser",
-          "source": "autosut_concretized",
-          "host": "nginx",
-          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
-        },
-        {
-          "dimension": "exposures",
-          "identifier": "nginx.exposure.22",
-          "value": "22/tcp ssh",
-          "source": "analyst_authored",
-          "host": "nginx",
-          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
-        },
-        {
-          "dimension": "platform",
-          "identifier": "app_server.platform.linux",
-          "value": "linux",
-          "source": "corpus_supported",
-          "host": "app_server",
-          "purpose": "materialised as autosut/dmz-host:s28"
-        },
-        {
-          "dimension": "credentials",
-          "identifier": "app_server.credential.labuser",
-          "value": "password:labuser",
-          "source": "autosut_concretized",
-          "host": "app_server",
-          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
-        },
-        {
-          "dimension": "exposures",
-          "identifier": "app_server.exposure.22",
-          "value": "22/tcp ssh",
-          "source": "analyst_authored",
-          "host": "app_server",
-          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
-        },
-        {
-          "dimension": "platform",
-          "identifier": "db.platform.linux",
-          "value": "linux",
-          "source": "corpus_supported",
-          "host": "db",
-          "purpose": "materialised as autosut/dmz-host:s28"
-        },
-        {
-          "dimension": "credentials",
-          "identifier": "db.credential.labuser",
-          "value": "password:labuser",
-          "source": "autosut_concretized",
-          "host": "db",
-          "purpose": "Lab-pre-staged SSH credential, identical on every server host so the pivot chain can reuse it as it crosses zone boundaries."
-        },
-        {
-          "dimension": "exposures",
-          "identifier": "db.exposure.22",
-          "value": "22/tcp ssh",
-          "source": "analyst_authored",
-          "host": "db",
-          "purpose": "SSH boundary each zone host exposes so the pivot chain can cross zone boundaries."
-        },
-        {
-          "dimension": "topology",
-          "identifier": "topology.zone.internet_edge",
-          "value": "internet_edge",
-          "source": "analyst_authored",
-          "host": null,
-          "purpose": "Where the attacker originates. Has no enterprise access."
-        },
-        {
-          "dimension": "topology",
-          "identifier": "topology.zone.dmz",
-          "value": "dmz",
-          "source": "analyst_authored",
-          "host": null,
-          "purpose": "Bridges internet_edge and enterprise. Hosts edge-facing services."
-        },
-        {
-          "dimension": "topology",
-          "identifier": "topology.zone.enterprise",
-          "value": "enterprise",
-          "source": "analyst_authored",
-          "host": null,
-          "purpose": "Backend zone. No direct path from internet_edge."
         }
       ]
     }

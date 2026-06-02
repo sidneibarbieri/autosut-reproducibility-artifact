@@ -28,9 +28,9 @@ python3 scripts/generate_tables.py
 
 ## Non-Guarantees
 
-- Full-corpus success is not currently guaranteed.
-- Optional multi-VM helpers may report degraded state depending on the local
-  environment.
-- Historical frozen results are retained for comparison and paper traceability,
-  not as a substitute for live validation.
-
+- Full replay depends on local Docker, Caldera, and host resources; use the
+  generated TSV/JSON reports to audit any interrupted or failed campaign.
+- Optional multi-VM helpers may report degraded state when the selected
+  provider lacks the declared networking or virtualization features.
+- Live validation from this checkout is the review contract; external historical
+  workspaces are not required evidence.

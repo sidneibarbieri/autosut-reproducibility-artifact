@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Unified Campaign Runner - Orchestrates Campaign → SUT → Executor → Evidence pipeline.
+Unified Campaign Runner - Orchestrates Campaign -> SUT -> Executor -> Evidence pipeline.
 """
 
 import argparse
@@ -60,7 +60,7 @@ HOME_DIR = Path.home()
 
 class UnifiedCampaignRunner:
     """
-    Orchestrates Campaign → SUT → Executor → Evidence pipeline.
+    Orchestrates Campaign -> SUT -> Executor -> Evidence pipeline.
 
     Loads validated Campaign and SUTProfile, executes each step in order,
     tracks capabilities, and produces structured CampaignEvidence.

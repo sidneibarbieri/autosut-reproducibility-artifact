@@ -279,8 +279,8 @@ _INDEX_HTML = """<!doctype html>
         const ratio = run.techniques_total
           ? run.techniques_success + '/' + run.techniques_total : '-';
         row.appendChild(elementWithText('td', ratio));
-        row.appendChild(elementWithText('td', run.has_caldera ? '✓' : '-'));
-        row.appendChild(elementWithText('td', run.has_rubric ? '✓' : '-'));
+        row.appendChild(elementWithText('td', run.has_caldera ? 'OK' : '-'));
+        row.appendChild(elementWithText('td', run.has_rubric ? 'OK' : '-'));
         const link = document.createElement('a');
         link.href = '/evidence/' + run.evidence_path.replace('release/evidence/', '')
                     + '/manifest.json';

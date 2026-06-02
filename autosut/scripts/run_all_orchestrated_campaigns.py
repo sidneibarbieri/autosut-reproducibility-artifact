@@ -273,6 +273,17 @@ def write_reports(rows: Sequence[ReplayRow], output_path: Path) -> None:
     )
 
 
+def reviewer_path(path_value: str) -> str:
+    """Return a path that remains valid after cloning the artifact."""
+    if not path_value:
+        return ""
+    path = Path(path_value)
+    try:
+        return path.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return path_value
+
+
 def select_campaigns(args: argparse.Namespace) -> list[str]:
     all_campaigns = implemented_campaigns()
     if args.list:
@@ -367,7 +378,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             total=result.total_techniques,
             fidelity_distribution=result.fidelity_distribution,
             elapsed_seconds=elapsed,
-            evidence_manifest=result.manifest_path,
+            evidence_manifest=reviewer_path(result.manifest_path),
             notes="ok",
         ))
         write_reports(rows, output_path)

@@ -1,0 +1,11 @@
+{
+  "campaign_id": "0.fin6_emulation",
+  "timestamp": "2026-06-01T17:18:49+00:00",
+  "total_techniques": 12,
+  "successful": 12,
+  "fidelity_distribution": {
+    "inspired": 9,
+    "adapted": 3
+  },
+  "evidence_directory": "release/evidence/0.fin6_emulation_20260601_171345"
+}

@@ -1,6 +1,6 @@
 # Environment Provenance
 
-- Generated at: `2026-05-31T22:53:37`
+- Generated at: `2026-06-02T09:08:39`
 - Campaigns measured: `19`
 - Total tagged SUT elements: `133`
 - Policy: 3-category hybrid (`corpus_supported` / `autosut_concretized` / `analyst_authored`).

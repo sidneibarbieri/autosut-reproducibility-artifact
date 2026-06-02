@@ -24,7 +24,7 @@ from orchestrator import subdetermination  # noqa: E402
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="S32 subdetermination proof")
+    parser = argparse.ArgumentParser(description="subdetermination proof")
     parser.add_argument("campaign_id")
     parser.add_argument("--variants", type=int, default=2)
     parser.add_argument("--seed", type=int, default=1)
