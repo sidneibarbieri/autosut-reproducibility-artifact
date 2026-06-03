@@ -34,8 +34,10 @@ SANDCAT_PATH_IN_CONTAINER = "/usr/local/bin/sandcat"
 SANDCAT_LOG_IN_CONTAINER = "/tmp/sandcat.log"
 DEFAULT_GROUP = "red"
 
-# One paw per (container, campaign run) keeps the agent inventory clean and
-# means consecutive techniques on the same container share an agent.
+# The dispatch path uses one fresh paw per Caldera operation. Reusing a sandcat
+# across one-off operations is faster, but Caldera can leave stale operation
+# state attached to an otherwise registered agent. Fresh paws make campaign
+# replay slower and much more stable for external reviewers.
 _paw_by_container: dict[str, str] = {}
 
 
@@ -56,6 +58,79 @@ class CalderaLinkResult:
     paw: Optional[str] = None
     evidence_files: list[str] = field(default_factory=list)
     error: Optional[str] = None
+
+
+def reset_agent_cache() -> None:
+    """Forget per-container sandcat paws after campaign teardown or C2 reset."""
+    _paw_by_container.clear()
+
+
+def _reset_container_agent(container: str) -> None:
+    """Stop any sandcat in ``container`` and allocate a fresh paw next time."""
+    _paw_by_container.pop(container, None)
+    subprocess.run(
+        [
+            "docker", "exec", container, "bash", "-lc",
+            f"pkill -f {SANDCAT_PATH_IN_CONTAINER} 2>/dev/null || true; "
+            f"rm -f {SANDCAT_LOG_IN_CONTAINER}",
+        ],
+        capture_output=True, text=True, check=False,
+    )
+
+
+def _find_report_link(report: dict, ability_id: str,
+                      paw: str) -> Optional[dict]:
+    """Return the report link for ``ability_id``, preferring the run's paw."""
+    fallback: Optional[dict] = None
+    for paw_in_report, info in report.get("steps", {}).items():
+        for cand in info.get("steps", []):
+            if cand.get("ability_id") != ability_id:
+                continue
+            if paw_in_report == paw:
+                return cand
+            if fallback is None:
+                fallback = cand
+    return fallback
+
+
+def _wait_report_link_or_finished(op_id: str, ability_id: str, paw: str,
+                                  max_seconds: int,
+                                  poll_seconds: float = 3.0
+                                  ) -> tuple[Optional[dict], dict, Optional[dict]]:
+    """Poll Caldera until the target link is observable or the budget expires.
+
+    Caldera 5.x can expose completed per-link evidence in the operation report
+    while the operation endpoint still says ``state=running``. Reviewer
+    auditability depends on the per-link stdout/stderr, not on that stale state
+    bit, so the dispatch path accepts a completed report link as the terminal
+    condition.
+    """
+    deadline = time.monotonic() + max_seconds
+    last_op: Optional[dict] = None
+    last_report: dict = {}
+    last_link: Optional[dict] = None
+    while time.monotonic() < deadline:
+        last_op = caldera_client.get_operation(op_id)
+        report = caldera_client.get_operation_report(op_id) or {}
+        if report:
+            last_report = report
+            last_link = _find_report_link(report, ability_id, paw)
+            # Caldera uses -3 for a link that has been delegated but has not
+            # yet returned agent output. Treating it as terminal races the
+            # sandcat and can kill the agent before it submits stdout/stderr.
+            if (last_link is not None
+                    and last_link.get("status") is not None
+                    and last_link.get("status") != -3):
+                return last_op, last_report, last_link
+            if report.get("finish"):
+                return last_op, last_report, last_link
+        if last_op is None or last_op.get("state") == "finished":
+            return last_op, last_report, last_link
+        time.sleep(poll_seconds)
+    last_op = caldera_client.get_operation(op_id)
+    last_report = caldera_client.get_operation_report(op_id) or last_report
+    last_link = _find_report_link(last_report, ability_id, paw)
+    return last_op, last_report, last_link
 
 
 def _container_arch_for_sandcat(container: str) -> str:
@@ -93,8 +168,32 @@ def _container_has_sandcat(container: str) -> bool:
     return proc.returncode == 0
 
 
+def _copy_cached_sandcat(container: str, arch: str) -> bool:
+    """Install Caldera's prebuilt sandcat payload without triggering Go builds."""
+    if arch != "amd64":
+        return False
+    proc = subprocess.run(
+        [
+            "docker", "cp",
+            f"{caldera_client.CALDERA_CONTAINER}:"
+            "/usr/src/app/plugins/sandcat/payloads/sandcat.go-linux",
+            f"{container}:{SANDCAT_PATH_IN_CONTAINER}",
+        ],
+        capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        return False
+    chmod = subprocess.run(
+        ["docker", "exec", container, "chmod", "+x", SANDCAT_PATH_IN_CONTAINER],
+        capture_output=True, text=True, check=False,
+    )
+    return chmod.returncode == 0
+
+
 def _install_sandcat(container: str) -> bool:
     arch = _container_arch_for_sandcat(container)
+    if _copy_cached_sandcat(container, arch):
+        return True
     binary = caldera_client.download_sandcat(platform="linux", architecture=arch)
     if not binary:
         return False
@@ -188,7 +287,10 @@ def dispatch_via_caldera(container: str, technique_id: str,
     ability_id = ability.get("ability_id") or ""
     ability_name = ability.get("name") or ""
 
-    agent = ensure_agent(container, run_dir)
+    _reset_container_agent(container)
+    paw = _agent_paw(container)
+    group = paw
+    agent = ensure_agent(container, run_dir, group=group)
     if not agent:
         return CalderaLinkResult(
             ok=False, technique_id=technique_id,
@@ -209,7 +311,9 @@ def dispatch_via_caldera(container: str, technique_id: str,
         )
 
     op_name = f"autosut-{technique_id}-{int(time.time())}"
-    op_id = caldera_client.start_operation(name=op_name, adversary_id=adv_id)
+    op_id = caldera_client.start_operation(
+        name=op_name, adversary_id=adv_id, group=group,
+    )
     if not op_id:
         return CalderaLinkResult(
             ok=False, technique_id=technique_id,
@@ -217,20 +321,9 @@ def dispatch_via_caldera(container: str, technique_id: str,
             error="start_operation failed",
         )
 
-    op = caldera_client.wait_operation_done(op_id, max_seconds=operation_timeout_s)
-    report = caldera_client.get_operation_report(op_id) or {}
-
-    paw = _paw_by_container.get(container, "")
-    # Find the link that matches our ability + agent.
-    link: Optional[dict] = None
-    for paw_in_report, info in report.get("steps", {}).items():
-        for cand in info.get("steps", []):
-            if cand.get("ability_id") == ability_id:
-                link = cand
-                if paw_in_report == paw:
-                    break
-        if link:
-            break
+    op, report, link = _wait_report_link_or_finished(
+        op_id, ability_id, paw, max_seconds=operation_timeout_s,
+    )
 
     # Persist the full report for reviewer auditability.
     evidence: list[str] = []

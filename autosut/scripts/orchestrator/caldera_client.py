@@ -44,6 +44,13 @@ def _read_red_api_key_from_container() -> Optional[str]:
 _CACHED_API_KEY: Optional[str] = None
 
 
+def reset_cache() -> None:
+    """Forget Caldera-derived client state after a C2 container restart."""
+    global _CACHED_API_KEY, _ABILITIES_CACHE
+    _CACHED_API_KEY = None
+    _ABILITIES_CACHE = []
+
+
 def get_red_api_key() -> Optional[str]:
     """Return the live red api key, caching after first read."""
     global _CACHED_API_KEY

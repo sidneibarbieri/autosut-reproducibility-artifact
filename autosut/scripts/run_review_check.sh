@@ -154,6 +154,34 @@ if non_golden:
     sys.exit(1)
 PYEOF
 
+step "validating dashboard evidence copy matches golden runs"
+"$PY" - <<'PYEOF' || fail "dashboard evidence copy does not match golden runs"
+import json
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(".").resolve()
+golden = json.loads((PROJECT_ROOT / "release" / "golden_runs.json").read_text())
+golden_run_ids = {entry["golden_run_id"] for entry in golden.get("campaigns", [])}
+evidence_dir = PROJECT_ROOT / "release" / "dashboard" / "data" / "evidence"
+if not evidence_dir.exists():
+    print("  dashboard data/evidence directory is missing", file=sys.stderr)
+    sys.exit(1)
+copied_run_ids = {path.name for path in evidence_dir.iterdir() if path.is_dir()}
+missing = sorted(golden_run_ids - copied_run_ids)
+extra = sorted(copied_run_ids - golden_run_ids)
+if missing or extra:
+    if missing:
+        print("  dashboard evidence is missing golden runs:", file=sys.stderr)
+        for run_id in missing:
+            print(f"    {run_id}", file=sys.stderr)
+    if extra:
+        print("  dashboard evidence contains non-golden runs:", file=sys.stderr)
+        for run_id in extra:
+            print(f"    {run_id}", file=sys.stderr)
+    sys.exit(1)
+PYEOF
+
 # ---------------------------------------------------------------------------
 # 6. no non-archived partial runs in evidence/
 # ---------------------------------------------------------------------------

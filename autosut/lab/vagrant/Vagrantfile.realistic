@@ -297,7 +297,7 @@ EOF
       mkdir -p /home/vulnuser/documents
       echo "Sensitive Company Data - CONFIDENTIAL" > /home/vulnuser/documents/confidential.txt
       echo "Passwords: admin:secret123, db:dbpass456" > /home/vulnuser/documents/passwords.txt
-      echo "API Keys: sk-live-abc123xyz789" > /home/vulnuser/documents/api_keys.txt
+      echo "API Keys: LAB_DECOY_API_KEY_abc123xyz789" > /home/vulnuser/documents/api_keys.txt
       
       # Create SSH keys
       mkdir -p /home/vulnuser/.ssh

@@ -16,6 +16,8 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
+import signal
 import shutil
 import subprocess
 import sys
@@ -29,6 +31,7 @@ from typing import Sequence
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from orchestrator import build_default, caldera_client
+from orchestrator import caldera_operation
 from orchestrator.catalog import implemented_campaigns
 
 
@@ -40,7 +43,12 @@ CALDERA_REQUIRED_CAMPAIGNS = {
     "0.caldera_linux_demo",
     "0.fin6_emulation",
 }
+CALDERA_DOCKER_PLATFORM = "linux/amd64"
 CALDERA_IMAGE = "ghcr.io/mitre/caldera:latest"
+
+
+class CampaignTimeout(RuntimeError):
+    """Raised when a campaign exceeds the configured wall-clock budget."""
 
 
 @dataclass
@@ -109,6 +117,33 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Do not attempt to start the local Caldera container automatically.",
     )
     parser.add_argument(
+        "--restart-caldera-per-campaign",
+        action="store_true",
+        help=(
+            "For Caldera-backed campaigns, restart autosut-caldera before "
+            "the campaign so stale agents, operations, and randomized API "
+            "keys cannot leak across a long batch."
+        ),
+    )
+    parser.add_argument(
+        "--isolate-campaigns",
+        action="store_true",
+        help=(
+            "Clean AutoSUT containers before and after each campaign. For "
+            "Caldera-backed campaigns, also restart Caldera before the run."
+        ),
+    )
+    parser.add_argument(
+        "--campaign-timeout-seconds",
+        type=int,
+        default=0,
+        help=(
+            "Optional wall-clock timeout per campaign. Timeout rows are "
+            "recorded as ERROR and the batch continues unless "
+            "--stop-on-failure is set."
+        ),
+    )
+    parser.add_argument(
         "--clean-stale-autosut-containers",
         action="store_true",
         help=(
@@ -166,6 +201,20 @@ def ensure_caldera_ready(max_wait_seconds: int = 90) -> bool:
     print("[caldera] C2 still unreachable. Run ./scripts/up_lab.sh to provision "
           "it; caldera-driven techniques are otherwise recorded as failures.")
     return False
+
+
+def reset_caldera_state(*, remove_container: bool = False) -> None:
+    """Reset Caldera client/agent caches and optionally replace the C2."""
+    caldera_client.reset_cache()
+    caldera_operation.reset_agent_cache()
+    if not remove_container:
+        return
+    subprocess.run(
+        ["docker", "rm", "-f", "autosut-caldera"],
+        check=False, capture_output=True, text=True,
+    )
+    caldera_client.reset_cache()
+    caldera_operation.reset_agent_cache()
 
 
 def preflight(
@@ -240,6 +289,42 @@ def clean_stale_autosut_containers() -> None:
         capture_output=True,
         text=True,
     )
+
+
+def run_with_optional_timeout(orch, campaign_id: str,
+                              timeout_seconds: int):
+    """Run one campaign, using SIGALRM only when configured."""
+    if timeout_seconds <= 0:
+        return orch.run_campaign(campaign_id)
+
+    def _raise_timeout(signum, frame):  # noqa: ARG001
+        raise CampaignTimeout(
+            f"campaign exceeded {timeout_seconds}s wall-clock budget"
+        )
+
+    previous = signal.signal(signal.SIGALRM, _raise_timeout)
+    signal.alarm(timeout_seconds)
+    try:
+        return orch.run_campaign(campaign_id)
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, previous)
+
+
+def set_caldera_platform_if_needed(campaign_id: str) -> str | None:
+    """Pin Caldera-backed SUTs to amd64 so the prebuilt sandcat is usable."""
+    previous = os.environ.get("AUTOSUT_DOCKER_PLATFORM")
+    if campaign_id in CALDERA_REQUIRED_CAMPAIGNS and previous is None:
+        os.environ["AUTOSUT_DOCKER_PLATFORM"] = CALDERA_DOCKER_PLATFORM
+        print(f"[caldera] SUT Docker platform: {CALDERA_DOCKER_PLATFORM}")
+    return previous
+
+
+def restore_docker_platform(previous: str | None) -> None:
+    if previous is None:
+        os.environ.pop("AUTOSUT_DOCKER_PLATFORM", None)
+    else:
+        os.environ["AUTOSUT_DOCKER_PLATFORM"] = previous
 
 
 def write_reports(rows: Sequence[ReplayRow], output_path: Path) -> None:
@@ -344,9 +429,34 @@ def main(argv: Sequence[str] | None = None) -> int:
     for index, cid in enumerate(campaigns, start=1):
         print(f"\n=== Running {cid} ===")
         print(f"[batch] {index}/{len(campaigns)}")
+        needs_campaign_caldera = cid in CALDERA_REQUIRED_CAMPAIGNS
+        if args.isolate_campaigns:
+            clean_stale_autosut_containers()
+        if needs_campaign_caldera and (args.restart_caldera_per_campaign
+                                       or args.isolate_campaigns):
+            print("[caldera] restarting C2 for campaign isolation ...")
+            reset_caldera_state(remove_container=True)
+            if not args.no_caldera_start and not ensure_caldera_ready():
+                rows.append(ReplayRow(
+                    campaign_id=cid,
+                    status="ERROR",
+                    successful=0,
+                    total=0,
+                    fidelity_distribution={},
+                    elapsed_seconds=0.0,
+                    evidence_manifest="",
+                    notes="Caldera did not become ready after restart",
+                ))
+                write_reports(rows, output_path)
+                if args.stop_on_failure:
+                    break
+                continue
         t0 = time.monotonic()
+        previous_platform = set_caldera_platform_if_needed(cid)
         try:
-            result = orch.run_campaign(cid)
+            result = run_with_optional_timeout(
+                orch, cid, args.campaign_timeout_seconds,
+            )
         except Exception as exc:
             elapsed = time.monotonic() - t0
             rows.append(ReplayRow(
@@ -360,9 +470,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                 notes=f"{type(exc).__name__}: {exc}",
             ))
             write_reports(rows, output_path)
+            if args.isolate_campaigns:
+                clean_stale_autosut_containers()
             if args.stop_on_failure:
                 break
             continue
+        finally:
+            restore_docker_platform(previous_platform)
         elapsed = time.monotonic() - t0
         status = (
             "PASS"
@@ -384,6 +498,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         write_reports(rows, output_path)
         print(f"[batch] {cid}: {status} {result.successful}/{result.total_techniques} "
               f"in {elapsed:.1f}s")
+        if args.isolate_campaigns:
+            clean_stale_autosut_containers()
         if status != "PASS" and args.stop_on_failure:
             break
 

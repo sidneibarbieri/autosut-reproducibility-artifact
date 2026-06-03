@@ -85,7 +85,7 @@ them.
 | --- | --- | --- | --- | --- |
 | Fast study-claim validation | `bash run_review_check.sh` | `python3` | commodity laptop/desktop | revalidate released values and synthesized outputs |
 | Minimal working example | `bash artifact/setup.sh && bash artifact/run.sh && bash artifact/validate.sh` | `python3`, `venv` | commodity laptop/desktop | smallest repository-local execution trace |
-| Orchestrated campaign replay | `python3 scripts/run_all_orchestrated_campaigns.py --preflight-only` then `python3 scripts/run_all_orchestrated_campaigns.py` | `python3`, `docker` | Docker-capable host | sequentially replay all implemented campaign/SUT pairs and write TSV/JSON status reports |
+| Orchestrated campaign replay | `python3 scripts/run_all_orchestrated_campaigns.py --preflight-only` then `python3 scripts/run_all_orchestrated_campaigns.py --isolate-campaigns --campaign-timeout-seconds 1200` | `python3`, `docker` | Docker-capable host | sequentially replay all implemented campaign/SUT pairs and write TSV/JSON status reports |
 | VM-backed realism | `bash run_vm_backed_campaign.sh 0.c0011` | `python3`, `vagrant`, `qemu` or `libvirt` | 8 CPU cores, 16 GB RAM, 25 GB free disk recommended | cold-start campaign/SUT replay on declared lab infrastructure |
 
 The first two paths are the fastest validation contract. The orchestrated
@@ -163,8 +163,14 @@ python3 scripts/run_all_orchestrated_campaigns.py --campaign 0.c0013
 Run the full implemented campaign suite:
 
 ```bash
-python3 scripts/run_all_orchestrated_campaigns.py
+python3 scripts/run_all_orchestrated_campaigns.py --isolate-campaigns --campaign-timeout-seconds 1200
 ```
+
+`--isolate-campaigns` is the recommended reviewer mode for the full suite: it
+cleans SUT containers before and after every campaign and restarts Caldera for
+Caldera-backed campaigns. On Apple Silicon, those Caldera-backed SUTs are
+pinned to `linux/amd64` so the prebuilt sandcat payload is used instead of a
+fragile just-in-time ARM build.
 
 If a previous local batch was interrupted, first remove only stale AutoSUT
 campaign containers:

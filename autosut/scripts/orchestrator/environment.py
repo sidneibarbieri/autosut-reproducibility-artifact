@@ -12,6 +12,7 @@ exercised in the container, not on the host.
 
 from __future__ import annotations
 
+import os
 import subprocess
 import uuid
 from pathlib import Path
@@ -46,13 +47,16 @@ class DockerEnvironment(EnvironmentBackend):
         container_name = f"autosut-{uuid.uuid4().hex[:10]}"
         run_dir.mkdir(parents=True, exist_ok=True)
 
+        platform = os.environ.get("AUTOSUT_DOCKER_PLATFORM", "").strip()
+        platform_args = ["--platform", platform] if platform else []
         subprocess.run(
-            ["docker", "pull", sut.base_image],
+            ["docker", "pull", *platform_args, sut.base_image],
             capture_output=True, text=True, check=False,
         )
         proc = subprocess.run(
             [
                 "docker", "run", "-d",
+                *platform_args,
                 "--name", container_name,
                 "--rm",
                 "--memory", f"{sut.memory_mb}m",
@@ -67,6 +71,7 @@ class DockerEnvironment(EnvironmentBackend):
         log_path.parent.mkdir(parents=True, exist_ok=True)
         log_path.write_text(
             f"# container bring-up\nimage: {sut.base_image}\nname: {container_name}\n"
+            f"platform: {platform or 'default'}\n"
             f"container_id: {proc.stdout.strip()}\n",
             encoding="utf-8",
         )

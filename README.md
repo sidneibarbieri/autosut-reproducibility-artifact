@@ -48,13 +48,16 @@ Dashboard preview:
 ```bash
 cd autosut
 python3 scripts/run_all_orchestrated_campaigns.py --preflight-only
-python3 scripts/run_all_orchestrated_campaigns.py --clean-stale-autosut-containers
+python3 scripts/run_all_orchestrated_campaigns.py --isolate-campaigns --campaign-timeout-seconds 1200
 ```
 
 This path replays the implemented Docker-backed campaign/SUT pairs
 and writes TSV/JSON reports under `release/`. It is slower than the
 fast validation path and requires Docker; the preflight separates
 infrastructure readiness from campaign failures before the long run.
+`--isolate-campaigns` is the recommended reviewer mode: it cleans
+SUT containers around each campaign and restarts Caldera for
+Caldera-backed campaigns.
 
 ## Executable Non-Uniqueness Witness
 

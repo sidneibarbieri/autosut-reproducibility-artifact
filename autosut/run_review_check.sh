@@ -7,3 +7,4 @@ cd "$ROOT_DIR/measurement/sut"
 bash release_check.sh
 cd "$ROOT_DIR"
 python3 scripts/build_reviewer_dashboard.py
+bash scripts/run_review_check.sh

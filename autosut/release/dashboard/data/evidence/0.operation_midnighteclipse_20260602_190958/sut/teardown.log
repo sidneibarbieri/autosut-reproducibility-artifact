@@ -1,5 +1,0 @@
-docker stop autosut-c88b259d6e
-exit_code: 0
-stdout: autosut-c88b259d6e
-
-stderr: 
