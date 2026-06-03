@@ -5,7 +5,7 @@
 \definecolor{acmGray}{HTML}{8A8F99}
 \definecolor{acmGrid}{HTML}{D9DDE2}
 \begin{tikzpicture}[x=0.603cm,y=0.055cm,font=\footnotesize]
-  \draw[->] (0,0) -- (13.8,0) node[right] {Compatibility class / sensitivity};
+  \draw[->] (0,0) -- (13.8,0) node[right,align=left] {Compatibility\\class / sensitivity};
   \draw[->] (0,0) -- (0,106) node[above] {\% of techniques};
   \foreach \yy in {0,20,40,60,80,100} {
     \draw[acmGrid] (0,\yy) -- (13.2,\yy);
@@ -35,5 +35,5 @@
   \node[anchor=west,font=\scriptsize,text=acmBlue] at (11.18,91.6) {resolved 91.6\%};
   \node[below] at (11.0,0) {non-CF range};
   \node[below,font=\scriptsize,text=gray] at (11.0,-7.0) {rule coverage 32.7\%};
-  \node[below,font=\scriptsize,text=gray] at (6.6,-12.5) {$N=691$ techniques};
+  \node[below,font=\scriptsize,text=gray] at (4.35,-18.0) {$N=691$ techniques};
 \end{tikzpicture}
