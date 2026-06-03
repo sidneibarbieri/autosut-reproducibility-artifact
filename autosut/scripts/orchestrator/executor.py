@@ -672,6 +672,164 @@ def _adapted_exfil(target: DockerEnvironment, attacker: AttackerEnv,
     )
 
 
+def _adapted_file_deletion(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1070.004 Indicator Removal: File Deletion."""
+    start = _now()
+    safe = tid.replace(".", "_")
+    r = target.run_shell(
+        f"f=/tmp/autosut_{safe}_indicator.log; "
+        f"echo 'lab activity to be erased' > $f; sha256sum $f; "
+        f"rm -f $f; "
+        f"if [ -e $f ]; then echo DELETE_FAILED; else echo DELETED_OK; fi",
+        log_name=f"techniques/{tid}_file_deletion.log", timeout=30,
+    )
+    success = r.ok and "DELETED_OK" in r.stdout
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if success else "failure",
+        evidence_files=[f"techniques/{tid}_file_deletion.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: a staged indicator file is really created then removed; absence is verified.",
+    )
+
+
+def _adapted_browser_discovery(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1217 Browser Information Discovery."""
+    start = _now()
+    r = target.run_shell(
+        "d=/root/.config/lab-browser/Default; mkdir -p $d; "
+        "printf '%s\\n' "
+        "'[{\"name\":\"intranet\",\"url\":\"http://intranet.lab\"},"
+        "{\"name\":\"wiki\",\"url\":\"http://wiki.lab\"}]' > $d/Bookmarks; "
+        "find / -name Bookmarks 2>/dev/null | head -3; "
+        "cat $d/Bookmarks",
+        log_name=f"techniques/{tid}_browser_discovery.log", timeout=30,
+    )
+    success = r.ok and "intranet.lab" in r.stdout
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if success else "failure",
+        evidence_files=[f"techniques/{tid}_browser_discovery.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: a browser bookmark store is staged, then discovered on disk and read from the SUT.",
+    )
+
+
+def _adapted_system_process(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1543 Create or Modify System Process / T1569.002 Service Execution."""
+    start = _now()
+    safe = tid.replace(".", "_")
+    r = target.run_shell(
+        f"u=/etc/systemd/system/autosut_{safe}.service; mkdir -p /etc/systemd/system; "
+        f"printf '[Unit]\\nDescription=autosut {safe}\\n[Service]\\nType=oneshot\\n"
+        f"ExecStart=/bin/sh -c \"echo {safe}-ran >> /tmp/autosut_{safe}.log\"\\n"
+        f"[Install]\\nWantedBy=multi-user.target\\n' > $u; cat $u; "
+        f"/bin/sh -c 'echo {safe}-ran >> /tmp/autosut_{safe}.log'; "
+        f"cat /tmp/autosut_{safe}.log; sha256sum $u",
+        log_name=f"techniques/{tid}_system_process.log", timeout=30,
+    )
+    success = r.ok and f"{safe}-ran" in r.stdout
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if success else "failure",
+        evidence_files=[f"techniques/{tid}_system_process.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: a systemd service unit is really written and its declared action executed in the bounded SUT.",
+    )
+
+
+def _adapted_chunked_transfer(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1030 Data Transfer Size Limits."""
+    start = _now()
+    safe = tid.replace(".", "_")
+    r = target.run_shell(
+        f"d=/tmp/autosut_{safe}; rm -rf $d; mkdir -p $d; "
+        f"dd if=/dev/urandom of=$d/blob bs=1024 count=8 2>/dev/null; "
+        f"split -b 1024 $d/blob $d/chunk_; "
+        f"n=$(ls $d/chunk_* 2>/dev/null | wc -l); "
+        f"if [ \"$n\" -ge 2 ]; then echo CHUNKS_OK; else echo CHUNKS_FEW; fi; echo n=$n",
+        log_name=f"techniques/{tid}_chunked_transfer.log", timeout=30,
+    )
+    success = r.ok and "CHUNKS_OK" in r.stdout
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if success else "failure",
+        evidence_files=[f"techniques/{tid}_chunked_transfer.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: staged data is really split into size-limited chunks for bounded transfer.",
+    )
+
+
+def _adapted_elevation(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1548 Abuse Elevation Control Mechanism."""
+    start = _now()
+    r = target.run_shell(
+        "id; "
+        "if sudo -n true 2>/dev/null; then echo SUDO_NOPASSWD; else echo NO_NOPASSWD_SUDO; fi; "
+        "echo '--- setuid surface ---'; find / -perm -4000 -type f 2>/dev/null | head -5",
+        log_name=f"techniques/{tid}_elevation.log", timeout=40,
+    )
+    success = r.ok and "uid=" in r.stdout
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if success else "failure",
+        evidence_files=[f"techniques/{tid}_elevation.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: the real privilege context and setuid surface are enumerated and the no-password sudo path is probed.",
+    )
+
+
+def _adapted_encoded_file(target: DockerEnvironment, tid: str, run_dir: Path) -> TechniqueOutcome:
+    """T1027.013 Obfuscated Files or Information: Encrypted/Encoded File."""
+    start = _now()
+    safe = tid.replace(".", "_")
+    r = target.run_shell(
+        f"f=/tmp/autosut_{safe}; "
+        f"echo 'sensitive-lab-payload' | base64 > $f.b64; "
+        f"if openssl enc -aes-256-cbc -pbkdf2 -salt -in $f.b64 -out $f.enc -k labkey 2>/dev/null; "
+        f"then echo ENCODED_OK; fi; ls -l $f.enc; sha256sum $f.enc",
+        log_name=f"techniques/{tid}_encoded_file.log", timeout=30,
+    )
+    success = r.ok and "ENCODED_OK" in r.stdout
+    return TechniqueOutcome(
+        technique_id=tid,
+        declared_fidelity=FidelityLevel.adapted,
+        executed_fidelity=FidelityLevel.adapted,
+        declared_mode=ExecutionMode.real_controlled,
+        executed_mode=ExecutionMode.real_controlled,
+        realization=Realization.generic_primitive,
+        status="success" if success else "failure",
+        evidence_files=[f"techniques/{tid}_encoded_file.log"],
+        duration_sec=_now() - start,
+        notes="Adapted: a payload is really base64-encoded then AES-256 encrypted on disk inside the SUT.",
+    )
+
+
 # Per-technique adapted recipes. Anything not listed falls back to inspired
 # marker even if the campaign JSON says expected_fidelity=adapted (in which
 # case the manifest records declared!=executed, which is itself a finding).
@@ -709,6 +867,14 @@ _ADAPTED_RECIPES: dict[str, str] = {
     "T1036.004": "masquerade",      # Masquerade Task/Service
     "T1543.003": "masquerade",      # Create or Modify System Process: Systemd Service
     "T1574.001": "masquerade",      # Hijack Execution Flow: DLL Search Order Hijacking
+    "T1070.004": "file_deletion",   # Indicator Removal: File Deletion
+    "T1217": "browser_discovery",   # Browser Information Discovery
+    "T1543": "system_process",      # Create or Modify System Process
+    "T1569.002": "system_process",  # System Services: Service Execution
+    "T1030": "chunked_transfer",    # Data Transfer Size Limits
+    "T1548": "elevation",           # Abuse Elevation Control Mechanism
+    "T1027.013": "encoded_file",    # Obfuscated Files: Encrypted/Encoded File
+    "T1553.002": "cert",            # Subvert Trust Controls: Code Signing
 }
 
 
@@ -863,6 +1029,18 @@ def _campaign_aware_walker(campaign_id: str):
                 outcomes.append(_adapted_crm_query(target, attacker, target_ip, tid, run_dir))
             elif recipe == "exfil":
                 outcomes.append(_adapted_exfil(target, attacker, target_ip, tid, run_dir))
+            elif recipe == "file_deletion":
+                outcomes.append(_adapted_file_deletion(target, tid, run_dir))
+            elif recipe == "browser_discovery":
+                outcomes.append(_adapted_browser_discovery(target, tid, run_dir))
+            elif recipe == "system_process":
+                outcomes.append(_adapted_system_process(target, tid, run_dir))
+            elif recipe == "chunked_transfer":
+                outcomes.append(_adapted_chunked_transfer(target, tid, run_dir))
+            elif recipe == "elevation":
+                outcomes.append(_adapted_elevation(target, tid, run_dir))
+            elif recipe == "encoded_file":
+                outcomes.append(_adapted_encoded_file(target, tid, run_dir))
             else:
                 # No adapted recipe registered -> inspired marker, with the
                 # manifest preserving the declared/executed gap if relevant.

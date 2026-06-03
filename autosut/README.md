@@ -38,6 +38,9 @@ also works after extraction. The dashboard is designed as the reviewer-first
 visual map of claims, replay reports, canonical evidence, and raw CSV/JSON
 anchors.
 
+![AutoSUT evidence dashboard: the reviewer path, the environment non-uniqueness
+proof, and the corpus-supported versus analyst-authored provenance surface](release/dashboard/dashboard-preview.png)
+
 The public repository scope intended for GitHub publication and artifact
 distribution is defined in `PUBLIC_REPOSITORY_SCOPE.md`.
 
