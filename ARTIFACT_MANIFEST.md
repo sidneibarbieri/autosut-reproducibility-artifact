@@ -7,7 +7,7 @@
 | --- | ---: | --- |
 | `.gitignore` | 284 | `9867cb6ecb44ceaab43aaa935d1f32164b26b76f5aa448dc071aaccfcac78748` |
 | `ARTIFACT_BOUNDARY.md` | 857 | `ce33a2a10ab2b4d455104913ec771de444f19c9106c4a7d9294a0f23e25c3421` |
-| `README.md` | 2548 | `f35e7f6f1fe0faacfcc9f058796ff8f769fdf5d60cd17041719a5c1dd1e88c89` |
+| `README.md` | 2611 | `936371f836aab5aae828524abd6f0374902f20962fcba6d185c8d6d96db53360` |
 | `autosut/.python-version` | 8 | `db82937e1f1830581a9553c7814f5c5fcacb6dfdef8310b43e9a812c887acaf5` |
 | `autosut/ARCHITECTURE.md` | 4825 | `e2fd7819f4fcb689bf288ef725d7b090bfbefe0704b8e5e6e0268d876fa2e0c3` |
 | `autosut/LICENSE` | 1071 | `86970e3ddf75bb8c4eb2a00949394aad6b469a3683a125bf10bf28e14b0a4e92` |
@@ -267,7 +267,7 @@
 | `autosut/release/compatibility_rule_surface.json` | 884 | `40a1187d090c4d4aaadde3c927a16198a3a55343f0c5eb6301fce75b0a42e2f6` |
 | `autosut/release/cve_resolution_candidates.json` | 9338 | `da801361bfa7346b66cd56d555b750df90e4771af76668d3159ccc67effd5b0c` |
 | `autosut/release/dashboard/dashboard-preview.png` | 392523 | `48a8cd8453e949e8a6eff2ff5aab16501370d2dc9fd451a1b0918d090bb07770` |
-| `autosut/release/dashboard/data/ENVIRONMENT_PROVENANCE.md` | 3249 | `0bd1aa0e4a38e6e79eed7d1663623dacfacc2f2024998482bf7b025dfc002340` |
+| `autosut/release/dashboard/data/ENVIRONMENT_PROVENANCE.md` | 3249 | `d9b3d100f36edcdaa97b333e5f2e533dd9b6f86c6c594b7ac6e7d8b9bb715188` |
 | `autosut/release/dashboard/data/all_cves.csv` | 718 | `e5e5019b3ce2d89f86158d2b75fdf3170c0007d4510379d79a3f5e683183f098` |
 | `autosut/release/dashboard/data/bootstrap_confusion_distribution.csv` | 153 | `695b0b62ea85c36d9a322efeb11ce7ed0d52ec693f818649e70ffe756af26f17` |
 | `autosut/release/dashboard/data/campaign_correlation_summary.csv` | 1462 | `d9f750217caf2cbd55c8603dcc4b2b8f3e58dfb0f870a0b5ed5335b92738e931` |
@@ -294,7 +294,7 @@
 | `autosut/release/dashboard/data/cve_validation.csv` | 1185 | `ee55b669e85f069cce444f11537dda3e8eb4e5334bd2379124bc8b4c6d147568` |
 | `autosut/release/dashboard/data/delta_sensitivity.csv` | 130 | `febfdc52fba50d0bbb1020468b2ac2aaa9a67e4eec8b303bc34f5e6c19d849a1` |
 | `autosut/release/dashboard/data/environment_inference.csv` | 10798 | `bcb68dfbefa1367594e94933ee1e4b962cdae36ba9b5a62d83309252b9cdc69c` |
-| `autosut/release/dashboard/data/environment_provenance.json` | 110303 | `92aa7f39776004b44dc7ee354fa3928850d9ec80dd15b8782d238309b0b178b3` |
+| `autosut/release/dashboard/data/environment_provenance.json` | 110303 | `514b7f48489403804ab47f8d5d7380253ffd6a5c51390547a58247f0dbf05b1f` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_023824/environment_provenance.json` | 4227 | `5daf48889e8cdae59f5419f70078d4b815043a87cdfe8479c0dbaf249b46527e` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_023824/fidelity_report.json` | 26346 | `c583b1b7ca6e06cc084105e65f86c9c7931c23f86ec8afe6854fa57022c9926c` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_023824/manifest.json` | 18012 | `4243d022b785285e6e5bd4dd37a2bbae09cc70d7dcb47decbbbaf67d149583fb` |
@@ -502,8 +502,8 @@
 | `autosut/release/orchestrated_replay_full_19.json` | 6211 | `16375fa2035cbd8282ecb6dc4770179940405c9ebc4231892967bbccdf89587f` |
 | `autosut/release/orchestrated_replay_full_19.tsv` | 2489 | `773a457de523c5873d1cac95aca30186671c9b9bb117bf6be3cf4ec15c09769d` |
 | `autosut/release/performance_metrics.tex` | 381 | `5a0482297c6c6cd81668e3a5b69eeae7d5c5465474287a57bbb8c935af544560` |
-| `autosut/release/provenance/ENVIRONMENT_PROVENANCE.md` | 3249 | `d272333ede13c32e8c1f4af21edf7d3880f2861df00e2de310acbb9ac185b0a5` |
-| `autosut/release/provenance/environment_provenance.json` | 110303 | `d85e271195c258cd42289dcfb85ff858d8d498cbb2954b512fa901a1db7468b8` |
+| `autosut/release/provenance/ENVIRONMENT_PROVENANCE.md` | 3249 | `9dc6c33f699438c7b26fef595f331d0fdb833b0463c66f13e33e2e6cebd1479f` |
+| `autosut/release/provenance/environment_provenance.json` | 110303 | `6a130951cd8ce07c9e30be0f3a12e3da34091da0d8a26ff2105586b2ebc84914` |
 | `autosut/release/provenance/provenance_values.tex` | 925 | `e529a4830a224e535e850ed8e4bb2ce02a394132db889f03f1dfda2b55d1a120` |
 | `autosut/release/provenance/support_matrix.csv` | 251 | `015ec67b3187704a3ea840d5c6bd6b4be9d266a84734542b890c59a1d7f5efbc` |
 | `autosut/release/realism_analysis_report.json` | 4084 | `4754aa77e9a9bdc9311df2d6438afa270de2d51836495928cff8214f20577bc6` |

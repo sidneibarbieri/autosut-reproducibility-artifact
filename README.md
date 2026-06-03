@@ -56,16 +56,17 @@ and writes TSV/JSON reports under `release/`. It is slower than the
 fast validation path and requires Docker; the preflight separates
 infrastructure readiness from campaign failures before the long run.
 
-## Heavier Optional VM Path
+## Executable Non-Uniqueness Witness
 
 ```bash
 cd autosut
-bash run_vm_backed_campaign.sh 0.cve_2021_41773
+bash artifact/setup.sh
+.venv/bin/python3 scripts/prove_subdetermination.py 0.cve_2021_41773 --variants 2 --execute
 ```
 
-The optional VM-backed path is not required for the main measurement
-claims. It is included to expose the declared campaign/SUT workflow
-for reviewers who want to inspect the execution-facing substrate.
+This Docker-backed witness varies only analyst-authored SUT elements
+while preserving the same corpus fingerprint and executing the real
+CVE-2021-41773 mechanism in each compatible variant.
 
 ## Layout
 
