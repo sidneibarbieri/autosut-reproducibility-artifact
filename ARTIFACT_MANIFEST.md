@@ -7,7 +7,7 @@
 | --- | ---: | --- |
 | `.gitignore` | 284 | `9867cb6ecb44ceaab43aaa935d1f32164b26b76f5aa448dc071aaccfcac78748` |
 | `ARTIFACT_BOUNDARY.md` | 857 | `ce33a2a10ab2b4d455104913ec771de444f19c9106c4a7d9294a0f23e25c3421` |
-| `README.md` | 2783 | `b431b1f84776f811252ae348ca84f8f3995bc0bc1f1493cff64214815ff997c5` |
+| `README.md` | 2993 | `66f675df1157375ad1d20a0164beb4dba10d18e518e5610afd2762f370e2a91c` |
 | `autosut/.pytest_cache/.gitignore` | 37 | `3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd` |
 | `autosut/.pytest_cache/CACHEDIR.TAG` | 191 | `37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4` |
 | `autosut/.pytest_cache/README.md` | 302 | `73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad` |
@@ -17,7 +17,7 @@
 | `autosut/LICENSE` | 1071 | `86970e3ddf75bb8c4eb2a00949394aad6b469a3683a125bf10bf28e14b0a4e92` |
 | `autosut/MANIFEST.md` | 1499 | `de01a02502d917d3d5634d1ad56f102c76b363f1ea9683b2405d0b981021c155` |
 | `autosut/PUBLIC_REPOSITORY_SCOPE.md` | 3035 | `37c5ef0ecd5e511e6be5023cd0828fc42e6b05d80254f4bf2850eb88534da26a` |
-| `autosut/README.md` | 15288 | `265079953237251dc6661f1c23e84a96392474272e70d8ce6ac217a4fe06dbc4` |
+| `autosut/README.md` | 15678 | `16a873bc4c96068c8b7356a98e5909a112ec38d44201fcb970bf2e0136cb1743` |
 | `autosut/README_MULTI_VM.md` | 1797 | `1da8f039d0709e8bc273f2cdba99e8d7bfaf1870fd3c80acf01542804b931a8d` |
 | `autosut/REPRODUCIBILITY.md` | 6204 | `050b59f4970d79e48da1fd88f56b23a333bbf30c7a5e08f5f282ade56cf2fcc5` |
 | `autosut/REVIEWER_GUIDE.md` | 17973 | `93c373b95f8c456f6fb35d0836dfd1db77648c4f11dfffe7f5bc8a1fb7323bd7` |
@@ -271,7 +271,7 @@
 | `autosut/release/compatibility_rule_surface.json` | 884 | `40a1187d090c4d4aaadde3c927a16198a3a55343f0c5eb6301fce75b0a42e2f6` |
 | `autosut/release/cve_resolution_candidates.json` | 9338 | `da801361bfa7346b66cd56d555b750df90e4771af76668d3159ccc67effd5b0c` |
 | `autosut/release/dashboard/dashboard-preview.png` | 392523 | `48a8cd8453e949e8a6eff2ff5aab16501370d2dc9fd451a1b0918d090bb07770` |
-| `autosut/release/dashboard/data/ENVIRONMENT_PROVENANCE.md` | 3249 | `e5bf41130031ef7b16721b35076cbc06971455748f646998b91b0bd9863577e6` |
+| `autosut/release/dashboard/data/ENVIRONMENT_PROVENANCE.md` | 3249 | `d915573e595c11f3517caf4d326ee6b2e266b71fd918ae2940562b9e934cff36` |
 | `autosut/release/dashboard/data/all_cves.csv` | 718 | `e5e5019b3ce2d89f86158d2b75fdf3170c0007d4510379d79a3f5e683183f098` |
 | `autosut/release/dashboard/data/bootstrap_confusion_distribution.csv` | 153 | `695b0b62ea85c36d9a322efeb11ce7ed0d52ec693f818649e70ffe756af26f17` |
 | `autosut/release/dashboard/data/campaign_correlation_summary.csv` | 1462 | `d9f750217caf2cbd55c8603dcc4b2b8f3e58dfb0f870a0b5ed5335b92738e931` |
@@ -298,7 +298,7 @@
 | `autosut/release/dashboard/data/cve_validation.csv` | 1185 | `ee55b669e85f069cce444f11537dda3e8eb4e5334bd2379124bc8b4c6d147568` |
 | `autosut/release/dashboard/data/delta_sensitivity.csv` | 130 | `febfdc52fba50d0bbb1020468b2ac2aaa9a67e4eec8b303bc34f5e6c19d849a1` |
 | `autosut/release/dashboard/data/environment_inference.csv` | 10798 | `bcb68dfbefa1367594e94933ee1e4b962cdae36ba9b5a62d83309252b9cdc69c` |
-| `autosut/release/dashboard/data/environment_provenance.json` | 110303 | `3d7c1ad2ce8fb2600a22ce6558781af8e116ac6614b13ec6d1865ed576c7bca5` |
+| `autosut/release/dashboard/data/environment_provenance.json` | 110303 | `8e02f20a9a986b067be36bec94877fdaaed617831d7bd6f195141513818cfaed` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/environment_provenance.json` | 4227 | `5daf48889e8cdae59f5419f70078d4b815043a87cdfe8479c0dbaf249b46527e` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/fidelity_report.json` | 26346 | `6f0456eaac3065882bdf9c7b26f31b50830c608aa5a0910df786ddb3fb2fd712` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/manifest.json` | 18014 | `661e319b6e94acc7f19b9eabccc685a97193e47373468f7d5586ade828dc6c5d` |
@@ -503,7 +503,7 @@
 | `autosut/release/dashboard/data/software_version_enrichment.csv` | 1639 | `a67f0601dd17ef54e92f65e82f08dfadc0f2d43aceaa53ab7942f3d4263e2ed4` |
 | `autosut/release/dashboard/data/support_matrix.csv` | 251 | `015ec67b3187704a3ea840d5c6bd6b4be9d266a84734542b890c59a1d7f5efbc` |
 | `autosut/release/dashboard/data/technique_compatibility.csv` | 161791 | `989b0adcd6b47cf1ac4b2be1f5fc9a5cee5ba4a19173823ff099a80a7dd0c66e` |
-| `autosut/release/dashboard/index.html` | 48440 | `3bfd1f561ba7527ad7a43bed83b5d25bfdf389ada50058744e593a1295f3c171` |
+| `autosut/release/dashboard/index.html` | 48440 | `c5b3b1110ebfcb7e08593197a4a5351f28341fb0ece22de9766494c7b2e9bbf9` |
 | `autosut/release/dashboard/style.css` | 6962 | `2d0872fc4bb1f07598f031a50cea413eef39397c737346bc2e62b7fb6ce01fbd` |
 | `autosut/release/fidelity_report.json` | 181388 | `03c6d2334b4778e56fd3581473b79055f60aca9a09dfaa86214198028e661a0c` |
 | `autosut/release/fidelity_tables.tex` | 22155 | `00deb5ce7cbbd8185f920cf7f3ec0a41e61bebafb95d1c4a1f86eebc4b8eb79c` |
@@ -513,8 +513,8 @@
 | `autosut/release/orchestrated_replay_full_19.json` | 6192 | `066bb601604d7238ad6a0bd7949a3ec8ccf731bac1a6d2c2e9da07a48ad66fe3` |
 | `autosut/release/orchestrated_replay_full_19.tsv` | 2470 | `836c520c66bf14f3701c7f372048d7cdbd59df8ef1eb4c7fb48e89498c0f68b6` |
 | `autosut/release/performance_metrics.tex` | 381 | `5a0482297c6c6cd81668e3a5b69eeae7d5c5465474287a57bbb8c935af544560` |
-| `autosut/release/provenance/ENVIRONMENT_PROVENANCE.md` | 3249 | `d8047017223bc30fac38f2ccf5081a5d28ec8b4904f15e9aa2b47f1ed3b0718e` |
-| `autosut/release/provenance/environment_provenance.json` | 110303 | `2268819d724dfafcd262c9e56d57fa2fae40041c7e1dcb11e6a6f80d689c9f92` |
+| `autosut/release/provenance/ENVIRONMENT_PROVENANCE.md` | 3249 | `56a8ebce7b6204fdaec7d71da25f6b66190ef08b97e831ac89e31fe8c6966d8a` |
+| `autosut/release/provenance/environment_provenance.json` | 110303 | `e9647213a13ad382749b2e2de013e8ed6fb81652a51572d99a99acd87901e0c7` |
 | `autosut/release/provenance/provenance_values.tex` | 925 | `e529a4830a224e535e850ed8e4bb2ce02a394132db889f03f1dfda2b55d1a120` |
 | `autosut/release/provenance/support_matrix.csv` | 251 | `015ec67b3187704a3ea840d5c6bd6b4be9d266a84734542b890c59a1d7f5efbc` |
 | `autosut/release/realism_analysis_report.json` | 4084 | `4754aa77e9a9bdc9311df2d6438afa270de2d51836495928cff8214f20577bc6` |
@@ -602,7 +602,7 @@
 | `autosut/scripts/reviewer_server.py` | 16635 | `b1fc39daf47f26e8f8ae035fd2de7811786b4e87585c2996b718f8e94e9800a6` |
 | `autosut/scripts/run_all_campaigns.py` | 4892 | `aba82300732ddd2f15fa0c65d4e4cbf123803984f2477178ce6c34d3d5e9e7ce` |
 | `autosut/scripts/run_all_lab_campaigns.py` | 8678 | `aae9366563305836c90d270951db0528c1d456cc6b1f8f6a21da4ec536e956a2` |
-| `autosut/scripts/run_all_orchestrated_campaigns.py` | 18048 | `a193f78e6505288425cfb743e49694b71c58b248424454dd4f789f1bf6ea438b` |
+| `autosut/scripts/run_all_orchestrated_campaigns.py` | 20286 | `ab535e6a58cd4dd170b976172a4071f8171718ccfafc5dbbd71c28fb2390b9f8` |
 | `autosut/scripts/run_campaign.py` | 626 | `cec8da532d90ba050dfd7b1d9af9b6ed33836c3c6c3506056a0ee17ee47d649f` |
 | `autosut/scripts/run_concurrent_campaigns.py` | 5982 | `4af2d6c64beb0746ae5f968af9b2f712b5df76777ad7c18188e7d9747accb290` |
 | `autosut/scripts/run_corpus.sh` | 1952 | `5166544b1e5713874f4d2c144be17c54ddcddfa2ef7a5ac17953b21b9bd86ed3` |

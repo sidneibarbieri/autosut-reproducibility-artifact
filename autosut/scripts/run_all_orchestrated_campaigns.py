@@ -157,6 +157,16 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Stop the batch after the first failing campaign.",
     )
+    parser.add_argument(
+        "--retain-run-evidence-at-root",
+        action="store_true",
+        help=(
+            "Developer/curation mode: leave newly generated replay evidence "
+            "under release/evidence/. By default, reviewer replays are moved "
+            "to release/evidence/_reviewer_runs/ so run_review_check.sh still "
+            "validates the curated golden evidence after a full rerun."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -369,6 +379,46 @@ def reviewer_path(path_value: str) -> str:
         return path_value
 
 
+def archive_reviewer_evidence(manifest_path: str,
+                              *,
+                              retain_at_root: bool) -> str:
+    """Move replay-generated evidence out of the curated evidence root.
+
+    ``release/evidence/`` is the curated surface consumed by the dashboard and
+    release gate: only golden runs belong there. A reviewer can still run all
+    campaigns, but those fresh runs are ordinary replay evidence rather than
+    newly curated golden runs. Keeping them under ``_reviewer_runs`` preserves
+    their manifests while letting ``run_review_check.sh`` pass immediately
+    after the reviewer has exercised the full replay command.
+    """
+    if retain_at_root or not manifest_path:
+        return manifest_path
+    manifest = Path(manifest_path)
+    if not manifest.exists():
+        return manifest_path
+    run_dir = manifest.parent
+    evidence_root = RELEASE_DIR / "evidence"
+    try:
+        run_dir.relative_to(evidence_root)
+    except ValueError:
+        return manifest_path
+    if run_dir.parent != evidence_root:
+        return manifest_path
+    if not run_dir.name.startswith("0.") or "_2026" not in run_dir.name:
+        return manifest_path
+
+    archive_root = evidence_root / "_reviewer_runs"
+    archive_root.mkdir(parents=True, exist_ok=True)
+    destination = archive_root / run_dir.name
+    if destination.exists():
+        suffix = 1
+        while (archive_root / f"{run_dir.name}_{suffix}").exists():
+            suffix += 1
+        destination = archive_root / f"{run_dir.name}_{suffix}"
+    shutil.move(str(run_dir), str(destination))
+    return str(destination / manifest.name)
+
+
 def select_campaigns(args: argparse.Namespace) -> list[str]:
     all_campaigns = implemented_campaigns()
     if args.list:
@@ -485,6 +535,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             if result.successful > 0
             else "FAIL"
         )
+        evidence_manifest = archive_reviewer_evidence(
+            str(result.manifest_path),
+            retain_at_root=args.retain_run_evidence_at_root,
+        )
         rows.append(ReplayRow(
             campaign_id=cid,
             status=status,
@@ -492,7 +546,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             total=result.total_techniques,
             fidelity_distribution=result.fidelity_distribution,
             elapsed_seconds=elapsed,
-            evidence_manifest=reviewer_path(result.manifest_path),
+            evidence_manifest=reviewer_path(evidence_manifest),
             notes="ok",
         ))
         write_reports(rows, output_path)

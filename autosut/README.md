@@ -180,9 +180,14 @@ python3 scripts/run_all_orchestrated_campaigns.py --clean-stale-autosut-containe
 ```
 
 The runner writes `release/orchestrated_replay_<timestamp>.tsv` and a matching
-JSON report after each campaign. This makes partial long runs auditable instead
-of losing all progress when a host, Docker, or Caldera issue interrupts the
-batch. By default, known slow campaigns run last so the reviewer gets early
+JSON report after each campaign. Fresh replay evidence is moved under
+`release/evidence/_reviewer_runs/` by default, so reviewers can run the full
+suite and then rerun `bash run_review_check.sh` without polluting the curated
+golden evidence used by the dashboard. Use `--retain-run-evidence-at-root` only
+for internal curation when you intentionally want new runs to be candidates for
+`scripts/curate_evidence.py --apply`. This makes partial long runs auditable
+instead of losing all progress when a host, Docker, or Caldera issue interrupts
+the batch. By default, known slow campaigns run last so the reviewer gets early
 feedback from faster campaigns; use `--catalog-order` to preserve catalog order.
 
 ## Canonical Entry Points

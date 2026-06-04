@@ -58,6 +58,10 @@ infrastructure readiness from campaign failures before the long run.
 `--isolate-campaigns` is the recommended reviewer mode: it cleans
 SUT containers around each campaign and restarts Caldera for
 Caldera-backed campaigns.
+Fresh replay evidence is kept under
+`autosut/release/evidence/_reviewer_runs/`, preserving the
+curated golden evidence used by the dashboard and allowing
+`bash run_review_check.sh` to pass after a full replay.
 
 ## Executable Non-Uniqueness Witness
 
