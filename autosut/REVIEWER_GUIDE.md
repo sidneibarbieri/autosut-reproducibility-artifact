@@ -156,14 +156,14 @@ Expected outputs:
 If you prefer not to use the wrappers:
 
 ```bash
-.venv/bin/python3 scripts/run_campaign.py --campaign 0.c0011
+.venv/bin/python3 scripts/run_orchestrated_campaign.py 0.c0017
 .venv/bin/python3 scripts/generate_tables.py
 ```
 
 To list campaigns:
 
 ```bash
-.venv/bin/python3 scripts/run_campaign.py
+.venv/bin/python3 scripts/run_orchestrated_campaign.py --list
 ```
 
 To audit the public-facing repository surface:

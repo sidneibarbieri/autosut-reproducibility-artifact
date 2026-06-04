@@ -141,7 +141,8 @@ class UnifiedCampaignRunner:
                 )
             print(f"[{i}/{total}] {step.technique_id} — {step.technique_name}")
             print(
-                f"         mode={step.expected_mode.value}  fidelity={step.expected_fidelity.value}"
+                f"         declared_mode={step.expected_mode.value}  "
+                f"declared_fidelity={step.expected_fidelity.value}"
             )
 
             tech_evidence = self._execute_step(step)
@@ -162,7 +163,7 @@ class UnifiedCampaignRunner:
 
             status_icon = "OK" if tech_evidence.status == "success" else "FAIL"
             print(
-                f"         [{status_icon}] fidelity={tech_evidence.fidelity.verified.value}"
+                f"         [{status_icon}] rubric_fidelity={tech_evidence.fidelity.verified.value}"
             )
             print()
 
@@ -423,7 +424,7 @@ class UnifiedCampaignRunner:
         print(f"  Total:      {evidence.total_techniques}")
         print(f"  Successful: {evidence.successful}")
         print(f"  Failed:     {evidence.failed}")
-        print(f"  Fidelity:   {evidence.fidelity_distribution}")
+        print(f"  Rubric:     {evidence.fidelity_distribution}")
         print()
 
         for te in evidence.technique_results:

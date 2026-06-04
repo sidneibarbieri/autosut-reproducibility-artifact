@@ -43,7 +43,7 @@ bash artifact/validate.sh
 
 The smoke path currently executes one representative campaign:
 
-- `0.c0011`
+- `0.c0017`
 
 and then regenerates the LaTeX tables used by the study-facing workflow.
 
@@ -53,9 +53,14 @@ The smoke path writes:
 
 - `release/evidence/<campaign>_<timestamp>/summary.json`
 - `release/evidence/<campaign>_<timestamp>/manifest.json`
+- `release/evidence/<campaign>_<timestamp>/fidelity_report.json`
 - `results/tables/corpus_table.tex`
 - `results/tables/fidelity_table.tex`
 - `results/tables/execution_table.tex`
+
+After validation, the checked smoke run is moved to
+`release/evidence/_reviewer_runs/` so reviewer-generated runs remain available
+without changing the curated golden evidence used by the dashboard.
 
 Supporting state reports can be regenerated with:
 

@@ -16,7 +16,7 @@ bash artifact/validate.sh
 ## Direct Commands
 
 ```bash
-python3 scripts/run_campaign.py --campaign 0.c0011
+python3 scripts/run_orchestrated_campaign.py 0.c0017
 python3 scripts/generate_tables.py
 ```
 

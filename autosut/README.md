@@ -130,14 +130,14 @@ reuse that interpreter automatically and do not require manual activation.
 Equivalent direct commands:
 
 ```bash
-.venv/bin/python3 scripts/run_campaign.py --campaign 0.c0011
+.venv/bin/python3 scripts/run_orchestrated_campaign.py 0.c0017
 .venv/bin/python3 scripts/generate_tables.py
 ```
 
 To list campaigns:
 
 ```bash
-.venv/bin/python3 scripts/run_campaign.py
+.venv/bin/python3 scripts/run_orchestrated_campaign.py --list
 ```
 
 This path is the smallest end-to-end execution example in the public checkout.
@@ -199,7 +199,7 @@ feedback from faster campaigns; use `--catalog-order` to preserve catalog order.
 - `artifact/validate.sh`: output validation for the smoke path
 - `artifact/teardown.sh`: cleanup helper
 - `scripts/run_all_orchestrated_campaigns.py`: Docker-backed full campaign replay with preflight and TSV/JSON reports
-- `scripts/run_campaign.py`: campaign execution
+- `scripts/run_orchestrated_campaign.py`: campaign execution
 - `scripts/run_lab_campaign.py`: canonical VM-backed orchestration for one campaign/SUT pair
 - `scripts/generate_tables.py`: LaTeX table generation
 - `scripts/up_lab.sh`: provider-aware lab provisioning and SUT application
