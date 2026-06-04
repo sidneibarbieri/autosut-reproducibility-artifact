@@ -542,15 +542,15 @@ def render_audit_overview(merged) -> str:
     </div>
     <div class='overview-card'>
       <strong>Boundary</strong>
-      <span>The manuscript, private notes, raw development logs, and VM images
-        are not part of this artifact.</span>
+      <span>No VM images are shipped; VM-backed reproduction uses a local
+        provider.</span>
     </div>
   </div>
   <div class='recipe-grid'>
     <div class='recipe-card'>
       <strong>1. Fast deterministic audit</strong>
-      <p>Regenerates measurements, dashboard inputs, figures, invariants, and
-        traceability files from the shipped public inputs.</p>
+      <p>Regenerates measurements, figures, traceability files, and value
+        checks from the shipped public inputs.</p>
       <code>bash run_review_check.sh</code>
     </div>
     <div class='recipe-card'>
@@ -649,15 +649,15 @@ def render_provenance_summary(summaries: list, merged) -> str:
         "<em>a</em> credential exists; AutoSUT picks the literal pair) or a "
         "named-product surrogate with no disclosed CVE. <strong>Analyst</strong> = "
         "no corpus signal; pure lab construction (generic inherited services, "
-        "topology zones, decoy files). Provenance is <strong>counted, never "
-        "computed</strong>: the aggregator only tallies tags set in "
-        "<code>catalog.py</code>; the sole derived tags are definitional (a real "
-        "CVE id <em>is</em> corpus evidence; an OS family <em>is</em> an ATT&amp;CK "
+        "topology zones, decoy files). Provenance tags are explicit: this "
+        "dashboard aggregates those tags and does not infer new provenance "
+        "categories. The only derived tags are definitional (a real CVE id "
+        "<em>is</em> corpus evidence; an OS family <em>is</em> an ATT&amp;CK "
         "platform).</p>"
     )
 
     downloads = (
-        "<p class='muted'>Full artifacts (same computation): "
+        "<p class='muted'>Audit files: "
         "<a href='data/ENVIRONMENT_PROVENANCE.md'><code>ENVIRONMENT_PROVENANCE.md</code></a>, "
         "<a href='data/support_matrix.csv'><code>support_matrix.csv</code></a>, "
         "<a href='data/environment_provenance.json'><code>environment_provenance.json</code></a> "
@@ -1241,7 +1241,7 @@ def render_execution_tour() -> str:
     # real-vs-simulated split before any per-campaign success count.
     banner = (
         "<p class='realism-summary'>Across these "
-        f"<strong>{len(cards)}</strong> canonical run(s): "
+        f"<strong>{len(cards)}</strong> audited run(s): "
         f"<strong>{agg_real}/{agg_total}</strong> planned steps are real executions "
         "(real_controlled / caldera_driven / atomic_red_team)"
     )
@@ -1333,7 +1333,7 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
 <body>
 <header>
   <h1>AutoSUT Evidence Dashboard</h1>
-  <p>Static snapshot of the artifact outputs that back the study claims.
+  <p>Evidence view for reproducing and auditing the study claims.
      Generated {datetime.now(timezone.utc).strftime('%B %d, %Y')}.</p>
 </header>
 <nav>
@@ -1369,33 +1369,29 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
     the executable environment; the rest must be reconstructed. Every concrete
     SUT element is tagged by where it came from, then rolled up into a dimension
     &times; source table: the fixed (corpus) vs free (reconstructed) partition
-    that the non-uniqueness result exploits. Computed live from <code>orchestrator/catalog.py</code>
-    (deterministic, no live run required).</p>
+    that the non-uniqueness result exploits. Computed deterministically from
+    shipped provenance annotations; no live campaign run is required.</p>
   {provenance_section}
 </section>
 <section id='findings'>
   <h2>Claim-To-Evidence Map</h2>
-  <p class='muted'>Each card shows a study claim, the macros that produce its
-    numbers, and the CSV files that back the macros. Click any file name to
-    open the raw evidence under <code>data/</code>.</p>
+  <p class='muted'>Each card shows a study claim, the reported values, and the
+    CSV files that back them. Click any file name to open the raw evidence
+    under <code>data/</code>.</p>
 {render_findings(macros)}
 </section>
 <section id='replay'>
   <h2>End-to-End Replay Reports</h2>
-  <p class='muted'>These are the batch-run reports a reviewer gets when
-    re-executing implemented campaigns. They are separate from curated
-    release evidence: a replay report is the latest local execution result,
-    while the audited-run section below shows the stable evidence bundled for
-    claim inspection. The dashboard separates publishable complete runs from
-    development attempts: audited complete runs back the reviewer-facing claim
-    surface, while replay scripts emit incremental TSV and JSON reports for new
-    executions.</p>
+  <p class='muted'>Replay reports summarize completed campaign reruns. They are
+    separate from the audited runs below: reruns show what a reviewer executed
+    locally, while audited runs are the stable evidence shipped for claim
+    inspection. New reruns emit TSV and JSON reports for inspection.</p>
   {render_replay_reports()}
 </section>
 <section id='scope'>
   <h2>Campaign Scope Sanity Check</h2>
   <p class='muted'>This table prevents a common denominator error. AutoSUT
-    replay counts are planned campaign/SUT steps from the artifact manifest;
+    replay counts are planned campaign/SUT steps from released manifests;
     they are not automatically the full set of ATT&amp;CK techniques linked to
     a MITRE campaign object. For Cxxxx runs, the table compares the planned
     replay against the frozen Enterprise ATT&amp;CK bundle. Source:
@@ -1407,9 +1403,9 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
   <p class='muted'>
     Only audited complete runs are shown here: every planned step completed
     and the manifest, summary, and fidelity rubric are all present. Selection
-    criteria are copied into <code>data/canonical_runs.json</code>. Partial,
-    empty, or superseded development runs are excluded, so experimental and
-    publishable evidence are never mixed. Execution is split into realism tiers:
+    criteria are recorded in <code>data/canonical_runs.json</code>. Partial,
+    empty, or superseded runs are excluded and are not used for claims.
+    Execution is split into realism tiers:
     <code>real_controlled</code>, <code>caldera_driven</code>, and
     <code>atomic_red_team</code> are real executions (a command ran, an
     operation fired); <strong>simulated</strong> is declared behavioral
@@ -1440,7 +1436,7 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
 </section>
 </main>
 <footer>
-  Reproduce this dashboard:
+  Dashboard regeneration:
   <code>python3 scripts/build_reviewer_dashboard.py</code>.
   Validate every macro: <code>bash run_review_check.sh</code>.
 </footer>

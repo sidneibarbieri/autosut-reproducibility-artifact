@@ -13,9 +13,7 @@ bash run_review_check.sh
 
 The command reruns the measurement pipeline from version-pinned public input
 bundles, regenerates figures and traceability outputs, and validates
-numeric invariants. The study manuscript itself is intentionally
-not included in this artifact; this repository is the independent
-evidence and reproduction package.
+numeric invariants. This ZIP is the evidence and reproduction package.
 
 Expected runtime on a laptop-class machine is about one minute once
 Python and LaTeX dependencies are available. The command does not
