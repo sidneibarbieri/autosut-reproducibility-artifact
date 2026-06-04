@@ -1021,7 +1021,10 @@ def _campaign_scope_rows() -> list[list[str]]:
                 interpretation = "ATT&CK set plus local or subtechnique replay steps."
             else:
                 interpretation = "Partial planned replay; not full ATT&CK campaign coverage."
-            attack_label = f"{external_id}: {attack_campaigns[external_id]['name']}"
+            campaign_name = attack_campaigns[external_id]["name"]
+            if campaign_name == external_id:
+                campaign_name = f"ATT&CK campaign object {external_id}"
+            attack_label = f"{external_id}: {campaign_name}"
             attack_count = str(len(attack_techniques))
             overlap_count = str(len(overlap))
         elif external_id:
@@ -1381,11 +1384,12 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
   <h2>End-to-End Replay Reports</h2>
   <p class='muted'>These are the batch-run reports a reviewer gets when
     re-executing implemented campaigns. They are separate from curated
-    canonical runs: a replay report is the latest local execution result,
-    while the canonical section below shows the stable evidence bundled for
-    claim inspection. The dashboard intentionally shows only the primary PASS
-    report; non-primary development attempts remain outside the reviewer-facing
-    interface.</p>
+    release evidence: a replay report is the latest local execution result,
+    while the audited-run section below shows the stable evidence bundled for
+    claim inspection. The dashboard separates publishable complete runs from
+    development attempts: audited complete runs back the reviewer-facing claim
+    surface, while replay scripts emit incremental TSV and JSON reports for new
+    executions.</p>
   {render_replay_reports()}
 </section>
 <section id='scope'>
@@ -1399,9 +1403,9 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
   {render_campaign_scope_check()}
 </section>
 <section id='execution'>
-  <h2>Curated Canonical Runs</h2>
+  <h2>Audited Complete Runs</h2>
   <p class='muted'>
-    Only complete, canonical runs are shown here: every planned step completed
+    Only audited complete runs are shown here: every planned step completed
     and the manifest, summary, and fidelity rubric are all present. Selection
     criteria are copied into <code>data/canonical_runs.json</code>. Partial,
     empty, or superseded development runs are excluded, so experimental and
