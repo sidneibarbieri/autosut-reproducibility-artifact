@@ -9,14 +9,14 @@
     \draw[acmGrid] (\x,0) -- (\x,10.8);
     \node[below] at (\x,0) {\x};
   }
-  \node[anchor=east] at (-0.6,9.6) {Detected CVEs};
-  \node[anchor=east] at (-0.6,7.1) {Actionable CVEs};
-  \node[anchor=east] at (-0.6,4.6) {Campaign-linked CVEs};
-  \node[anchor=east] at (-0.6,2.1) {Campaigns with $\geq$1 CVE};
   \fill[acmBlue] (0,9.1) rectangle (26,10.1);
   \fill[acmTeal] (0,6.6) rectangle (12,7.6);
   \fill[acmSand] (0,4.1) rectangle (8,5.1);
   \fill[acmGray] (0,1.6) rectangle (5,2.6);
+  \node[anchor=west,font=\scriptsize\bfseries,text=white] at (0.45,9.6) {Detected CVEs};
+  \node[anchor=west,font=\scriptsize\bfseries,text=white] at (0.45,7.1) {Actionable};
+  \node[anchor=west,font=\scriptsize\bfseries,text=white] at (0.45,4.6) {Linked CVEs};
+  \node[anchor=west,font=\scriptsize\bfseries,text=white] at (0.45,2.1) {$\geq$1 CVE};
   \draw[densely dashed,acmGrid] (0,3.35) -- (30.8,3.35);
   \node[anchor=west,font=\scriptsize,text=acmGray] at (20.2,3.55) {CVE-evidence units};
   \node[anchor=west,font=\scriptsize,text=acmGray] at (20.2,0.95) {Campaign units};

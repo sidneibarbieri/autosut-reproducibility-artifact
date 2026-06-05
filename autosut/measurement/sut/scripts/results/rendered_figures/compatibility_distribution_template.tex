@@ -6,10 +6,10 @@
 \definecolor{acmGrid}{HTML}{D9DDE2}
 \begin{tikzpicture}[x=0.603cm,y=0.055cm,font=\footnotesize]
   \draw[->] (0,0) -- (13.8,0) node[right,align=left] {Compatibility\\class / sensitivity};
-  \draw[->] (0,0) -- (0,106) node[above] {\% of techniques};
+  \draw[->] (0,0) -- (0,106) node[above right,font=\scriptsize] {\% of techniques};
   \foreach \yy in {0,20,40,60,80,100} {
     \draw[acmGrid] (0,\yy) -- (13.2,\yy);
-    \node[left] at (0,\yy) {\yy};
+    \node[anchor=west,font=\scriptsize,text=acmGray,fill=white,inner xsep=0.8pt,inner ysep=0.2pt] at (0.16,\yy) {\yy};
   }
   \fill[acmBlue] (1.2,0) rectangle (2.7,2.7);
   \fill[acmTeal] (3.6,0) rectangle (5.1,8.8);

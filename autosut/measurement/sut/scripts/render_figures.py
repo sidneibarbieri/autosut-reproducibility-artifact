@@ -70,11 +70,11 @@ def render_coverage(d):
 \\definecolor{{acmSand}}{{HTML}}{{EE7733}}
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
 \\begin{{tikzpicture}}[x=0.48cm,y=0.03cm,font=\\footnotesize]
-  \\draw[->] (0,0) -- (17.2,0) node[right] {{Corpus}};
-  \\draw[->] (0,0) -- (0,124) node[above] {{\\%}};
+  \\draw[->] (0,0) -- (17.2,0);
+  \\draw[->] (0,0) -- (0,124) node[above right,font=\\scriptsize] {{\\%}};
   \\foreach \\yy in {{0,20,40,60,80,100}} {{
     \\draw[acmGrid] (0,\\yy) -- (16.8,\\yy);
-    \\node[left] at (0,\\yy) {{\\yy}};
+    \\node[anchor=west,font=\\scriptsize,text=gray,fill=white,inner xsep=0.8pt,inner ysep=0.2pt] at (0.16,\\yy) {{\\yy}};
   }}
   \\fill[acmBlue]   (1.0,0) rectangle (1.8,{e['platform']});
   \\fill[acmTeal]   (1.9,0) rectangle (2.7,{e['software_link']});
@@ -113,13 +113,14 @@ def render_coverage(d):
   \\node[below,font=\\scriptsize,text=gray] at (8.3,-12) {{$n={i_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (11.3,-12) {{$n={cap_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (14.3,-12) {{$n={f_n}$}};
-  \\node[anchor=center,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (8.4,120.8) {{
+  \\node[anchor=north west,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (0.35,123.0) {{
     \\begin{{tabular}}{{@{{}}c@{{\\hspace{{0.8em}}}}c@{{\\hspace{{0.8em}}}}c@{{}}}}
       \\textcolor{{acmBlue}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_P$: platform &
       \\textcolor{{acmTeal}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_S$: software &
       \\textcolor{{acmSand}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_V$: CVE
     \\end{{tabular}}
   }};
+  \\node[anchor=east,font=\\scriptsize] at (16.8,5.5) {{Corpus}};
 \\end{{tikzpicture}}
 """
 
@@ -140,7 +141,7 @@ def render_software_specificity(d):
 \\definecolor{{acmSand}}{{HTML}}{{EE7733}}
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
 \\definecolor{{acmGray}}{{HTML}}{{8A8F99}}
-\\begin{{tikzpicture}}[x=0.074cm,y=0.88cm,font=\\footnotesize]
+\\begin{{tikzpicture}}[x=0.079cm,y=0.96cm,font=\\footnotesize]
   \\draw[->] (0,0) -- (106.5,0);
   \\foreach \\x in {{0,20,40,60,80,100}} {{
     \\draw[acmGrid] (\\x,0) -- (\\x,3.25);
@@ -149,21 +150,21 @@ def render_software_specificity(d):
   % Row 1: Structured fields only (baseline)
   \\fill[acmGrayFill] (0,2.00) rectangle ({s['no_version_no_cpe_pct']},2.60);
   \\fill[acmTeal] ({s['no_version_no_cpe_pct']},2.00) rectangle (100,2.60);
-  \\node[anchor=east] at (-1.0,2.30) {{Structured}};
+  \\node[anchor=west] at (1.2,2.30) {{Structured}};
   \\node at ({s['no_version_no_cpe_pct']/2:.2f},2.30) {{{fmt(s['no_version_no_cpe_pct'])}\\%}};
   \\node[anchor=west,font=\\scriptsize] at (100.5,2.30) {{{fmt(baseline_version_pct)}\\% ({s['version_no_cpe']})}};
   % Row 2: With description enrichment
   \\fill[acmGrayFill] (0,1.00) rectangle ({enriched_no_version_pct},1.60);
   \\fill[acmTeal] ({enriched_no_version_pct},1.00) rectangle ({enriched_no_version_pct + baseline_version_pct},1.60);
   \\fill[acmSand] ({enriched_no_version_pct + baseline_version_pct},1.00) rectangle (100,1.60);
-  \\node[anchor=east] at (-1.0,1.30) {{+Description}};
+  \\node[anchor=west] at (1.2,1.30) {{+Description}};
   \\node at ({enriched_no_version_pct/2:.2f},1.30) {{{fmt(enriched_no_version_pct)}\\%}};
   \\node[anchor=west,font=\\scriptsize] at (100.5,1.30) {{{fmt(enriched_total_pct)}\\% ({enriched_total})}};
   % Gain annotation
-  \\draw[<->,acmSand,line width=0.7pt] (102.5,2.00) -- (102.5,1.60);
-  \\node[anchor=west,font=\\scriptsize,text=acmSand] at (103.5,1.80) {{+{gain_pp}\\,pp (+{desc_enriched_count})}};
+  \\draw[<->,acmSand,line width=0.8pt] (102.5,2.00) -- (102.5,1.60);
+  \\node[anchor=west,font=\\scriptsize,text=acmSand] at (103.5,1.80) {{+{gain_pp}\\,pp (+{desc_enriched_count} objects)}};
   \\node[font=\\scriptsize,align=center] at (50.0,-0.78) {{\\% of software objects\\\\($N = {s['total_software']}$)}};
-  \\node[anchor=north,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (51.0,3.18) {{
+  \\node[anchor=north west,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (0.35,3.18) {{
     \\begin{{tabular}}{{@{{}}ccc@{{}}}}
       \\textcolor{{acmGrayFill}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ No version signal &
       \\textcolor{{acmTeal}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ Structured version &
@@ -239,14 +240,14 @@ def render_cve_location(d):
     \\draw[acmGrid] (\\x,0) -- (\\x,10.8);
     \\node[below] at (\\x,0) {{\\x}};
   }}
-  \\node[anchor=east] at (-0.6,9.6) {{Detected CVEs}};
-  \\node[anchor=east] at (-0.6,7.1) {{Actionable CVEs}};
-  \\node[anchor=east] at (-0.6,4.6) {{Campaign-linked CVEs}};
-  \\node[anchor=east] at (-0.6,2.1) {{Campaigns with $\\geq$1 CVE}};
   \\fill[acmBlue] (0,9.1) rectangle ({detected},10.1);
   \\fill[acmTeal] (0,6.6) rectangle ({actionable},7.6);
   \\fill[acmSand] (0,4.1) rectangle ({campaign_linked},5.1);
   \\fill[acmGray] (0,1.6) rectangle ({campaigns_with_cve},2.6);
+  \\node[anchor=west,font=\\scriptsize\\bfseries,text=white] at (0.45,9.6) {{Detected CVEs}};
+  \\node[anchor=west,font=\\scriptsize\\bfseries,text=white] at (0.45,7.1) {{Actionable}};
+  \\node[anchor=west,font=\\scriptsize\\bfseries,text=white] at (0.45,4.6) {{Linked CVEs}};
+  \\node[anchor=west,font=\\scriptsize\\bfseries,text=white] at (0.45,2.1) {{$\\geq$1 CVE}};
   \\draw[densely dashed,acmGrid] (0,3.35) -- (30.8,3.35);
   \\node[anchor=west,font=\\scriptsize,text=acmGray] at (20.2,3.55) {{CVE-evidence units}};
   \\node[anchor=west,font=\\scriptsize,text=acmGray] at (20.2,0.95) {{Campaign units}};
@@ -270,8 +271,8 @@ def render_jaccard(d):
 \\definecolor{{acmTeal}}{{HTML}}{{228833}}
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
 \\definecolor{{acmGray}}{{HTML}}{{8A8F99}}
-\\begin{{tikzpicture}}[x=7.94cm,y=4.7cm,font=\\footnotesize]
-  \\draw[->] (0,0) -- (1.05,0) node[right] {{Nearest-neighbor Jaccard distance}};
+\\begin{{tikzpicture}}[x=7.94cm,y=5.15cm,font=\\footnotesize]
+  \\draw[->] (0,0) -- (1.05,0);
   \\draw[->] (0,0) -- (0,1.05) node[above] {{Cumulative fraction of groups}};
   \\foreach \\x in {{0,0.2,0.4,0.6,0.8,1.0}} {{
     \\draw[acmGrid] (\\x,0) -- (\\x,1.0);
@@ -281,9 +282,9 @@ def render_jaccard(d):
     \\draw[acmGrid] (0,\\y) -- (1.0,\\y);
     \\node[left] at (0,\\y) {{\\y}};
   }}
-  \\draw[line width=0.9pt,acmBlue] {pts_sw};
-  \\draw[line width=0.9pt,acmTeal,densely dashed] {pts_sc};
-  \\draw[densely dashed,acmGray] ({j['delta_threshold']},0) -- ({j['delta_threshold']},1.0);
+  \\draw[line width=1.08pt,acmBlue] {pts_sw};
+  \\draw[line width=1.08pt,acmTeal,densely dashed] {pts_sc};
+  \\draw[densely dashed,line width=0.75pt,acmGray] ({j['delta_threshold']},0) -- ({j['delta_threshold']},1.0);
   \\node[anchor=south west,text=acmGray] at ({j['delta_threshold'] + 0.005:.3f},0.10) {{$\\delta={j['delta_threshold']}$}};
   \\node[anchor=north west,text=acmGray] at ({j['delta_threshold'] + 0.005:.3f},0.085) {{{round(100*confused,1)}\\% confused}};
   \\node[anchor=north west,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (0.56,0.98) {{
@@ -292,7 +293,8 @@ def render_jaccard(d):
       \\textcolor{{acmTeal}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ Software + CVE
     \\end{{tabular}}
   }};
-  \\node[font=\\scriptsize,text=acmGray] at (0.5,-0.08) {{$n={n_is}$ intrusion sets, $\\delta={j['delta_threshold']}$}};
+  \\node[font=\\footnotesize] at (0.52,-0.095) {{Nearest-neighbor Jaccard distance}};
+  \\node[font=\\scriptsize,text=acmGray] at (0.52,-0.175) {{$n={n_is}$ intrusion sets, $\\delta={j['delta_threshold']}$}};
 \\end{{tikzpicture}}
 """
 
@@ -319,10 +321,10 @@ def render_ablation(d):
     for x, label, val, n, color in zip(x_centers, labels, vals, samples, colors):
         points.append(f"({x:.2f},{val:.2f})")
         label_y = val + 0.30
-        point_block.append(f"  \\fill[{color}] ({x:.2f},{val:.2f}) circle (0.085);")
+        point_block.append(f"  \\fill[{color}] ({x:.2f},{val:.2f}) circle (0.10);")
         point_block.append(f"  \\node[above] at ({x:.2f},{label_y:.2f}) {{{fmt(val)}\\%}};")
         point_block.append(f"  \\node[below] at ({x:.2f},0) {{{label}}};")
-        point_block.append(f"  \\node[below,font=\\footnotesize,text=acmGray] at ({x:.2f},-0.9) {{n={n}}};")
+        point_block.append(f"  \\node[below,font=\\scriptsize,text=acmGray] at ({x:.2f},-0.82) {{n={n}}};")
     line_path = " -- ".join(points)
     point_block_text = "\n".join(point_block)
     return f"""\\definecolor{{acmBlue}}{{HTML}}{{4477AA}}
@@ -330,15 +332,16 @@ def render_ablation(d):
 \\definecolor{{acmGray}}{{HTML}}{{8A8F99}}
 \\definecolor{{acmSand}}{{HTML}}{{EE7733}}
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
-\\begin{{tikzpicture}}[x=1.67cm,y=0.52cm,font=\\footnotesize]
-  \\draw[->] (0,0) -- (5.0,0) node[right] {{Minimum evidence threshold}};
+\\begin{{tikzpicture}}[x=1.67cm,y=0.58cm,font=\\footnotesize]
+  \\draw[->] (0,0) -- (5.0,0);
   \\draw[->] (0,0) -- (0,10.8) node[above] {{Confusion rate (\\%)}};
   \\foreach \\y in {{0,2,4,6,8,10}} {{
     \\draw[acmGrid] (0,\\y) -- (4.8,\\y);
     \\node[left] at (0,\\y) {{\\y}};
   }}
-  \\draw[line width=1.0pt,acmBlue] {line_path};
+  \\draw[line width=1.15pt,acmBlue] {line_path};
 {point_block_text}
+  \\node[font=\\footnotesize] at (2.55,-2.05) {{Minimum evidence threshold}};
 \\end{{tikzpicture}}
 """
 
@@ -372,10 +375,10 @@ def render_compatibility_distribution(d):
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
 \\begin{{tikzpicture}}[x=0.603cm,y=0.055cm,font=\\footnotesize]
   \\draw[->] (0,0) -- (13.8,0) node[right,align=left] {{Compatibility\\\\class / sensitivity}};
-  \\draw[->] (0,0) -- (0,106) node[above] {{\\% of techniques}};
+  \\draw[->] (0,0) -- (0,106) node[above right,font=\\scriptsize] {{\\% of techniques}};
   \\foreach \\yy in {{0,20,40,60,80,100}} {{
     \\draw[acmGrid] (0,\\yy) -- (13.2,\\yy);
-    \\node[left] at (0,\\yy) {{\\yy}};
+    \\node[anchor=west,font=\\scriptsize,text=acmGray,fill=white,inner xsep=0.8pt,inner ysep=0.2pt] at (0.16,\\yy) {{\\yy}};
   }}
   \\fill[acmBlue] (1.2,0) rectangle (2.7,{cf_pct});
   \\fill[acmTeal] (3.6,0) rectangle (5.1,{vmr_explicit_pct});
