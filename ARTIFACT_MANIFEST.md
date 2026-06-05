@@ -185,7 +185,7 @@
 | `autosut/measurement/sut/scripts/generate_traceability.py` | 13889 | `d16b148c1ce596fa5257718ef7857a3171343aacb2ebd14d0b37ba94a6494643` |
 | `autosut/measurement/sut/scripts/orchestrator.py` | 5863 | `08abd529901295cf8f5ddaaec0fd473e43465fd44a904fd7fd890827c0ff055c` |
 | `autosut/measurement/sut/scripts/real_campaign_runner.py` | 7624 | `fd7454e15b632b1ffd7e2defe713cd1876005cef4b8e276646e6521e3e1126dd` |
-| `autosut/measurement/sut/scripts/render_figures.py` | 31326 | `ab57a5e1eba3932a9cc51f52979dc373405b84a0eb3a0b022b912ff30a3df5b3` |
+| `autosut/measurement/sut/scripts/render_figures.py` | 31327 | `6a51b74332ba1c00852b9d275e65440566315809fda646c891dd02878690c2e7` |
 | `autosut/measurement/sut/scripts/results/0.apt28_nearest_neighbor_campaign_results.json` | 1207 | `f5115828d85fda83e21190c9a7f188c1e4980bb7c1a76b5e5bb303982d156b63` |
 | `autosut/measurement/sut/scripts/results/0.solarwinds_compromise_results.json` | 1187 | `19e24109679280ac87ed67601c605097c695340f357b693b25c5f712adff4d7f` |
 | `autosut/measurement/sut/scripts/results/EXECUTION_SUMMARY` | 1561 | `034e6e294bb041c1f2ebe544872380e96985264a68f61cf601cbd27612a337e2` |
@@ -236,7 +236,7 @@
 | `autosut/measurement/sut/scripts/results/rendered_figures/ablation_template.tex` | 1389 | `980d1377761a448256fab4238baa49055b66be5df720f91829e6254b7587f746` |
 | `autosut/measurement/sut/scripts/results/rendered_figures/compatibility_by_tactic_template.tex` | 3742 | `967d85eb73c892cb97e13531973fd099913bb52cf50f5d96c5ae3cb553d80d87` |
 | `autosut/measurement/sut/scripts/results/rendered_figures/compatibility_distribution_template.tex` | 2166 | `6a1419b606afbe35ee5d8e82d021d2ffdbeb637374db1c83425d192b03380f98` |
-| `autosut/measurement/sut/scripts/results/rendered_figures/coverage_template.tex` | 2673 | `4314c1562ea2f1e1d5991979cbd545df1840e805f319e354fa98cf1b24932ea9` |
+| `autosut/measurement/sut/scripts/results/rendered_figures/coverage_template.tex` | 2674 | `061bb1973c1e7de08ff986fbaa0bf97557507ae649f649aa4c03d085fac626f9` |
 | `autosut/measurement/sut/scripts/results/rendered_figures/cve_location_template.tex` | 1418 | `a64dda31e9f3d5496c4fab5ccb96894feef79aa7065be178f4307b3e21213e9f` |
 | `autosut/measurement/sut/scripts/results/rendered_figures/evidence_convergence_template.tex` | 1340 | `75026b60332f28471d5c5e4405b901a632a2cadf4a31078fb06c796bcab680aa` |
 | `autosut/measurement/sut/scripts/results/rendered_figures/ieir_breakdown_template.tex` | 652 | `9304c62e4b1d1a06f547b7a29cb109ec6ab0ace1d374849a2063e3f7cc83db96` |
@@ -271,7 +271,7 @@
 | `autosut/release/compatibility_rule_surface.json` | 884 | `40a1187d090c4d4aaadde3c927a16198a3a55343f0c5eb6301fce75b0a42e2f6` |
 | `autosut/release/cve_resolution_candidates.json` | 9338 | `da801361bfa7346b66cd56d555b750df90e4771af76668d3159ccc67effd5b0c` |
 | `autosut/release/dashboard/dashboard-preview.png` | 378364 | `dd8d2c565e46b41b6e4b8d7be646e07c8c55d022538fdcf7b59b6ed13a82a33e` |
-| `autosut/release/dashboard/data/ENVIRONMENT_PROVENANCE.md` | 3249 | `023bc0eb35cc3858c0b07b7c497dc439a579d98d0d5d75026c45fc2830edb448` |
+| `autosut/release/dashboard/data/ENVIRONMENT_PROVENANCE.md` | 3249 | `e965df5abffa3adc187bed23e9ba07c3ad6bc14d29178f6d02f7a78908f69c42` |
 | `autosut/release/dashboard/data/all_cves.csv` | 718 | `e5e5019b3ce2d89f86158d2b75fdf3170c0007d4510379d79a3f5e683183f098` |
 | `autosut/release/dashboard/data/bootstrap_confusion_distribution.csv` | 153 | `695b0b62ea85c36d9a322efeb11ce7ed0d52ec693f818649e70ffe756af26f17` |
 | `autosut/release/dashboard/data/campaign_correlation_summary.csv` | 1462 | `d9f750217caf2cbd55c8603dcc4b2b8f3e58dfb0f870a0b5ed5335b92738e931` |
@@ -298,7 +298,7 @@
 | `autosut/release/dashboard/data/cve_validation.csv` | 1185 | `ee55b669e85f069cce444f11537dda3e8eb4e5334bd2379124bc8b4c6d147568` |
 | `autosut/release/dashboard/data/delta_sensitivity.csv` | 130 | `febfdc52fba50d0bbb1020468b2ac2aaa9a67e4eec8b303bc34f5e6c19d849a1` |
 | `autosut/release/dashboard/data/environment_inference.csv` | 10798 | `bcb68dfbefa1367594e94933ee1e4b962cdae36ba9b5a62d83309252b9cdc69c` |
-| `autosut/release/dashboard/data/environment_provenance.json` | 110303 | `ee6dc197f2ba8f124ef5ed26c631b49720e235b7d7b3d1633665e63caf061252` |
+| `autosut/release/dashboard/data/environment_provenance.json` | 110303 | `ed44ecb2fecc316f205cc6e52a3a24bf5b0ccd960d4d2ad1f6013108eea31c23` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/environment_provenance.json` | 4227 | `5daf48889e8cdae59f5419f70078d4b815043a87cdfe8479c0dbaf249b46527e` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/fidelity_report.json` | 26346 | `6f0456eaac3065882bdf9c7b26f31b50830c608aa5a0910df786ddb3fb2fd712` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/manifest.json` | 18014 | `661e319b6e94acc7f19b9eabccc685a97193e47373468f7d5586ade828dc6c5d` |
@@ -513,8 +513,8 @@
 | `autosut/release/orchestrated_replay_full_19.json` | 6192 | `066bb601604d7238ad6a0bd7949a3ec8ccf731bac1a6d2c2e9da07a48ad66fe3` |
 | `autosut/release/orchestrated_replay_full_19.tsv` | 2470 | `836c520c66bf14f3701c7f372048d7cdbd59df8ef1eb4c7fb48e89498c0f68b6` |
 | `autosut/release/performance_metrics.tex` | 381 | `5a0482297c6c6cd81668e3a5b69eeae7d5c5465474287a57bbb8c935af544560` |
-| `autosut/release/provenance/ENVIRONMENT_PROVENANCE.md` | 3249 | `6513c02c1081dd1f683e5e0064438f7bece8dceab9b9c8e351e13c4a45004e9e` |
-| `autosut/release/provenance/environment_provenance.json` | 110303 | `60eb86c2a76de6d249061619cba1532a8e9352d92f478e67673aba5cd43e6225` |
+| `autosut/release/provenance/ENVIRONMENT_PROVENANCE.md` | 3249 | `51bea15dc17bb0e0525810b73da0722158f70d7991de6112592c341c8f8a7edd` |
+| `autosut/release/provenance/environment_provenance.json` | 110303 | `25716488574d38909300423fe3a8d91d8c13f867856062c5a66e1e45f990b3e0` |
 | `autosut/release/provenance/provenance_values.tex` | 925 | `e529a4830a224e535e850ed8e4bb2ce02a394132db889f03f1dfda2b55d1a120` |
 | `autosut/release/provenance/support_matrix.csv` | 251 | `015ec67b3187704a3ea840d5c6bd6b4be9d266a84734542b890c59a1d7f5efbc` |
 | `autosut/release/realism_analysis_report.json` | 4084 | `4754aa77e9a9bdc9311df2d6438afa270de2d51836495928cff8214f20577bc6` |
