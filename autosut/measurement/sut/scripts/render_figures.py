@@ -113,7 +113,7 @@ def render_coverage(d):
   \\node[below,font=\\scriptsize,text=gray] at (8.3,-12) {{$n={i_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (11.3,-12) {{$n={cap_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (14.3,-12) {{$n={f_n}$}};
-  \\node[anchor=north west,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (0.35,123.0) {{
+  \\node[anchor=north west,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (0.35,128.0) {{
     \\begin{{tabular}}{{@{{}}c@{{\\hspace{{0.8em}}}}c@{{\\hspace{{0.8em}}}}c@{{}}}}
       \\textcolor{{acmBlue}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_P$: platform &
       \\textcolor{{acmTeal}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_S$: software &
