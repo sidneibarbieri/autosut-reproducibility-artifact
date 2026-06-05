@@ -120,7 +120,6 @@ def render_coverage(d):
       \\textcolor{{acmSand}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_V$: CVE
     \\end{{tabular}}
   }};
-  \\node[anchor=east,font=\\scriptsize] at (16.8,-3.8) {{Corpus}};
 \\end{{tikzpicture}}
 """
 
