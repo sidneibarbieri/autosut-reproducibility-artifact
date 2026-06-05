@@ -376,11 +376,13 @@ def render_compatibility_distribution(d):
 \\definecolor{{acmGray}}{{HTML}}{{8A8F99}}
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
 \\begin{{tikzpicture}}[x=0.603cm,y=0.055cm,font=\\small]
-  \\draw[->] (0,0) -- (13.8,0) node[right,align=left] {{Compatibility\\\\class / sensitivity}};
-  \\draw[->] (0,0) -- (0,106) node[above right,font=\\scriptsize] {{\\% of techniques}};
+  \\path[use as bounding box] (-1.55,-35.5) rectangle (14.6,108.0);
+  \\draw[->] (0,0) -- (13.8,0);
+  \\draw[->] (0,0) -- (0,106);
+  \\node[rotate=90,font=\\small] at (-1.25,53) {{\\% of techniques}};
   \\foreach \\yy in {{0,20,40,60,80,100}} {{
     \\draw[acmGrid] (0,\\yy) -- (13.2,\\yy);
-    \\node[anchor=west,font=\\scriptsize,text=acmGray,fill=white,inner xsep=0.8pt,inner ysep=0.2pt] at (0.16,\\yy) {{\\yy}};
+    \\node[anchor=east,font=\\small,text=acmGray,inner xsep=0.8pt,inner ysep=0.2pt] at (-0.12,\\yy) {{\\yy}};
   }}
   \\fill[acmBlue] (1.2,0) rectangle (2.7,{cf_pct});
   \\fill[acmTeal] (3.6,0) rectangle (5.1,{vmr_explicit_pct});
@@ -390,13 +392,13 @@ def render_compatibility_distribution(d):
   \\node[above] at (1.95,{max(cf_pct, 0.5)}) {{{fmt(cf_pct)}\\%}};
   \\node[above] at (4.35,{vmr_pct}) {{{fmt(vmr_pct)}\\%}};
   \\node[above] at (6.75,{id_pct}) {{{fmt(id_pct)}\\%}};
-  \\node[anchor=west,font=\\scriptsize,text=acmGray] at (5.18,{vmr_fallback_mid}) {{fallback {fmt(vmr_fallback_pct)}\\%}};
+  \\node[anchor=west,font=\\scriptsize,text=acmGray] at (5.35,{vmr_fallback_mid}) {{fallback {fmt(vmr_fallback_pct)}\\%}};
   \\node[below] at (1.95,0) {{CF}};
   \\node[below] at (4.35,0) {{VMR}};
   \\node[below] at (6.75,0) {{ID}};
-  \\node[below,font=\\scriptsize,text=gray] at (1.95,-7.0) {{{cf} techniques}};
-  \\node[below,font=\\scriptsize,text=gray,align=center] at (4.35,-7.0) {{{vmr_explicit} explicit\\\\{vmr_fallback} fallback}};
-  \\node[below,font=\\scriptsize,text=gray] at (6.75,-7.0) {{{ident} techniques}};
+  \\node[below,font=\\scriptsize,text=acmGray] at (1.95,-6.5) {{{cf} techniques}};
+  \\node[below,font=\\scriptsize,text=acmGray,align=center] at (4.35,-6.5) {{{vmr_explicit} explicit\\\\{vmr_fallback} fallback}};
+  \\node[below,font=\\scriptsize,text=acmGray] at (6.75,-6.5) {{{ident} techniques}};
   \\draw[line width=1.1pt,acmGray] (11.0,{floor_pct}) -- (11.0,{ceiling_pct});
   \\fill[acmGray] (11.0,{floor_pct}) circle (0.085);
   \\fill[acmGray] (11.0,{ceiling_pct}) circle (0.085);
@@ -405,8 +407,8 @@ def render_compatibility_distribution(d):
   \\node[anchor=west,font=\\scriptsize,text=acmGray] at (11.18,{floor_pct}) {{floor {fmt(floor_pct)}\\%}};
   \\node[anchor=west,font=\\scriptsize,text=acmBlue] at (11.18,{resolved_pct}) {{resolved {fmt(resolved_pct)}\\%}};
   \\node[below] at (11.0,0) {{non-CF range}};
-  \\node[below,font=\\scriptsize,text=gray] at (11.0,-7.0) {{rule coverage {fmt(rule_coverage_pct)}\\%}};
-  \\node[below,font=\\scriptsize,text=gray] at (4.35,-18.0) {{$N={total}$ techniques}};
+  \\node[below,font=\\scriptsize,text=acmGray] at (11.0,-6.5) {{rule coverage {fmt(rule_coverage_pct)}\\%}};
+  \\node[font=\\scriptsize,text=black!70,align=center] at (6.9,-29.5) {{Compatibility class / sensitivity\\\\$N={total}$ techniques}};
 \\end{{tikzpicture}}
 """
 
