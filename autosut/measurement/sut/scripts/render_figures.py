@@ -71,7 +71,7 @@ def render_coverage(d):
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
 \\begin{{tikzpicture}}[x=0.48cm,y=0.03cm,font=\\footnotesize]
   \\draw[->] (0,0) -- (17.2,0);
-  \\draw[->] (0,0) -- (0,124) node[above right,font=\\scriptsize] {{\\%}};
+  \\draw[->] (0,0) -- (0,124) node[above right,font=\\scriptsize] {{Coverage (\\%)}};
   \\foreach \\yy in {{0,20,40,60,80,100}} {{
     \\draw[acmGrid] (0,\\yy) -- (16.8,\\yy);
     \\node[anchor=west,font=\\scriptsize,text=gray,fill=white,inner xsep=0.8pt,inner ysep=0.2pt] at (0.16,\\yy) {{\\yy}};
@@ -113,6 +113,7 @@ def render_coverage(d):
   \\node[below,font=\\scriptsize,text=gray] at (8.3,-12) {{$n={i_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (11.3,-12) {{$n={cap_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (14.3,-12) {{$n={f_n}$}};
+  \\node[font=\\scriptsize,text=gray] at (8.3,-29.0) {{Corpus}};
   \\node[anchor=north west,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (0.35,128.0) {{
     \\begin{{tabular}}{{@{{}}c@{{\\hspace{{0.8em}}}}c@{{\\hspace{{0.8em}}}}c@{{}}}}
       \\textcolor{{acmBlue}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_P$: platform &
