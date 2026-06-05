@@ -69,52 +69,54 @@ def render_coverage(d):
 \\definecolor{{acmTeal}}{{HTML}}{{228833}}
 \\definecolor{{acmSand}}{{HTML}}{{EE7733}}
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
-\\begin{{tikzpicture}}[x=0.48cm,y=0.03cm,font=\\footnotesize]
+\\begin{{tikzpicture}}[x=0.50cm,y=0.028cm,font=\\scriptsize]
+  \\path[use as bounding box] (-1.40,-33.0) rectangle (17.75,139.0);
   \\draw[->] (0,0) -- (17.2,0);
-  \\draw[->] (0,0) -- (0,124) node[above right,font=\\scriptsize] {{Coverage (\\%)}};
+  \\draw[->] (0,0) -- (0,118);
+  \\node[rotate=90,font=\\scriptsize] at (-1.18,60) {{Coverage (\\%)}};
   \\foreach \\yy in {{0,20,40,60,80,100}} {{
     \\draw[acmGrid] (0,\\yy) -- (16.8,\\yy);
-    \\node[anchor=west,font=\\scriptsize,text=gray,fill=white,inner xsep=0.8pt,inner ysep=0.2pt] at (0.16,\\yy) {{\\yy}};
+    \\node[anchor=east,font=\\scriptsize,text=gray,inner xsep=0.8pt,inner ysep=0.2pt] at (-0.14,\\yy) {{\\yy}};
   }}
   \\fill[acmBlue]   (1.0,0) rectangle (1.8,{e['platform']});
   \\fill[acmTeal]   (1.9,0) rectangle (2.7,{e['software_link']});
   \\fill[acmSand]   (2.8,0) rectangle (3.6,{e['cve_link']});
-  \\node[above] at (1.4,{e['platform']}) {{{fmt(e['platform'])}}};
-  \\node[above] at (2.3,{e['software_link']}) {{{fmt(e['software_link'])}}};
-  \\node[above] at (3.2,{coord(max(1.7, e['cve_link'] + 0.4))}) {{{fmt(e['cve_link'])}}};
+  \\node[above,font=\\scriptsize] at (1.4,{e['platform']}) {{{fmt(e['platform'])}}};
+  \\node[above,font=\\scriptsize] at (2.3,{e['software_link']}) {{{fmt(e['software_link'])}}};
+  \\node[above,font=\\scriptsize] at (3.2,{coord(max(1.7, e['cve_link'] + 0.4))}) {{{fmt(e['cve_link'])}}};
   \\fill[acmBlue]   (4.0,0) rectangle (4.8,{m['platform']});
   \\fill[acmTeal]   (4.9,0) rectangle (5.7,{m['software_link']});
   \\fill[acmSand]   (5.8,0) rectangle (6.6,{m['cve_link']});
-  \\node[above] at (4.4,{m['platform']}) {{{fmt(m['platform'])}}};
-  \\node[above] at (5.3,{m['software_link']}) {{{fmt(m['software_link'])}}};
+  \\node[above,font=\\scriptsize] at (4.4,{m['platform']}) {{{fmt(m['platform'])}}};
+  \\node[above,font=\\scriptsize] at (5.3,{m['software_link']}) {{{fmt(m['software_link'])}}};
   \\fill[acmBlue]   (7.0,0) rectangle (7.8,{i['platform']});
   \\fill[acmTeal]   (7.9,0) rectangle (8.7,{i['software_link']});
   \\fill[acmSand]   (8.8,0) rectangle (9.6,{i['cve_link']});
-  \\node[above] at (7.4,{i['platform']}) {{{fmt(i['platform'])}}};
-  \\node[above] at (8.3,{i['software_link']}) {{{fmt(i['software_link'])}}};
-  \\node[above] at (9.2,{coord(max(1.7, i['cve_link'] + 0.4))}) {{{fmt(i['cve_link'])}}};
+  \\node[above,font=\\scriptsize] at (7.4,{i['platform']}) {{{fmt(i['platform'])}}};
+  \\node[above,font=\\scriptsize] at (8.3,{i['software_link']}) {{{fmt(i['software_link'])}}};
+  \\node[above,font=\\scriptsize] at (9.2,{coord(max(1.7, i['cve_link'] + 0.4))}) {{{fmt(i['cve_link'])}}};
   \\fill[acmBlue!40]   (10.0,0) rectangle (10.8,{cap['platform']});
   \\fill[acmTeal!40]   (10.9,0) rectangle (11.7,{cap['software_link']});
   \\fill[acmSand!40]   (11.8,0) rectangle (12.6,{cap['cve_link']});
-  \\node[above,text=gray] at (11.3,2) {{{fmt(cap['platform'])}}};
+  \\node[above,font=\\scriptsize,text=gray] at (11.3,2) {{{fmt(cap['platform'])}}};
   \\fill[acmBlue]   (13.0,0) rectangle (13.8,{f['platform']});
   \\fill[acmTeal]   (13.9,0) rectangle (14.7,{f['software_link']});
   \\fill[acmSand]   (14.8,0) rectangle (15.6,{f['cve_link']});
-  \\node[above] at (13.4,{f['platform']}) {{{fmt(f['platform'])}}};
-  \\node[above] at (14.3,{f['software_link']}) {{{fmt(f['software_link'])}}};
-  \\node[above] at (15.2,{coord(max(1.7, f['cve_link'] + 0.4))}) {{{fmt(f['cve_link'])}}};
-  \\node at (2.3,-8) {{Enterprise}};
-  \\node at (5.3,-8) {{Mobile}};
-  \\node at (8.3,-8) {{ICS}};
-  \\node at (11.3,-8) {{CAPEC}};
-  \\node at (14.3,-8) {{FiGHT}};
+  \\node[above,font=\\scriptsize] at (13.4,{f['platform']}) {{{fmt(f['platform'])}}};
+  \\node[above,font=\\scriptsize] at (14.3,{f['software_link']}) {{{fmt(f['software_link'])}}};
+  \\node[above,font=\\scriptsize] at (15.2,{coord(max(1.7, f['cve_link'] + 0.4))}) {{{fmt(f['cve_link'])}}};
+  \\node[font=\\footnotesize] at (2.3,-8) {{Enterprise}};
+  \\node[font=\\footnotesize] at (5.3,-8) {{Mobile}};
+  \\node[font=\\footnotesize] at (8.3,-8) {{ICS}};
+  \\node[font=\\footnotesize,text=gray] at (11.3,-8) {{CAPEC}};
+  \\node[font=\\footnotesize] at (14.3,-8) {{FiGHT}};
   \\node[below,font=\\scriptsize,text=gray] at (2.3,-12) {{$n={e_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (5.3,-12) {{$n={m_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (8.3,-12) {{$n={i_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (11.3,-12) {{$n={cap_n}$}};
   \\node[below,font=\\scriptsize,text=gray] at (14.3,-12) {{$n={f_n}$}};
   \\node[font=\\scriptsize,text=gray] at (8.3,-29.0) {{Corpus}};
-  \\node[anchor=north west,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (0.35,128.0) {{
+  \\node[anchor=north,fill=white,fill opacity=0.95,text opacity=1,inner sep=2.2pt] at (8.6,136.0) {{
     \\begin{{tabular}}{{@{{}}c@{{\\hspace{{0.8em}}}}c@{{\\hspace{{0.8em}}}}c@{{}}}}
       \\textcolor{{acmBlue}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_P$: platform &
       \\textcolor{{acmTeal}}{{\\rule{{0.95em}}{{0.72em}}}}\\ \\ $\\rho_S$: software &
@@ -234,7 +236,7 @@ def render_cve_location(d):
 \\definecolor{{acmSand}}{{HTML}}{{EE7733}}
 \\definecolor{{acmGray}}{{HTML}}{{8A8F99}}
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
-\\begin{{tikzpicture}}[x=0.253cm,y=0.62cm,font=\\footnotesize]
+\\begin{{tikzpicture}}[x=0.253cm,y=0.62cm,font=\\small]
   \\draw[->] (0,0) -- (30.5,0) node[right] {{Count}};
   \\foreach \\x in {{0,5,10,15,20,25,30}} {{
     \\draw[acmGrid] (\\x,0) -- (\\x,10.8);
@@ -373,7 +375,7 @@ def render_compatibility_distribution(d):
 \\definecolor{{acmSand}}{{HTML}}{{EE7733}}
 \\definecolor{{acmGray}}{{HTML}}{{8A8F99}}
 \\definecolor{{acmGrid}}{{HTML}}{{D9DDE2}}
-\\begin{{tikzpicture}}[x=0.603cm,y=0.055cm,font=\\footnotesize]
+\\begin{{tikzpicture}}[x=0.603cm,y=0.055cm,font=\\small]
   \\draw[->] (0,0) -- (13.8,0) node[right,align=left] {{Compatibility\\\\class / sensitivity}};
   \\draw[->] (0,0) -- (0,106) node[above right,font=\\scriptsize] {{\\% of techniques}};
   \\foreach \\yy in {{0,20,40,60,80,100}} {{
