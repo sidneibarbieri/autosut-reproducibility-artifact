@@ -21,6 +21,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from orchestrator import build_default
 from orchestrator.catalog import implemented_campaigns, known_campaigns
+from run_all_orchestrated_campaigns import (
+    CALDERA_REQUIRED_CAMPAIGNS,
+    ensure_caldera_ready,
+    restore_docker_platform,
+    set_caldera_platform_if_needed,
+)
 
 
 def main() -> int:
@@ -44,8 +50,26 @@ def main() -> int:
         parser.print_help()
         return 1
 
-    orch = build_default()
-    result = orch.run_campaign(args.campaign)
+    # Caldera-driven campaigns need the C2 reachable and their SUT pinned to
+    # the prebuilt-sandcat architecture; otherwise the agent registration cold-
+    # starts a just-in-time build and the technique is recorded as a failure.
+    # Applying it here means the single-campaign command behaves like the full
+    # reviewer runner without extra steps.
+    needs_caldera = args.campaign in CALDERA_REQUIRED_CAMPAIGNS
+    prev_platform = None
+    if needs_caldera:
+        if not ensure_caldera_ready():
+            print("[caldera] C2 not reachable; caldera-driven techniques will "
+                  "be recorded as failures (run scripts/up_lab.sh or use "
+                  "scripts/run_all_orchestrated_campaigns.py).", file=sys.stderr)
+        prev_platform = set_caldera_platform_if_needed(args.campaign)
+
+    try:
+        orch = build_default()
+        result = orch.run_campaign(args.campaign)
+    finally:
+        if needs_caldera:
+            restore_docker_platform(prev_platform)
 
     print(f"\n[orchestrator] run_id: {result.run_id}")
     print(f"[orchestrator] techniques: {result.successful}/{result.total_techniques} successful")
