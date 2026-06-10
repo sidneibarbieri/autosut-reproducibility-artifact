@@ -1305,9 +1305,22 @@ def render_subdetermination_section() -> str:
             "same real vulnerability: the path traversal leaking "
             "<code>/etc/passwd</code>, each with "
             "<code>declared_mode == executed_mode</code>.</p>")
+    pivot = data.get("proofs", {}).get("0.pivot_demo")
+    coincident = ""
+    if pivot and pivot.get("executable"):
+        pivot_realisations = len(pivot["variants"]) + 1  # canonical + variants
+        coincident = (
+            f"<p><strong>Coincident witness:</strong> {pivot_realisations} "
+            "realisations of an SSH-pivot reference (canonical OpenSSH plus a "
+            "generated Dropbear variant) preserve the same corpus fingerprint "
+            "and run the same multi-stage pivot to completion, each with "
+            "<code>declared_mode == executed_mode</code>. The executed variation "
+            "is the service realisation itself, a structurally different SSH "
+            "server.</p>")
     coverage_note = (
         "<p class='muted'>Scope: the non-uniqueness result rests on the "
-        "executable CVE-2021-41773 witness above. Campaigns carrying "
+        "executable CVE-2021-41773 and coincident SSH-pivot witnesses above. "
+        "Campaigns carrying "
         "<code>naive_simulated</code> techniques are included to study "
         "environment reconstruction and compatibility; declared behavioral "
         "coverage is never counted as procedural-execution evidence, so the "
@@ -1318,7 +1331,7 @@ def render_subdetermination_section() -> str:
         "complete executable environment. The result "
         "shows where downstream emulation must reconstruct the environment "
         "beyond the structured intelligence.</p>")
-    return table + conclusion + witness + coverage_note + interpretation
+    return table + conclusion + witness + coincident + coverage_note + interpretation
 
 
 def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
@@ -1356,8 +1369,10 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
     compatible SUTs, including an executable witness. Each variant preserves
     every <code>corpus_supported</code>
     element (identical invariant fingerprint) and varies only the free region.
-    <code>0.cve_2021_41773</code> is the executable witness: each of its
-    variants runs the real CVE with <code>declared_mode == executed_mode</code>;
+    <code>0.cve_2021_41773</code> is the executable witness, each variant
+    running the real CVE with <code>declared_mode == executed_mode</code>.
+    <code>0.pivot_demo</code> is the coincident witness, running the same SSH
+    pivot across structurally different SSH servers (OpenSSH and Dropbear).
     <code>0.apt41_dust</code> is the structural witness: a large free region
     with materially distinct services. Source:
     <code>release/subdetermination_proof.json</code>.</p>

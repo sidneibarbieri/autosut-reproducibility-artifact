@@ -271,7 +271,7 @@
 | `autosut/release/compatibility_rule_surface.json` | 884 | `40a1187d090c4d4aaadde3c927a16198a3a55343f0c5eb6301fce75b0a42e2f6` |
 | `autosut/release/cve_resolution_candidates.json` | 9338 | `da801361bfa7346b66cd56d555b750df90e4771af76668d3159ccc67effd5b0c` |
 | `autosut/release/dashboard/dashboard-preview.png` | 378364 | `dd8d2c565e46b41b6e4b8d7be646e07c8c55d022538fdcf7b59b6ed13a82a33e` |
-| `autosut/release/dashboard/data/ENVIRONMENT_PROVENANCE.md` | 3249 | `7e51af5a20e80fdea9bafd8a1480e97f649ea6067be04426a9b46a953334c2b1` |
+| `autosut/release/dashboard/data/ENVIRONMENT_PROVENANCE.md` | 3249 | `5be7ad382160c7c8c7cfefdddbf7193ba9108d515cfd46772750847ea92fda1f` |
 | `autosut/release/dashboard/data/all_cves.csv` | 718 | `e5e5019b3ce2d89f86158d2b75fdf3170c0007d4510379d79a3f5e683183f098` |
 | `autosut/release/dashboard/data/bootstrap_confusion_distribution.csv` | 153 | `695b0b62ea85c36d9a322efeb11ce7ed0d52ec693f818649e70ffe756af26f17` |
 | `autosut/release/dashboard/data/campaign_correlation_summary.csv` | 1462 | `d9f750217caf2cbd55c8603dcc4b2b8f3e58dfb0f870a0b5ed5335b92738e931` |
@@ -298,7 +298,7 @@
 | `autosut/release/dashboard/data/cve_validation.csv` | 1185 | `ee55b669e85f069cce444f11537dda3e8eb4e5334bd2379124bc8b4c6d147568` |
 | `autosut/release/dashboard/data/delta_sensitivity.csv` | 130 | `febfdc52fba50d0bbb1020468b2ac2aaa9a67e4eec8b303bc34f5e6c19d849a1` |
 | `autosut/release/dashboard/data/environment_inference.csv` | 10798 | `bcb68dfbefa1367594e94933ee1e4b962cdae36ba9b5a62d83309252b9cdc69c` |
-| `autosut/release/dashboard/data/environment_provenance.json` | 112795 | `43c9d058a4c5234c05a67328791a8c0a03c56637dd683011b6dcfeef120465f7` |
+| `autosut/release/dashboard/data/environment_provenance.json` | 112795 | `356a914f0485ce2f322f22ad53cb21dd37be4b17a63f37773df9b61b7800d41d` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/environment_provenance.json` | 4227 | `5daf48889e8cdae59f5419f70078d4b815043a87cdfe8479c0dbaf249b46527e` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/fidelity_report.json` | 26346 | `6f0456eaac3065882bdf9c7b26f31b50830c608aa5a0910df786ddb3fb2fd712` |
 | `autosut/release/dashboard/data/evidence/0.apt41_dust_20260603_193334/manifest.json` | 18014 | `661e319b6e94acc7f19b9eabccc685a97193e47373468f7d5586ade828dc6c5d` |
@@ -503,7 +503,7 @@
 | `autosut/release/dashboard/data/software_version_enrichment.csv` | 1639 | `a67f0601dd17ef54e92f65e82f08dfadc0f2d43aceaa53ab7942f3d4263e2ed4` |
 | `autosut/release/dashboard/data/support_matrix.csv` | 251 | `49e29093a685319230bdbc7ba56ad17c95c3476e13bc5c8e1c3b52c6340eb0fe` |
 | `autosut/release/dashboard/data/technique_compatibility.csv` | 161791 | `989b0adcd6b47cf1ac4b2be1f5fc9a5cee5ba4a19173823ff099a80a7dd0c66e` |
-| `autosut/release/dashboard/index.html` | 48431 | `c55d213e6007c0117b725b5687838feb7f10bb4f17227fc31ad507a5f4fd73cb` |
+| `autosut/release/dashboard/index.html` | 48982 | `891490b3a16a0a31d4114ccb5c61e03f1bf9c995bfbb58ab40872a05af3c6c91` |
 | `autosut/release/dashboard/style.css` | 6962 | `2d0872fc4bb1f07598f031a50cea413eef39397c737346bc2e62b7fb6ce01fbd` |
 | `autosut/release/fidelity_report.json` | 181388 | `03c6d2334b4778e56fd3581473b79055f60aca9a09dfaa86214198028e661a0c` |
 | `autosut/release/fidelity_tables.tex` | 22155 | `00deb5ce7cbbd8185f920cf7f3ec0a41e61bebafb95d1c4a1f86eebc4b8eb79c` |
@@ -513,15 +513,15 @@
 | `autosut/release/orchestrated_replay_full_19.json` | 6192 | `066bb601604d7238ad6a0bd7949a3ec8ccf731bac1a6d2c2e9da07a48ad66fe3` |
 | `autosut/release/orchestrated_replay_full_19.tsv` | 2470 | `836c520c66bf14f3701c7f372048d7cdbd59df8ef1eb4c7fb48e89498c0f68b6` |
 | `autosut/release/performance_metrics.tex` | 381 | `5a0482297c6c6cd81668e3a5b69eeae7d5c5465474287a57bbb8c935af544560` |
-| `autosut/release/provenance/ENVIRONMENT_PROVENANCE.md` | 3249 | `0ef94b7cdd4a0813e8ecd36d8c52ef7027515d78a4b9190ed03651898fc92769` |
-| `autosut/release/provenance/environment_provenance.json` | 112795 | `60af8c5deeb74225d725940ddbb8d9c908c3f0f3ef5aa5da9fe87c3299f77637` |
+| `autosut/release/provenance/ENVIRONMENT_PROVENANCE.md` | 3249 | `922893d3f56daf4444cfca2aaaac3f7901bed9f244175070756081362539666d` |
+| `autosut/release/provenance/environment_provenance.json` | 112795 | `ba81c843b2bd7472f8cee45f5f52061da983e9c63aabef8c82627aa9ba6e78e9` |
 | `autosut/release/provenance/provenance_values.tex` | 925 | `649b3b4a1ac5234422dad71671f0afe249ec308d16f6600ab0179f2fe1081c44` |
 | `autosut/release/provenance/support_matrix.csv` | 251 | `49e29093a685319230bdbc7ba56ad17c95c3476e13bc5c8e1c3b52c6340eb0fe` |
 | `autosut/release/realism_analysis_report.json` | 4084 | `4754aa77e9a9bdc9311df2d6438afa270de2d51836495928cff8214f20577bc6` |
 | `autosut/release/reproducibility_package.json` | 1044 | `c484f5834b4f3c47620af721aaf89d6ede9b0170f03191164619127d341e6c1f` |
 | `autosut/release/separated_corpus_results.json` | 3880 | `7bb6ba109073dfbb1c045c337158508acfba751cb6050a8331bdd166f404fdd0` |
 | `autosut/release/separated_corpus_tables.tex` | 1233 | `611ddfbd1d165d45e83a98ed7c116faadebc31ef3625784dc497150c95e5ac33` |
-| `autosut/release/subdetermination_proof.json` | 43708 | `5f7ae7665e66095a7734a478737ba22100f6a3f65abc85ada93955af702dcf04` |
+| `autosut/release/subdetermination_proof.json` | 43708 | `dd5a7ec706ef7b81f8d11c6c80253f1e5477e9e1e7aa4d2c31d6dcd5779ebe06` |
 | `autosut/release/values.tex` | 500 | `dac32ccfcf7d8c81e999f51b87cd2d3886c9bc1c8980e4fcabb4e859d8b39f45` |
 | `autosut/requirements.txt` | 265 | `449ab400c475e757dc1549932a54cb7a9458f1460885bef0f3fdc49a269a49e8` |
 | `autosut/results/CAMPAIGN_SUT_FIDELITY_MATRIX.md` | 2421 | `aa8e91d34868c1a24fcfc305027258ae0f07004ced1dc0f3a2d6703e8570ab7f` |
@@ -555,7 +555,7 @@
 | `autosut/scripts/artifact_smoke.sh` | 1817 | `b704112ff9de7cd32d555d12b2de3ab843b6130effe782269000a4a5ec00e434` |
 | `autosut/scripts/audit_host_leakage.py` | 5113 | `28f73169396709753f7ee67d605d217c8cc9151b35f489bcfd21bb06a8e49c67` |
 | `autosut/scripts/audit_mitre_metadata.py` | 8014 | `0a6622c27e501942fc698e9d490e43295df25daf338ceb14b8fa3250e5b726e7` |
-| `autosut/scripts/build_reviewer_dashboard.py` | 65530 | `a282d8c9ca32749bc9e42db871cc1092271b508fcd87dbc73e0d34e3fa956741` |
+| `autosut/scripts/build_reviewer_dashboard.py` | 66451 | `a51af4b105e0e82dc4969825c96b25e5bf72b60ebd7df4f3b0ac4e696c9aa7b2` |
 | `autosut/scripts/build_subdetermination_artifact.py` | 2972 | `f8fbff1d12a3c8dd71d98b3e91bc216b1dfe48b12bf1b91e552478fb233ef25f` |
 | `autosut/scripts/caldera_dispatch_smoke.py` | 8559 | `7636cd5c9e61b3202e218d10863e363daa434b8557cbd7db7f7e0ff2b447555e` |
 | `autosut/scripts/campaigns/run.py` | 865 | `66f66ae6b0a7b741fead8c0299c827b3525487368be64bbd759b7ec752e53ac3` |
