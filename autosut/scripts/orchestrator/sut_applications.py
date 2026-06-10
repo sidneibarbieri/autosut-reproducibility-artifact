@@ -278,6 +278,111 @@ def install_dropbear_equivalent(env: EnvironmentBackend,
 
 
 # ----------------------------------------------------------------------
+# Edge HTTP service witness (Apache <-> Nginx). Both serve the same
+# HTTP-Basic-Auth-protected secret, so the web brute-force chain runs
+# identically against either edge server. Credentials and the secret marker
+# are pre-staged and matched in multi_host_executor (webadmin / Lab-Web-2026!
+# / LAB-WEB-SECRET).
+# ----------------------------------------------------------------------
+
+_APACHE_BASIC_AUTH_INSTALL = """
+set -e
+if command -v apk >/dev/null 2>&1; then
+  apk add --no-cache apache2 apache2-utils curl
+elif command -v apt-get >/dev/null 2>&1; then
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apache2 apache2-utils curl
+else
+  echo "no supported package manager (apk, apt-get)" 1>&2; exit 1
+fi
+mkdir -p /secret
+echo 'LAB-WEB-SECRET-c0ffee' > /secret/flag.txt
+htpasswd -bc /etc/webauth.htpasswd webadmin 'Lab-Web-2026!'
+CONFDIR=/etc/apache2/conf.d
+[ -d "$CONFDIR" ] || CONFDIR=/etc/apache2/conf-enabled
+mkdir -p "$CONFDIR"
+cat > "$CONFDIR/secret.conf" <<'EOF'
+Alias /secret /secret
+<Directory "/secret">
+  AuthType Basic
+  AuthName "Restricted"
+  AuthUserFile /etc/webauth.htpasswd
+  Require valid-user
+</Directory>
+EOF
+(httpd -k start 2>/dev/null) || (apachectl -k start 2>/dev/null) || (service apache2 start 2>/dev/null) || (/usr/sbin/apache2ctl start 2>/dev/null)
+sleep 1
+(ss -lnt 2>/dev/null || netstat -lnt 2>/dev/null) | grep :80
+echo apache_basic_auth_done
+"""
+
+_NGINX_EQUIVALENT_INSTALL = """
+set -e
+if command -v apk >/dev/null 2>&1; then
+  apk add --no-cache nginx apache2-utils curl
+elif command -v apt-get >/dev/null 2>&1; then
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nginx apache2-utils curl
+else
+  echo "no supported package manager (apk, apt-get)" 1>&2; exit 1
+fi
+mkdir -p /secret /run/nginx
+echo 'LAB-WEB-SECRET-c0ffee' > /secret/flag.txt
+htpasswd -bc /etc/webauth.htpasswd webadmin 'Lab-Web-2026!'
+CONFDIR=/etc/nginx/http.d
+[ -d "$CONFDIR" ] || CONFDIR=/etc/nginx/conf.d
+mkdir -p "$CONFDIR"
+rm -f "$CONFDIR/default.conf" /etc/nginx/sites-enabled/default 2>/dev/null || true
+cat > "$CONFDIR/secret.conf" <<'EOF'
+server {
+  listen 80 default_server;
+  location /secret/ {
+    alias /secret/;
+    auth_basic "Restricted";
+    auth_basic_user_file /etc/webauth.htpasswd;
+  }
+}
+EOF
+nginx 2>/dev/null || (service nginx start 2>/dev/null) || true
+sleep 1
+(ss -lnt 2>/dev/null || netstat -lnt 2>/dev/null) | grep :80
+echo nginx_equivalent_done
+"""
+
+
+def install_apache_basic_auth(env: EnvironmentBackend, stack: ApplicationStack,
+                              run_dir) -> RecipeResult:
+    """Apache serving one HTTP-Basic-Auth-protected resource: the canonical
+    edge HTTP service for the web non-uniqueness witness."""
+    result = env.run_shell(_APACHE_BASIC_AUTH_INSTALL,
+                           log_name="sut/apache_basic_auth.log", timeout=600)
+    done = "apache_basic_auth_done" in result.stdout
+    return RecipeResult(
+        ok=result.ok and done,
+        detail=("apache serving Basic-Auth-protected /secret on :80" if done
+                else f"apache basic-auth install failed (exit {result.exit_code})"),
+        evidence_files=["sut/apache_basic_auth.log"],
+    )
+
+
+def install_nginx_equivalent(env: EnvironmentBackend, stack: ApplicationStack,
+                             run_dir) -> RecipeResult:
+    """Nginx serving the same Basic-Auth-protected resource as Apache. The
+    structural counterpart to :func:`install_apache_basic_auth`: a different
+    edge HTTP server (separate codebase and configuration model) realizing the
+    same abstract precondition, so the web brute-force chain runs identically."""
+    result = env.run_shell(_NGINX_EQUIVALENT_INSTALL,
+                           log_name="sut/nginx_equivalent.log", timeout=600)
+    done = "nginx_equivalent_done" in result.stdout
+    return RecipeResult(
+        ok=result.ok and done,
+        detail=("nginx serving Basic-Auth-protected /secret on :80" if done
+                else f"nginx install failed (exit {result.exit_code})"),
+        evidence_files=["sut/nginx_equivalent.log"],
+    )
+
+
+# ----------------------------------------------------------------------
 # Minimal "vulnerable Flask app" — generic web exfil surface
 # ----------------------------------------------------------------------
 
@@ -437,5 +542,7 @@ RECIPES: dict[str, RecipeFn] = {
     "mysql_default_instance": install_mysql_default_instance,
     "openssh_weak_password": install_openssh_weak_password,
     "dropbear_equivalent": install_dropbear_equivalent,
+    "apache_basic_auth": install_apache_basic_auth,
+    "nginx_equivalent": install_nginx_equivalent,
     "flask_decoy_api": install_flask_decoy_api,
 }

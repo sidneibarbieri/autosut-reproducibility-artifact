@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-10T12:08:42+00:00",
+  "generated_at": "2026-06-10T23:54:14+00:00",
   "proofs": {
     "0.cve_2021_41773": {
       "campaign_id": "0.cve_2021_41773",
@@ -569,6 +569,180 @@
             "target2.credential.labuser"
           ],
           "free_fraction": 66.6
+        }
+      ],
+      "executable": true
+    },
+    "0.web_demo": {
+      "campaign_id": "0.web_demo",
+      "invariant_fingerprint": "3ade674c28b03bc6b125372b5631ca7a953e254d669e2a002624134c3b5ad399",
+      "invariant_count": 2,
+      "free_count": 2,
+      "free_fraction": 50.0,
+      "canonical": {
+        "variant_id": "0.web_demo#canonical",
+        "seed": 0,
+        "sut_profile": {
+          "sut_id": "0.web_demo",
+          "base_image": "alpine:3.19",
+          "services": [
+            "http"
+          ],
+          "memory_mb": 512,
+          "smp": 1,
+          "backend": null,
+          "hosts": [
+            {
+              "name": "attacker",
+              "base_image": "alpine:3.19",
+              "role": "attacker",
+              "services": [],
+              "memory_mb": 512,
+              "smp": 1,
+              "startup_commands": [
+                "apk add --no-cache curl bash >/dev/null 2>&1 && echo attacker_tools_installed"
+              ],
+              "composition": {
+                "credentials": [],
+                "artifacts": [],
+                "exposures": [],
+                "applications": [],
+                "notes": "Attacker host has no pre-staged credentials of its own; the campaign's recipes recover the web credential by brute force."
+              },
+              "zones": []
+            },
+            {
+              "name": "webtarget",
+              "base_image": "alpine:3.19",
+              "role": "target",
+              "services": [
+                "http"
+              ],
+              "memory_mb": 512,
+              "smp": 1,
+              "startup_commands": [
+                "apk add --no-cache bash >/dev/null 2>&1 || true"
+              ],
+              "composition": {
+                "credentials": [],
+                "artifacts": [],
+                "exposures": [
+                  {
+                    "port": 80,
+                    "protocol": "tcp",
+                    "service": "http",
+                    "expose_to": "private_network",
+                    "purpose": "HTTP service the attacker brute-forces (T1110.001) on the web target.",
+                    "source": "analyst_authored"
+                  }
+                ],
+                "applications": [
+                  {
+                    "name": "apache_httpd",
+                    "version": "default",
+                    "recipe": "apache_basic_auth",
+                    "cve_pins": [],
+                    "config": {},
+                    "image_override": null,
+                    "purpose": "The edge HTTP service whose Basic Auth realm the attacker brute-forces (T1110.001) and authenticates to (T1078) before exfiltrating the protected secret (T1005). A FREE, analyst-authored implementation choice: the corpus pins only that an edge HTTP service must exist, not which web server realises it. The non-uniqueness witness substitutes it (Apache <-> Nginx) and executes both to completion under one corpus fingerprint.",
+                    "source": "analyst_authored"
+                  }
+                ],
+                "notes": "Web target realism: HTTP Basic Auth realm with a pre-staged weak credential and a protected secret on the per-run private network."
+              },
+              "zones": []
+            }
+          ],
+          "composition": null,
+          "topology": null,
+          "notes": "Two-host edge-HTTP witness. Lab pre-stages a weak HTTP Basic Auth credential on the web target; the attacker discovers it via T1110.001 and exfiltrates the protected secret."
+        },
+        "free_elements_changed": [],
+        "free_fraction": 50.0
+      },
+      "variants": [
+        {
+          "variant_id": "0.web_demo#seed1",
+          "seed": 1,
+          "sut_profile": {
+            "sut_id": "0.web_demo-s1",
+            "base_image": "alpine:3.19",
+            "services": [
+              "http"
+            ],
+            "memory_mb": 512,
+            "smp": 1,
+            "backend": null,
+            "hosts": [
+              {
+                "name": "attacker",
+                "base_image": "alpine:3.19",
+                "role": "attacker",
+                "services": [],
+                "memory_mb": 512,
+                "smp": 1,
+                "startup_commands": [
+                  "apk add --no-cache curl bash >/dev/null 2>&1 && echo attacker_tools_installed"
+                ],
+                "composition": {
+                  "credentials": [],
+                  "artifacts": [],
+                  "exposures": [],
+                  "applications": [],
+                  "notes": "Attacker host has no pre-staged credentials of its own; the campaign's recipes recover the web credential by brute force."
+                },
+                "zones": []
+              },
+              {
+                "name": "webtarget",
+                "base_image": "alpine:3.19",
+                "role": "target",
+                "services": [
+                  "http"
+                ],
+                "memory_mb": 512,
+                "smp": 1,
+                "startup_commands": [
+                  "apk add --no-cache bash >/dev/null 2>&1 || true"
+                ],
+                "composition": {
+                  "credentials": [],
+                  "artifacts": [],
+                  "exposures": [
+                    {
+                      "port": 80,
+                      "protocol": "tcp",
+                      "service": "http",
+                      "expose_to": "private_network",
+                      "purpose": "HTTP service the attacker brute-forces (T1110.001) on the web target.",
+                      "source": "analyst_authored"
+                    }
+                  ],
+                  "applications": [
+                    {
+                      "name": "nginx",
+                      "version": "default",
+                      "recipe": "nginx_equivalent",
+                      "cve_pins": [],
+                      "config": {},
+                      "image_override": null,
+                      "purpose": "Realises the same abstract precondition: edge HTTP service.",
+                      "source": "analyst_authored"
+                    }
+                  ],
+                  "notes": "Web target realism: HTTP Basic Auth realm with a pre-staged weak credential and a protected secret on the per-run private network."
+                },
+                "zones": []
+              }
+            ],
+            "composition": null,
+            "topology": null,
+            "notes": "Two-host edge-HTTP witness. Lab pre-stages a weak HTTP Basic Auth credential on the web target; the attacker discovers it via T1110.001 and exfiltrates the protected secret."
+          },
+          "free_elements_changed": [
+            "webtarget.software.apache_httpd@default"
+          ],
+          "free_fraction": 50.0
         }
       ],
       "executable": true

@@ -253,6 +253,9 @@ def test_build_subdetermination_artifact_structural():
     # Docker (executable is only asserted when Docker drives a live run).
     assert proofs["0.pivot_demo"]["invariant_count"] == 3
     assert proofs["0.pivot_demo"]["free_count"] == 6
+    # Second coincident witness (edge HTTP service class: Apache <-> Nginx).
+    assert proofs["0.web_demo"]["invariant_count"] == 2
+    assert proofs["0.web_demo"]["free_count"] == 2
     assert proofs["0.apt41_dust"]["invariant_count"] == 1
     assert proofs["0.apt41_dust"]["free_count"] == 10
     assert "generated_at" in artifact

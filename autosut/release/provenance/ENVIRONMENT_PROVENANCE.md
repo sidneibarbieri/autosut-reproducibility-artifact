@@ -1,11 +1,11 @@
 # Environment Provenance
 
-- Generated at: `2026-06-10T14:24:03`
-- Campaigns measured: `19`
-- Total tagged SUT elements: `135`
+- Generated at: `2026-06-10T20:56:24`
+- Campaigns measured: `20`
+- Total tagged SUT elements: `139`
 - Policy: 3-category hybrid (`corpus_supported` / `autosut_concretized` / `analyst_authored`).
 
-Of the **135** concrete SUT elements materialised across **19** campaign SUT profiles, **23.7%** is anchored in the CTI corpus, **17.0%** is an AutoSUT concretization of an under-specified corpus signal, and **59.3%** is an explicit analyst lab choice the corpus does not constrain.
+Of the **139** concrete SUT elements materialised across **20** campaign SUT profiles, **24.5%** is anchored in the CTI corpus, **16.5%** is an AutoSUT concretization of an under-specified corpus signal, and **59.0%** is an explicit analyst lab choice the corpus does not constrain.
 
 ## Dimension x Source
 
@@ -13,14 +13,14 @@ Each tagged element belongs to exactly one dimension. This table is the environm
 
 | Dimension | Corpus | AutoSUT | Analyst | Total |
 |---|---:|---:|---:|---:|
-| Platform | 25 | 0 | 0 | 25 |
-| Software | 1 | 0 | 21 | 22 |
+| Platform | 27 | 0 | 0 | 27 |
+| Software | 1 | 0 | 22 | 23 |
 | Vulnerability | 2 | 1 | 0 | 3 |
 | Credentials | 1 | 21 | 0 | 22 |
-| Exposures | 3 | 1 | 24 | 28 |
+| Exposures | 3 | 1 | 25 | 29 |
 | Artifacts | 0 | 0 | 32 | 32 |
 | Topology | 0 | 0 | 3 | 3 |
-| **All** | 32 (23.7%) | 23 (17.0%) | 80 (59.3%) | **135** |
+| **All** | 34 (24.5%) | 23 (16.5%) | 82 (59.0%) | **139** |
 
 ## Per-Campaign Breakdown
 
@@ -44,6 +44,7 @@ Each tagged element belongs to exactly one dimension. This table is the environm
 | `0.fin6_emulation` | 7 | 1 (14.3%) | 1 (14.3%) | 5 (71.4%) |
 | `0.dmz_segmentation_demo` | 13 | 4 (30.8%) | 3 (23.1%) | 6 (46.2%) |
 | `0.pivot_demo` | 9 | 3 (33.3%) | 2 (22.2%) | 4 (44.4%) |
+| `0.web_demo` | 4 | 2 (50.0%) | 0 (0.0%) | 2 (50.0%) |
 | `0.cve_2021_41773` | 5 | 4 (80.0%) | 0 (0.0%) | 1 (20.0%) |
 
 ## How to read this

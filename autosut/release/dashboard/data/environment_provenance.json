@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-10T14:24:08",
+  "generated_at": "2026-06-10T20:56:33",
   "policy": "hybrid_3category",
   "dimensions": [
     "platform",
@@ -13,29 +13,29 @@
   "skipped_unimplemented": [],
   "global": {
     "campaign_id": "ALL",
-    "total_elements": 135,
+    "total_elements": 139,
     "by_source": {
-      "corpus_supported": 32,
-      "analyst_authored": 80,
+      "corpus_supported": 34,
+      "analyst_authored": 82,
       "autosut_concretized": 23,
       "inferred": 0
     },
     "percentages": {
-      "corpus_supported": 23.7,
-      "analyst_authored": 59.3,
-      "autosut_concretized": 17.0,
+      "corpus_supported": 24.5,
+      "analyst_authored": 59.0,
+      "autosut_concretized": 16.5,
       "inferred": 0.0
     },
     "by_dimension": {
       "platform": {
-        "corpus_supported": 25,
+        "corpus_supported": 27,
         "analyst_authored": 0,
         "autosut_concretized": 0,
         "inferred": 0
       },
       "software": {
         "corpus_supported": 1,
-        "analyst_authored": 21,
+        "analyst_authored": 22,
         "autosut_concretized": 0,
         "inferred": 0
       },
@@ -53,7 +53,7 @@
       },
       "exposures": {
         "corpus_supported": 3,
-        "analyst_authored": 24,
+        "analyst_authored": 25,
         "autosut_concretized": 1,
         "inferred": 0
       },
@@ -1110,6 +1110,38 @@
         "source": "analyst_authored",
         "host": "target2",
         "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
+      },
+      {
+        "dimension": "platform",
+        "identifier": "attacker.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "attacker",
+        "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "platform",
+        "identifier": "webtarget.platform.linux",
+        "value": "linux",
+        "source": "corpus_supported",
+        "host": "webtarget",
+        "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "software",
+        "identifier": "webtarget.software.apache_httpd@default",
+        "value": "apache_httpd@default",
+        "source": "analyst_authored",
+        "host": "webtarget",
+        "purpose": "The edge HTTP service whose Basic Auth realm the attacker brute-forces (T1110.001) and authenticates to (T1078) before exfiltrating the protected secret (T1005). A FREE, analyst-authored implementation choice: the corpus pins only that an edge HTTP service must exist, not which web server realises it. The non-uniqueness witness substitutes it (Apache <-> Nginx) and executes both to completion under one corpus fingerprint."
+      },
+      {
+        "dimension": "exposures",
+        "identifier": "webtarget.exposure.80",
+        "value": "80/tcp http",
+        "source": "analyst_authored",
+        "host": "webtarget",
+        "purpose": "HTTP service the attacker brute-forces (T1110.001) on the web target."
       },
       {
         "dimension": "platform",
@@ -3307,6 +3339,100 @@
           "source": "analyst_authored",
           "host": "target2",
           "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target."
+        }
+      ]
+    },
+    {
+      "campaign_id": "0.web_demo",
+      "total_elements": 4,
+      "by_source": {
+        "corpus_supported": 2,
+        "analyst_authored": 2,
+        "autosut_concretized": 0,
+        "inferred": 0
+      },
+      "percentages": {
+        "corpus_supported": 50.0,
+        "analyst_authored": 50.0,
+        "autosut_concretized": 0.0,
+        "inferred": 0.0
+      },
+      "by_dimension": {
+        "platform": {
+          "corpus_supported": 2,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "software": {
+          "corpus_supported": 0,
+          "analyst_authored": 1,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "vulnerability": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "credentials": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "exposures": {
+          "corpus_supported": 0,
+          "analyst_authored": 1,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "artifacts": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        },
+        "topology": {
+          "corpus_supported": 0,
+          "analyst_authored": 0,
+          "autosut_concretized": 0,
+          "inferred": 0
+        }
+      },
+      "elements": [
+        {
+          "dimension": "platform",
+          "identifier": "attacker.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "attacker",
+          "purpose": "materialised as alpine:3.19"
+        },
+        {
+          "dimension": "platform",
+          "identifier": "webtarget.platform.linux",
+          "value": "linux",
+          "source": "corpus_supported",
+          "host": "webtarget",
+          "purpose": "materialised as alpine:3.19"
+        },
+        {
+          "dimension": "software",
+          "identifier": "webtarget.software.apache_httpd@default",
+          "value": "apache_httpd@default",
+          "source": "analyst_authored",
+          "host": "webtarget",
+          "purpose": "The edge HTTP service whose Basic Auth realm the attacker brute-forces (T1110.001) and authenticates to (T1078) before exfiltrating the protected secret (T1005). A FREE, analyst-authored implementation choice: the corpus pins only that an edge HTTP service must exist, not which web server realises it. The non-uniqueness witness substitutes it (Apache <-> Nginx) and executes both to completion under one corpus fingerprint."
+        },
+        {
+          "dimension": "exposures",
+          "identifier": "webtarget.exposure.80",
+          "value": "80/tcp http",
+          "source": "analyst_authored",
+          "host": "webtarget",
+          "purpose": "HTTP service the attacker brute-forces (T1110.001) on the web target."
         }
       ]
     },

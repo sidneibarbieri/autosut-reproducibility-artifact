@@ -16,8 +16,9 @@
 #   6. evidence under release/evidence/ contains no non-archived partial
 #      run (i.e. _archive/ is the only place historical runs may live)
 #   7. release/subdetermination_proof.json is present, the cve_2021_41773
-#      executable witness ran (both variants), and the pivot_demo coincident
-#      witness ran (OpenSSH<->Dropbear substitution executed, declared==executed)
+#      executable witness ran (both variants), and the two coincident witnesses
+#      ran (pivot_demo OpenSSH<->Dropbear and web_demo Apache<->Nginx service
+#      substitutions executed, declared==executed)
 #
 # Run from the project root::
 #
@@ -244,23 +245,25 @@ if not proofs.get("0.cve_2021_41773", {}).get("executable"):
     print("  0.cve_2021_41773: executable proof is not true "
           "(regenerate with docker up)", file=sys.stderr)
     exit_code = 1
-# Coincident witness: the informative free-region substitution (OpenSSH ->
-# Dropbear) is itself executed. Existence needs >= 2 campaign-equivalent SUTs
+# Coincident witnesses: an informative free-region service substitution is
+# itself executed, across two service classes (SSH: OpenSSH<->Dropbear; edge
+# HTTP: Apache<->Nginx). Existence needs >= 2 campaign-equivalent SUTs
 # (canonical + >= 1 variant); both must run with declared == executed.
-pivot = proofs.get("0.pivot_demo")
-if pivot is None:
-    print("  0.pivot_demo: coincident-witness proof missing from artifact",
-          file=sys.stderr)
-    exit_code = 1
-else:
-    if not pivot.get("invariant_fingerprint"):
-        print("  0.pivot_demo: empty invariant_fingerprint", file=sys.stderr)
+for cid in ("0.pivot_demo", "0.web_demo"):
+    proof = proofs.get(cid)
+    if proof is None:
+        print(f"  {cid}: coincident-witness proof missing from artifact",
+              file=sys.stderr)
         exit_code = 1
-    if len(pivot.get("variants", [])) < 1:
-        print("  0.pivot_demo: no compatible variant", file=sys.stderr)
+        continue
+    if not proof.get("invariant_fingerprint"):
+        print(f"  {cid}: empty invariant_fingerprint", file=sys.stderr)
         exit_code = 1
-    if not pivot.get("executable"):
-        print("  0.pivot_demo: coincident witness is not executable "
+    if len(proof.get("variants", [])) < 1:
+        print(f"  {cid}: no compatible variant", file=sys.stderr)
+        exit_code = 1
+    if not proof.get("executable"):
+        print(f"  {cid}: coincident witness is not executable "
               "(regenerate with docker up)", file=sys.stderr)
         exit_code = 1
 sys.exit(exit_code)

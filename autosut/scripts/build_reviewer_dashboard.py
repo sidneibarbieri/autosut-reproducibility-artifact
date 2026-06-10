@@ -1306,16 +1306,19 @@ def render_subdetermination_section() -> str:
             "<code>/etc/passwd</code>, each with "
             "<code>declared_mode == executed_mode</code>.</p>")
     pivot = data.get("proofs", {}).get("0.pivot_demo")
+    web = data.get("proofs", {}).get("0.web_demo")
     coincident = ""
-    if pivot and pivot.get("executable"):
-        pivot_realisations = len(pivot["variants"]) + 1  # canonical + variants
+    if (pivot and pivot.get("executable")) or (web and web.get("executable")):
         coincident = (
-            f"<p><strong>Coincident witness:</strong> {pivot_realisations} "
-            "realisations of an SSH-pivot reference (canonical OpenSSH plus a "
-            "generated Dropbear variant) preserve the same corpus fingerprint "
-            "and run the same multi-stage pivot to completion, each with "
+            "<p><strong>Coincident witnesses:</strong> two informative service "
+            "substitutions are themselves executed, across two service classes. "
+            "The SSH-pivot reference runs a canonical OpenSSH SUT and a generated "
+            "Dropbear variant through the same multi-stage pivot. The edge-HTTP "
+            "reference runs a canonical Apache SUT and a generated Nginx variant "
+            "through the same HTTP Basic Auth brute-force and exfiltration chain. "
+            "Each realisation preserves the same corpus fingerprint and runs with "
             "<code>declared_mode == executed_mode</code>. The executed variation "
-            "is the service realisation itself, a structurally different SSH "
+            "is the service realisation itself, a structurally different "
             "server.</p>")
     coverage_note = (
         "<p class='muted'>Scope: the non-uniqueness result rests on the "
@@ -1371,8 +1374,9 @@ def render_html(macros: dict[str, str], provenance_section: str, merged) -> str:
     element (identical invariant fingerprint) and varies only the free region.
     <code>0.cve_2021_41773</code> is the executable witness, each variant
     running the real CVE with <code>declared_mode == executed_mode</code>.
-    <code>0.pivot_demo</code> is the coincident witness, running the same SSH
-    pivot across structurally different SSH servers (OpenSSH and Dropbear).
+    <code>0.pivot_demo</code> and <code>0.web_demo</code> are coincident
+    witnesses, running the same attack across structurally different SSH servers
+    (OpenSSH and Dropbear) and edge HTTP servers (Apache and Nginx).
     <code>0.apt41_dust</code> is the structural witness: a large free region
     with materially distinct services. Source:
     <code>release/subdetermination_proof.json</code>.</p>

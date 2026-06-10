@@ -673,6 +673,98 @@ def pivot_demo_sut() -> SUTProfile:
 
 
 # ---------------------------------------------------------------------------
+# 0.web_demo — two-host edge-HTTP witness (Apache <-> Nginx)
+# ---------------------------------------------------------------------------
+
+_WEB_BASE_IMAGE = "alpine:3.19"
+_WEB_ATTACKER_STARTUP = [
+    "apk add --no-cache curl bash >/dev/null 2>&1 && echo attacker_tools_installed",
+]
+# The web target needs no user setup: the edge-HTTP application recipe
+# (apache_basic_auth or, in the variant, nginx_equivalent) installs the server,
+# stages the HTTP Basic Auth credential and the protected secret, and starts it
+# on :80.
+_WEB_TARGET_STARTUP = [
+    "apk add --no-cache bash >/dev/null 2>&1 || true",
+]
+
+
+def web_demo_attacker() -> AttackerProfile:
+    return AttackerProfile(
+        profile_id="web_attacker",
+        capabilities=["http_client", "basic_auth_bruteforce"],
+        notes="alpine with curl for the HTTP Basic Auth brute-force and exfil "
+              "chain.",
+    )
+
+
+def web_demo_sut() -> SUTProfile:
+    """Two-host SUT: attacker + web target on a private network. The web server
+    is a FREE element so the non-uniqueness witness can substitute it
+    (Apache <-> Nginx) and execute the same HTTP Basic Auth chain on both."""
+    from .models import (
+        ApplicationStack, NetworkExposure, SUTComposition, SUTHost,
+    )
+
+    target_composition = SUTComposition(
+        applications=[
+            ApplicationStack(
+                name="apache_httpd", version="default",
+                recipe="apache_basic_auth",
+                purpose="The edge HTTP service whose Basic Auth realm the "
+                        "attacker brute-forces (T1110.001) and authenticates to "
+                        "(T1078) before exfiltrating the protected secret "
+                        "(T1005). A FREE, analyst-authored implementation "
+                        "choice: the corpus pins only that an edge HTTP service "
+                        "must exist, not which web server realises it. The "
+                        "non-uniqueness witness substitutes it (Apache <-> "
+                        "Nginx) and executes both to completion under one corpus "
+                        "fingerprint.",
+                source=ProvenanceSource.analyst_authored,
+            ),
+        ],
+        exposures=[
+            NetworkExposure(port=80, service="http",
+                             expose_to="private_network",
+                             purpose="HTTP service the attacker brute-forces "
+                                     "(T1110.001) on the web target.",
+                             source=ProvenanceSource.analyst_authored),
+        ],
+        notes="Web target realism: HTTP Basic Auth realm with a pre-staged weak "
+              "credential and a protected secret on the per-run private network.",
+    )
+    attacker_composition = SUTComposition(
+        notes="Attacker host has no pre-staged credentials of its own; the "
+              "campaign's recipes recover the web credential by brute force.",
+    )
+
+    hosts = [
+        SUTHost(
+            name="attacker", role="attacker", base_image=_WEB_BASE_IMAGE,
+            memory_mb=512, smp=1,
+            startup_commands=_WEB_ATTACKER_STARTUP,
+            composition=attacker_composition,
+        ),
+        SUTHost(
+            name="webtarget", role="target", base_image=_WEB_BASE_IMAGE,
+            services=["http"], memory_mb=512, smp=1,
+            startup_commands=_WEB_TARGET_STARTUP,
+            composition=target_composition,
+        ),
+    ]
+    return SUTProfile(
+        sut_id="0.web_demo",
+        base_image=_WEB_BASE_IMAGE,
+        services=["http"],
+        memory_mb=512, smp=1,
+        hosts=hosts,
+        notes="Two-host edge-HTTP witness. Lab pre-stages a weak HTTP Basic "
+              "Auth credential on the web target; the attacker discovers it via "
+              "T1110.001 and exfiltrates the protected secret.",
+    )
+
+
+# ---------------------------------------------------------------------------
 # SUT declarations for the remaining inspired campaign profiles.
 #
 # Each function declares a SUTComposition for one campaign-specific lab shape.
@@ -981,6 +1073,8 @@ def resolve(campaign_id: str, *,
         return c0011_attacker(), c0011_sut(), c0011_cves()
     if campaign_id == "0.pivot_demo":
         return pivot_demo_attacker(), pivot_demo_sut(), []
+    if campaign_id == "0.web_demo":
+        return web_demo_attacker(), web_demo_sut(), []
     if campaign_id == "0.dmz_segmentation_demo":
         return dmz_segmentation_attacker(), dmz_segmentation_sut(), []
     if campaign_id == "0.cve_2021_41773":
@@ -1079,5 +1173,6 @@ def implemented_campaigns() -> list[str]:
         "0.fin6_emulation",
         "0.dmz_segmentation_demo",
         "0.pivot_demo",
+        "0.web_demo",
         "0.cve_2021_41773",
     ]
