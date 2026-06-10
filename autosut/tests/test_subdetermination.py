@@ -245,10 +245,14 @@ def test_cve_variants_execute_for_real():
 
 def test_build_subdetermination_artifact_structural():
     import build_subdetermination_artifact as bsa
-    artifact = bsa.build_artifact(execute_cve=False)
+    artifact = bsa.build_artifact(execute=False)
     proofs = artifact["proofs"]
     assert proofs["0.cve_2021_41773"]["invariant_count"] == 4
     assert proofs["0.cve_2021_41773"]["free_count"] == 1
+    # Coincident witness: present in the artifact, partition stable without
+    # Docker (executable is only asserted when Docker drives a live run).
+    assert proofs["0.pivot_demo"]["invariant_count"] == 3
+    assert proofs["0.pivot_demo"]["free_count"] == 6
     assert proofs["0.apt41_dust"]["invariant_count"] == 1
     assert proofs["0.apt41_dust"]["free_count"] == 10
     assert "generated_at" in artifact

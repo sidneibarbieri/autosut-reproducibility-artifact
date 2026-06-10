@@ -217,6 +217,66 @@ def install_openssh_weak_password(env: EnvironmentBackend,
     )
 
 
+# Structural equivalent of the openssh recipe: a different SSH server
+# implementation (dropbear) satisfying the same abstract precondition — a
+# remote authenticated SSH service on :22. Used by the non-uniqueness witness
+# so the OpenSSH<->Dropbear material variation runs the same technique to
+# completion (declared == executed), answering the "decoy-only witness"
+# critique with a coincident informative-variation-AND-execution witness.
+_DROPBEAR_INSTALL_SCRIPT = """
+set -e
+if command -v apk >/dev/null 2>&1; then
+  # dropbear is the SSH *server* (the substituted element). openssh-sftp-server
+  # + the scp client binary are file-transfer helpers dropbear invokes for
+  # T1570 (Lateral Tool Transfer) — they do not change the fact that the
+  # listening sshd is dropbear, only that scp/sftp works against it.
+  apk add --no-cache dropbear openssh-sftp-server openssh-client shadow
+elif command -v apt-get >/dev/null 2>&1; then
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends dropbear-bin openssh-sftp-server openssh-client
+else
+  echo "no supported package manager (apk, apt-get)" 1>&2
+  exit 1
+fi
+mkdir -p /etc/dropbear
+[ -f /etc/dropbear/dropbear_rsa_host_key ] || dropbearkey -t rsa -s 2048 -f /etc/dropbear/dropbear_rsa_host_key
+[ -f /etc/dropbear/dropbear_ed25519_host_key ] || dropbearkey -t ed25519 -f /etc/dropbear/dropbear_ed25519_host_key || true
+# Password auth is enabled by default in dropbear (no -s flag): the same weak
+# network surface the openssh recipe creates with PasswordAuthentication yes.
+# Daemonises (no -F); -p 22 listen; -P writes the pidfile.
+dropbear -p 22 -P /var/run/dropbear.pid
+sleep 1
+(ss -lnt 2>/dev/null || netstat -lnt 2>/dev/null) | grep :22
+echo dropbear_install_done
+"""
+
+
+def install_dropbear_equivalent(env: EnvironmentBackend,
+                                stack: ApplicationStack,
+                                run_dir) -> RecipeResult:
+    """Install dropbear and start it on :22 with password auth.
+
+    The structural counterpart to :func:`install_openssh_weak_password`. The
+    credential is declared in :class:`Credential`; this recipe is the network
+    surface (a real dropbear daemon, real host keys, real password auth), so a
+    technique that SSH-authenticates runs identically against OpenSSH or
+    Dropbear — the corpus-supported precondition is preserved, only the free
+    implementation differs.
+    """
+    result = env.run_shell(
+        _DROPBEAR_INSTALL_SCRIPT,
+        log_name="sut/dropbear_install.log",
+        timeout=600,
+    )
+    return RecipeResult(
+        ok=result.ok and "dropbear_install_done" in result.stdout,
+        detail=("dropbear listening on :22 with password auth"
+                if "dropbear_install_done" in result.stdout
+                else f"dropbear install failed (exit {result.exit_code})"),
+        evidence_files=["sut/dropbear_install.log"],
+    )
+
+
 # ----------------------------------------------------------------------
 # Minimal "vulnerable Flask app" — generic web exfil surface
 # ----------------------------------------------------------------------
@@ -376,5 +436,6 @@ RECIPES: dict[str, RecipeFn] = {
     "apache_default_site": install_apache_default_site,
     "mysql_default_instance": install_mysql_default_instance,
     "openssh_weak_password": install_openssh_weak_password,
+    "dropbear_equivalent": install_dropbear_equivalent,
     "flask_decoy_api": install_flask_decoy_api,
 }

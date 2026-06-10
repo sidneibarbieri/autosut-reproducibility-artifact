@@ -239,14 +239,16 @@ _PIVOT_LAB_PW = "Lab-Demo-2026!"
 # issues on `apt-get update` inside slim containers. Alpine's apk is
 # small, reliable on ARM64, and ships the binaries we need (openssh,
 # sshpass, netcat-openbsd) without architecture-specific friction.
+# The SSH server is now a FREE composition application (see
+# target_composition.applications) so the non-uniqueness witness can
+# substitute it (OpenSSH <-> Dropbear) and execute BOTH. Startup only
+# pre-creates the lab user; the chosen SSH implementation, its host keys, and
+# its daemon are installed by the application recipe (openssh_weak_password or,
+# in the variant, dropbear_equivalent).
 _PIVOT_TARGET_STARTUP = [
-    "apk add --no-cache openssh openssh-server bash shadow >/dev/null 2>&1",
+    "apk add --no-cache bash shadow >/dev/null 2>&1",
     f"adduser -D -s /bin/bash {_PIVOT_LAB_USER}",
     f"echo '{_PIVOT_LAB_USER}:{_PIVOT_LAB_PW}' | chpasswd",
-    "ssh-keygen -A",
-    "sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config",
-    "sed -i 's/^#*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config",
-    "/usr/sbin/sshd",
 ]
 _PIVOT_ATTACKER_STARTUP = [
     "apk add --no-cache openssh-client sshpass netcat-openbsd bash "
@@ -592,7 +594,8 @@ def cve_2021_41773_sut() -> SUTProfile:
 def pivot_demo_sut() -> SUTProfile:
     """Three-host SUT: attacker + target1 + target2 on a private network."""
     from .models import (
-        Credential, NetworkExposure, SUTComposition, SUTHost,
+        ApplicationStack, Credential, NetworkExposure, SUTComposition,
+        SUTHost,
     )
 
     target_composition = SUTComposition(
@@ -605,6 +608,21 @@ def pivot_demo_sut() -> SUTProfile:
                 # T1110.001 brute-force implies a discoverable credential; the
                 # literal labuser pair is AutoSUT's concretization.
                 source=ProvenanceSource.autosut_concretized,
+            ),
+        ],
+        applications=[
+            ApplicationStack(
+                name="openssh", version="default",
+                recipe="openssh_weak_password",
+                purpose="The remote authenticated SSH service the attacker "
+                        "brute-forces (T1110.001) and pivots through "
+                        "(T1021.004). A FREE, analyst-authored implementation "
+                        "choice: the corpus pins only that a remote "
+                        "authenticated service must exist, not which SSH "
+                        "server realises it. The non-uniqueness witness "
+                        "substitutes it (OpenSSH <-> Dropbear) and executes "
+                        "both to completion under one corpus fingerprint.",
+                source=ProvenanceSource.analyst_authored,
             ),
         ],
         exposures=[

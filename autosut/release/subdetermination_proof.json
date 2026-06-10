@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T18:38:58+00:00",
+  "generated_at": "2026-06-10T08:36:50+00:00",
   "proofs": {
     "0.cve_2021_41773": {
       "campaign_id": "0.cve_2021_41773",
@@ -80,7 +80,7 @@
                     "source": "corpus_supported"
                   }
                 ],
-                "notes": "S17 reference composition: every realism element is declared, applied, and audit-logged."
+                "notes": "Reference composition: every realism element is declared, applied, and audit-logged."
               },
               "zones": []
             }
@@ -166,7 +166,7 @@
                       "source": "corpus_supported"
                     }
                   ],
-                  "notes": "S17 reference composition: every realism element is declared, applied, and audit-logged."
+                  "notes": "Reference composition: every realism element is declared, applied, and audit-logged."
                 },
                 "zones": []
               }
@@ -253,7 +253,7 @@
                       "source": "corpus_supported"
                     }
                   ],
-                  "notes": "S17 reference composition: every realism element is declared, applied, and audit-logged."
+                  "notes": "Reference composition: every realism element is declared, applied, and audit-logged."
                 },
                 "zones": []
               }
@@ -266,6 +266,309 @@
             "target.artifact./usr/local/apache2/cgi-bin/lab.sh"
           ],
           "free_fraction": 20.0
+        }
+      ],
+      "executable": true
+    },
+    "0.pivot_demo": {
+      "campaign_id": "0.pivot_demo",
+      "invariant_fingerprint": "d3bd9e9bd3bdd765869fa7d99af45bb07b3a53c1c83191323df36292ea30a277",
+      "invariant_count": 3,
+      "free_count": 6,
+      "free_fraction": 66.6,
+      "canonical": {
+        "variant_id": "0.pivot_demo#canonical",
+        "seed": 0,
+        "sut_profile": {
+          "sut_id": "0.pivot_demo",
+          "base_image": "alpine:3.19",
+          "services": [
+            "ssh"
+          ],
+          "memory_mb": 512,
+          "smp": 1,
+          "backend": null,
+          "hosts": [
+            {
+              "name": "attacker",
+              "base_image": "alpine:3.19",
+              "role": "attacker",
+              "services": [],
+              "memory_mb": 512,
+              "smp": 1,
+              "startup_commands": [
+                "apk add --no-cache openssh-client sshpass netcat-openbsd bash >/dev/null 2>&1 && echo attacker_tools_installed"
+              ],
+              "composition": {
+                "credentials": [],
+                "artifacts": [],
+                "exposures": [],
+                "applications": [],
+                "notes": "Attacker host has no pre-staged credentials of its own; the campaign's recipes harvest target credentials by brute force."
+              },
+              "zones": []
+            },
+            {
+              "name": "target1",
+              "base_image": "alpine:3.19",
+              "role": "target",
+              "services": [
+                "ssh"
+              ],
+              "memory_mb": 512,
+              "smp": 1,
+              "startup_commands": [
+                "apk add --no-cache bash shadow >/dev/null 2>&1",
+                "adduser -D -s /bin/bash labuser",
+                "echo 'labuser:Lab-Demo-2026!' | chpasswd"
+              ],
+              "composition": {
+                "credentials": [
+                  {
+                    "kind": "password",
+                    "user": "labuser",
+                    "secret": "Lab-Demo-2026!",
+                    "location": null,
+                    "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service.",
+                    "source": "autosut_concretized"
+                  }
+                ],
+                "artifacts": [],
+                "exposures": [
+                  {
+                    "port": 22,
+                    "protocol": "tcp",
+                    "service": "ssh",
+                    "expose_to": "private_network",
+                    "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target.",
+                    "source": "analyst_authored"
+                  }
+                ],
+                "applications": [
+                  {
+                    "name": "openssh",
+                    "version": "default",
+                    "recipe": "openssh_weak_password",
+                    "cve_pins": [],
+                    "config": {},
+                    "image_override": null,
+                    "purpose": "The remote authenticated SSH service the attacker brute-forces (T1110.001) and pivots through (T1021.004). A FREE, analyst-authored implementation choice: the corpus pins only that a remote authenticated service must exist, not which SSH server realises it. The non-uniqueness witness substitutes it (OpenSSH <-> Dropbear) and executes both to completion under one corpus fingerprint.",
+                    "source": "analyst_authored"
+                  }
+                ],
+                "notes": "Pivot target realism: weak SSH credential + listening port 22 on the per-run private Docker network."
+              },
+              "zones": []
+            },
+            {
+              "name": "target2",
+              "base_image": "alpine:3.19",
+              "role": "target",
+              "services": [
+                "ssh"
+              ],
+              "memory_mb": 512,
+              "smp": 1,
+              "startup_commands": [
+                "apk add --no-cache bash shadow >/dev/null 2>&1",
+                "adduser -D -s /bin/bash labuser",
+                "echo 'labuser:Lab-Demo-2026!' | chpasswd"
+              ],
+              "composition": {
+                "credentials": [
+                  {
+                    "kind": "password",
+                    "user": "labuser",
+                    "secret": "Lab-Demo-2026!",
+                    "location": null,
+                    "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service.",
+                    "source": "autosut_concretized"
+                  }
+                ],
+                "artifacts": [],
+                "exposures": [
+                  {
+                    "port": 22,
+                    "protocol": "tcp",
+                    "service": "ssh",
+                    "expose_to": "private_network",
+                    "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target.",
+                    "source": "analyst_authored"
+                  }
+                ],
+                "applications": [
+                  {
+                    "name": "openssh",
+                    "version": "default",
+                    "recipe": "openssh_weak_password",
+                    "cve_pins": [],
+                    "config": {},
+                    "image_override": null,
+                    "purpose": "The remote authenticated SSH service the attacker brute-forces (T1110.001) and pivots through (T1021.004). A FREE, analyst-authored implementation choice: the corpus pins only that a remote authenticated service must exist, not which SSH server realises it. The non-uniqueness witness substitutes it (OpenSSH <-> Dropbear) and executes both to completion under one corpus fingerprint.",
+                    "source": "analyst_authored"
+                  }
+                ],
+                "notes": "Pivot target realism: weak SSH credential + listening port 22 on the per-run private Docker network."
+              },
+              "zones": []
+            }
+          ],
+          "composition": null,
+          "topology": null,
+          "notes": "Three-host SSH pivot reference. Lab pre-stages a single weak password on both targets to satisfy a minimal Q3 audit trail \u2014 the attacker still has to discover it via T1110.001."
+        },
+        "free_elements_changed": [],
+        "free_fraction": 66.6
+      },
+      "variants": [
+        {
+          "variant_id": "0.pivot_demo#seed1",
+          "seed": 1,
+          "sut_profile": {
+            "sut_id": "0.pivot_demo-s1",
+            "base_image": "alpine:3.19",
+            "services": [
+              "ssh"
+            ],
+            "memory_mb": 512,
+            "smp": 1,
+            "backend": null,
+            "hosts": [
+              {
+                "name": "attacker",
+                "base_image": "alpine:3.19",
+                "role": "attacker",
+                "services": [],
+                "memory_mb": 512,
+                "smp": 1,
+                "startup_commands": [
+                  "apk add --no-cache openssh-client sshpass netcat-openbsd bash >/dev/null 2>&1 && echo attacker_tools_installed"
+                ],
+                "composition": {
+                  "credentials": [],
+                  "artifacts": [],
+                  "exposures": [],
+                  "applications": [],
+                  "notes": "Attacker host has no pre-staged credentials of its own; the campaign's recipes harvest target credentials by brute force."
+                },
+                "zones": []
+              },
+              {
+                "name": "target1",
+                "base_image": "alpine:3.19",
+                "role": "target",
+                "services": [
+                  "ssh"
+                ],
+                "memory_mb": 512,
+                "smp": 1,
+                "startup_commands": [
+                  "apk add --no-cache bash shadow >/dev/null 2>&1",
+                  "adduser -D -s /bin/bash labuser",
+                  "echo 'labuser:Lab-Demo-2026!' | chpasswd"
+                ],
+                "composition": {
+                  "credentials": [
+                    {
+                      "kind": "password",
+                      "user": "labuser_44cb63",
+                      "secret": "Lab-44cb63!",
+                      "location": null,
+                      "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service.",
+                      "source": "autosut_concretized"
+                    }
+                  ],
+                  "artifacts": [],
+                  "exposures": [
+                    {
+                      "port": 22,
+                      "protocol": "tcp",
+                      "service": "ssh",
+                      "expose_to": "private_network",
+                      "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target.",
+                      "source": "analyst_authored"
+                    }
+                  ],
+                  "applications": [
+                    {
+                      "name": "dropbear",
+                      "version": "default",
+                      "recipe": "dropbear_equivalent",
+                      "cve_pins": [],
+                      "config": {},
+                      "image_override": null,
+                      "purpose": "Realises the same abstract precondition: remote authenticated service (SSH).",
+                      "source": "analyst_authored"
+                    }
+                  ],
+                  "notes": "Pivot target realism: weak SSH credential + listening port 22 on the per-run private Docker network."
+                },
+                "zones": []
+              },
+              {
+                "name": "target2",
+                "base_image": "alpine:3.19",
+                "role": "target",
+                "services": [
+                  "ssh"
+                ],
+                "memory_mb": 512,
+                "smp": 1,
+                "startup_commands": [
+                  "apk add --no-cache bash shadow >/dev/null 2>&1",
+                  "adduser -D -s /bin/bash labuser",
+                  "echo 'labuser:Lab-Demo-2026!' | chpasswd"
+                ],
+                "composition": {
+                  "credentials": [
+                    {
+                      "kind": "password",
+                      "user": "labuser_44cb63",
+                      "secret": "Lab-44cb63!",
+                      "location": null,
+                      "purpose": "Lab pre-staged weak credential \u2014 the attacker discovers it via T1110.001 brute-force against the target's SSH service.",
+                      "source": "autosut_concretized"
+                    }
+                  ],
+                  "artifacts": [],
+                  "exposures": [
+                    {
+                      "port": 22,
+                      "protocol": "tcp",
+                      "service": "ssh",
+                      "expose_to": "private_network",
+                      "purpose": "SSH service the attacker brute-forces (T1110.001) on the pivot target.",
+                      "source": "analyst_authored"
+                    }
+                  ],
+                  "applications": [
+                    {
+                      "name": "dropbear",
+                      "version": "default",
+                      "recipe": "dropbear_equivalent",
+                      "cve_pins": [],
+                      "config": {},
+                      "image_override": null,
+                      "purpose": "Realises the same abstract precondition: remote authenticated service (SSH).",
+                      "source": "analyst_authored"
+                    }
+                  ],
+                  "notes": "Pivot target realism: weak SSH credential + listening port 22 on the per-run private Docker network."
+                },
+                "zones": []
+              }
+            ],
+            "composition": null,
+            "topology": null,
+            "notes": "Three-host SSH pivot reference. Lab pre-stages a single weak password on both targets to satisfy a minimal Q3 audit trail \u2014 the attacker still has to discover it via T1110.001."
+          },
+          "free_elements_changed": [
+            "target1.software.openssh@default",
+            "target1.credential.labuser",
+            "target2.software.openssh@default",
+            "target2.credential.labuser"
+          ],
+          "free_fraction": 66.6
         }
       ],
       "executable": true
@@ -298,7 +601,7 @@
                 "user": "dustops",
                 "secret": "Dust2024!",
                 "location": null,
-                "purpose": "Operator account matching the released SUT profile declaration (dustops:Dust2024!).",
+                "purpose": "Operator account declared by the lab profile declaration (dustops:Dust2024!).",
                 "source": "autosut_concretized"
               }
             ],
@@ -309,7 +612,7 @@
                 "content_b64": null,
                 "owner": "dustops",
                 "mode": "0644",
-                "purpose": "Decoy artefact declared by the released SUT profile (/home/dustops/intel/targets.txt).",
+                "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/targets.txt).",
                 "source": "analyst_authored"
               },
               {
@@ -318,7 +621,7 @@
                 "content_b64": null,
                 "owner": "dustops",
                 "mode": "0644",
-                "purpose": "Decoy artefact declared by the released SUT profile (/home/dustops/intel/financials.csv).",
+                "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/financials.csv).",
                 "source": "analyst_authored"
               },
               {
@@ -327,7 +630,7 @@
                 "content_b64": null,
                 "owner": "dustops",
                 "mode": "0644",
-                "purpose": "Decoy artefact declared by the released SUT profile (/tmp/staged_payload.sh).",
+                "purpose": "Decoy artefact declared by the lab profile (/tmp/staged_payload.sh).",
                 "source": "analyst_authored"
               }
             ],
@@ -337,7 +640,7 @@
                 "protocol": "tcp",
                 "service": "ssh",
                 "expose_to": "private_network",
-                "purpose": "SSH service the released SUT profile declares (password_auth_enabled).",
+                "purpose": "SSH service with password authentication enabled.",
                 "source": "analyst_authored"
               },
               {
@@ -345,7 +648,7 @@
                 "protocol": "tcp",
                 "service": "http",
                 "expose_to": "private_network",
-                "purpose": "HTTP web surface the released SUT profile declares.",
+                "purpose": "HTTP web surface required by this lab profile.",
                 "source": "analyst_authored"
               },
               {
@@ -353,7 +656,7 @@
                 "protocol": "tcp",
                 "service": "mysql",
                 "expose_to": "private_network",
-                "purpose": "MySQL instance the released SUT profile declares (default_instance_exposed).",
+                "purpose": "MySQL instance the lab profile declares (default_instance_exposed).",
                 "source": "analyst_authored"
               }
             ],
@@ -365,7 +668,7 @@
                 "cve_pins": [],
                 "config": {},
                 "image_override": null,
-                "purpose": "ssh service the released SUT profile declares (password_auth_enabled).",
+                "purpose": "ssh service with password authentication enabled.",
                 "source": "analyst_authored"
               },
               {
@@ -375,7 +678,7 @@
                 "cve_pins": [],
                 "config": {},
                 "image_override": null,
-                "purpose": "HTTP web surface the released SUT profile declares.",
+                "purpose": "HTTP web surface required by this lab profile.",
                 "source": "analyst_authored"
               },
               {
@@ -385,7 +688,7 @@
                 "cve_pins": [],
                 "config": {},
                 "image_override": null,
-                "purpose": "MySQL instance the released SUT profile declares (default_instance_exposed).",
+                "purpose": "MySQL instance the lab profile declares (default_instance_exposed).",
                 "source": "analyst_authored"
               }
             ],
@@ -420,7 +723,7 @@
                   "user": "labuser_44cb63",
                   "secret": "Lab-44cb63!",
                   "location": null,
-                  "purpose": "Operator account matching the released SUT profile declaration (dustops:Dust2024!).",
+                  "purpose": "Operator account declared by the lab profile declaration (dustops:Dust2024!).",
                   "source": "autosut_concretized"
                 }
               ],
@@ -431,7 +734,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/home/dustops/intel/targets.txt).",
+                  "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/targets.txt).",
                   "source": "analyst_authored"
                 },
                 {
@@ -440,7 +743,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/home/dustops/intel/financials.csv).",
+                  "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/financials.csv).",
                   "source": "analyst_authored"
                 },
                 {
@@ -449,7 +752,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/tmp/staged_payload.sh).",
+                  "purpose": "Decoy artefact declared by the lab profile (/tmp/staged_payload.sh).",
                   "source": "analyst_authored"
                 }
               ],
@@ -459,7 +762,7 @@
                   "protocol": "tcp",
                   "service": "ssh",
                   "expose_to": "private_network",
-                  "purpose": "SSH service the released SUT profile declares (password_auth_enabled).",
+                  "purpose": "SSH service with password authentication enabled.",
                   "source": "analyst_authored"
                 },
                 {
@@ -467,7 +770,7 @@
                   "protocol": "tcp",
                   "service": "http",
                   "expose_to": "private_network",
-                  "purpose": "HTTP web surface the released SUT profile declares.",
+                  "purpose": "HTTP web surface required by this lab profile.",
                   "source": "analyst_authored"
                 },
                 {
@@ -475,7 +778,7 @@
                   "protocol": "tcp",
                   "service": "mysql",
                   "expose_to": "private_network",
-                  "purpose": "MySQL instance the released SUT profile declares (default_instance_exposed).",
+                  "purpose": "MySQL instance the lab profile declares (default_instance_exposed).",
                   "source": "analyst_authored"
                 }
               ],
@@ -549,7 +852,7 @@
                   "user": "labuser_1cf44d",
                   "secret": "Lab-1cf44d!",
                   "location": null,
-                  "purpose": "Operator account matching the released SUT profile declaration (dustops:Dust2024!).",
+                  "purpose": "Operator account declared by the lab profile declaration (dustops:Dust2024!).",
                   "source": "autosut_concretized"
                 }
               ],
@@ -560,7 +863,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/home/dustops/intel/targets.txt).",
+                  "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/targets.txt).",
                   "source": "analyst_authored"
                 },
                 {
@@ -569,7 +872,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/home/dustops/intel/financials.csv).",
+                  "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/financials.csv).",
                   "source": "analyst_authored"
                 },
                 {
@@ -578,7 +881,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/tmp/staged_payload.sh).",
+                  "purpose": "Decoy artefact declared by the lab profile (/tmp/staged_payload.sh).",
                   "source": "analyst_authored"
                 }
               ],
@@ -588,7 +891,7 @@
                   "protocol": "tcp",
                   "service": "ssh",
                   "expose_to": "private_network",
-                  "purpose": "SSH service the released SUT profile declares (password_auth_enabled).",
+                  "purpose": "SSH service with password authentication enabled.",
                   "source": "analyst_authored"
                 },
                 {
@@ -596,7 +899,7 @@
                   "protocol": "tcp",
                   "service": "http",
                   "expose_to": "private_network",
-                  "purpose": "HTTP web surface the released SUT profile declares.",
+                  "purpose": "HTTP web surface required by this lab profile.",
                   "source": "analyst_authored"
                 },
                 {
@@ -604,7 +907,7 @@
                   "protocol": "tcp",
                   "service": "mysql",
                   "expose_to": "private_network",
-                  "purpose": "MySQL instance the released SUT profile declares (default_instance_exposed).",
+                  "purpose": "MySQL instance the lab profile declares (default_instance_exposed).",
                   "source": "analyst_authored"
                 }
               ],
@@ -678,7 +981,7 @@
                   "user": "labuser_79d67f",
                   "secret": "Lab-79d67f!",
                   "location": null,
-                  "purpose": "Operator account matching the released SUT profile declaration (dustops:Dust2024!).",
+                  "purpose": "Operator account declared by the lab profile declaration (dustops:Dust2024!).",
                   "source": "autosut_concretized"
                 }
               ],
@@ -689,7 +992,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/home/dustops/intel/targets.txt).",
+                  "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/targets.txt).",
                   "source": "analyst_authored"
                 },
                 {
@@ -698,7 +1001,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/home/dustops/intel/financials.csv).",
+                  "purpose": "Decoy artefact declared by the lab profile (/home/dustops/intel/financials.csv).",
                   "source": "analyst_authored"
                 },
                 {
@@ -707,7 +1010,7 @@
                   "content_b64": null,
                   "owner": "dustops",
                   "mode": "0644",
-                  "purpose": "Decoy artefact declared by the released SUT profile (/tmp/staged_payload.sh).",
+                  "purpose": "Decoy artefact declared by the lab profile (/tmp/staged_payload.sh).",
                   "source": "analyst_authored"
                 }
               ],
@@ -717,7 +1020,7 @@
                   "protocol": "tcp",
                   "service": "ssh",
                   "expose_to": "private_network",
-                  "purpose": "SSH service the released SUT profile declares (password_auth_enabled).",
+                  "purpose": "SSH service with password authentication enabled.",
                   "source": "analyst_authored"
                 },
                 {
@@ -725,7 +1028,7 @@
                   "protocol": "tcp",
                   "service": "http",
                   "expose_to": "private_network",
-                  "purpose": "HTTP web surface the released SUT profile declares.",
+                  "purpose": "HTTP web surface required by this lab profile.",
                   "source": "analyst_authored"
                 },
                 {
@@ -733,7 +1036,7 @@
                   "protocol": "tcp",
                   "service": "mysql",
                   "expose_to": "private_network",
-                  "purpose": "MySQL instance the released SUT profile declares (default_instance_exposed).",
+                  "purpose": "MySQL instance the lab profile declares (default_instance_exposed).",
                   "source": "analyst_authored"
                 }
               ],

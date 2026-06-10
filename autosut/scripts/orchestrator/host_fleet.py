@@ -123,6 +123,12 @@ class HostFleet:
                         host_spec.name,
                     )
                 hosts[host_spec.name] = env
+                # Grant temporary egress so the declarative startup commands
+                # (apt/apk install of openssh, dropbear, sshpass, ...) can
+                # reach their package mirrors. Removed before any technique
+                # runs by _isolate_for_attack, so the attack phase is sealed.
+                _attach_setup_egress(env.container_name, run_dir,
+                                     host_spec.name)
                 # Run declarative startup commands (e.g. apt install
                 # openssh-server, key pre-staging). Each is logged so
                 # reviewers can audit the lab pre-staging step required by
@@ -144,6 +150,10 @@ class HostFleet:
                     sut_composer.apply_composition(
                         env, host_spec.name, host_spec.composition, run_dir,
                     )
+            # Every host is set up. Seal the lab BEFORE any technique runs:
+            # remove setup-time egress and verify no host can reach the Docker
+            # host or the Internet. The attack phase that follows is contained.
+            _isolate_for_attack(hosts, run_dir)
         except Exception:
             # If bring-up of any host fails, tear down what we have and
             # remove every per-zone network so the next run starts clean.
@@ -294,11 +304,18 @@ def _create_networks(network_names: dict[str, str], run_dir: Path) -> None:
     log_lines: list[str] = []
     for zone_label, network in network_names.items():
         proc = subprocess.run(
-            ["docker", "network", "create", "--driver", "bridge", network],
+            # --internal seals the network: no NAT, no route to the Docker
+            # host or the Internet. The attack phase runs only here, so a
+            # technique can never reach the host or egress. Setup-time package
+            # installs get a temporary bridge attachment that is removed before
+            # any technique runs (see _isolate_for_attack); a reviewer can
+            # confirm the seal from sut/containment.log alone.
+            ["docker", "network", "create", "--driver", "bridge",
+             "--internal", network],
             capture_output=True, text=True, check=False,
         )
         log_lines.append(
-            f"docker network create {network}  # zone={zone_label}\n"
+            f"docker network create --internal {network}  # zone={zone_label}\n"
             f"exit_code: {proc.returncode}\n"
             f"stdout: {proc.stdout}\nstderr: {proc.stderr}\n"
             f"---\n"
@@ -358,6 +375,72 @@ def _connect_extra_network(container_name: str, network: str, run_dir: Path,
     if proc.returncode != 0:
         raise RuntimeError(
             f"failed to attach {container_name} to {network}: {proc.stderr}"
+        )
+
+
+def _attach_setup_egress(container_name: str, run_dir: Path,
+                         host_label: str) -> None:
+    """Temporarily attach the default ``bridge`` so setup-time package installs
+    (apk/apt of openssh, dropbear, sshpass, ...) reach their mirrors. Removed
+    by :func:`_isolate_for_attack` before any technique runs, so the attack
+    phase is sealed. Setup is benign infrastructure prep, never an attack."""
+    proc = subprocess.run(
+        ["docker", "network", "connect", "bridge", container_name],
+        capture_output=True, text=True, check=False,
+    )
+    log_path = run_dir / "sut" / "containment.log"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open("a", encoding="utf-8") as fh:
+        fh.write(
+            f"[setup-egress] connect bridge {container_name} "
+            f"({host_label}) exit={proc.returncode} {proc.stderr.strip()}\n"
+        )
+
+
+def _isolate_for_attack(hosts: dict[str, EnvironmentBackend],
+                        run_dir: Path) -> None:
+    """Seal the lab before the attack phase and *prove* the seal.
+
+    Removes setup-time egress from every host, then probes each one: after
+    isolation a container reaches its lab peers (over the --internal network)
+    but NOT the Docker host or the Internet. The probe verdict is logged to
+    ``sut/containment.log`` so the containment claim is reproducible from the
+    log alone. Honesty invariant: if any host still has egress we raise rather
+    than run an attack we cannot prove is contained.
+    """
+    log_path = run_dir / "sut" / "containment.log"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    egress_probe = (
+        "timeout 6 sh -c '("
+        "wget -q -T3 -O- http://1.1.1.1/ 2>/dev/null || "
+        "curl -s -m3 http://1.1.1.1/ 2>/dev/null || "
+        "nc -w3 1.1.1.1 53 </dev/null 2>/dev/null"
+        ") >/dev/null 2>&1 && echo LEAK || echo SEALED'"
+    )
+    leaks: list[str] = []
+    with log_path.open("a", encoding="utf-8") as fh:
+        for host_name, env in hosts.items():
+            container = getattr(env, "container_name", host_name)
+            disc = subprocess.run(
+                ["docker", "network", "disconnect", "bridge", container],
+                capture_output=True, text=True, check=False,
+            )
+            probe = env.run_shell(
+                egress_probe,
+                log_name=f"sut/{host_name}_egress_probe.log", timeout=20,
+            )
+            out = probe.stdout.strip().splitlines()
+            verdict = out[-1] if out else "UNKNOWN"
+            fh.write(
+                f"[seal] {host_name} ({container}): disconnect bridge "
+                f"exit={disc.returncode}; egress={verdict}\n"
+            )
+            if verdict != "SEALED":
+                leaks.append(f"{host_name}={verdict}")
+    if leaks:
+        raise RuntimeError(
+            "containment seal failed; egress still reachable from: "
+            + ", ".join(leaks)
         )
 
 

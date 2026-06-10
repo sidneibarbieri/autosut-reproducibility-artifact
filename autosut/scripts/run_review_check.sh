@@ -15,8 +15,9 @@
 #   5. dashboard html is present and only references golden run paths
 #   6. evidence under release/evidence/ contains no non-archived partial
 #      run (i.e. _archive/ is the only place historical runs may live)
-#   7. release/subdetermination_proof.json is present and the
-#      cve_2021_41773 non-uniqueness proof is executable (both variants ran)
+#   7. release/subdetermination_proof.json is present, the cve_2021_41773
+#      executable witness ran (both variants), and the pivot_demo coincident
+#      witness ran (OpenSSH<->Dropbear substitution executed, declared==executed)
 #
 # Run from the project root::
 #
@@ -211,7 +212,7 @@ if strays:
 PYEOF
 
 # ---------------------------------------------------------------------------
-# 7. Subdetermination proof artifact present + cve proof is executable
+# 7. Subdetermination proof artifact present + cve executable + pivot coincident
 # ---------------------------------------------------------------------------
 step "validating subdetermination proof artifact"
 "$PY" - <<'PYEOF' || fail "subdetermination proof validation failed (see message above)"
@@ -243,6 +244,25 @@ if not proofs.get("0.cve_2021_41773", {}).get("executable"):
     print("  0.cve_2021_41773: executable proof is not true "
           "(regenerate with docker up)", file=sys.stderr)
     exit_code = 1
+# Coincident witness: the informative free-region substitution (OpenSSH ->
+# Dropbear) is itself executed. Existence needs >= 2 campaign-equivalent SUTs
+# (canonical + >= 1 variant); both must run with declared == executed.
+pivot = proofs.get("0.pivot_demo")
+if pivot is None:
+    print("  0.pivot_demo: coincident-witness proof missing from artifact",
+          file=sys.stderr)
+    exit_code = 1
+else:
+    if not pivot.get("invariant_fingerprint"):
+        print("  0.pivot_demo: empty invariant_fingerprint", file=sys.stderr)
+        exit_code = 1
+    if len(pivot.get("variants", [])) < 1:
+        print("  0.pivot_demo: no compatible variant", file=sys.stderr)
+        exit_code = 1
+    if not pivot.get("executable"):
+        print("  0.pivot_demo: coincident witness is not executable "
+              "(regenerate with docker up)", file=sys.stderr)
+        exit_code = 1
 sys.exit(exit_code)
 PYEOF
 

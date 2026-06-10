@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-09T09:51:04",
+  "generated_at": "2026-06-10T08:51:59",
   "policy": "hybrid_3category",
   "dimensions": [
     "platform",
@@ -13,17 +13,17 @@
   "skipped_unimplemented": [],
   "global": {
     "campaign_id": "ALL",
-    "total_elements": 133,
+    "total_elements": 135,
     "by_source": {
       "corpus_supported": 32,
-      "analyst_authored": 78,
+      "analyst_authored": 80,
       "autosut_concretized": 23,
       "inferred": 0
     },
     "percentages": {
-      "corpus_supported": 24.1,
-      "analyst_authored": 58.6,
-      "autosut_concretized": 17.3,
+      "corpus_supported": 23.7,
+      "analyst_authored": 59.3,
+      "autosut_concretized": 17.0,
       "inferred": 0.0
     },
     "by_dimension": {
@@ -35,7 +35,7 @@
       },
       "software": {
         "corpus_supported": 1,
-        "analyst_authored": 19,
+        "analyst_authored": 21,
         "autosut_concretized": 0,
         "inferred": 0
       },
@@ -1056,6 +1056,14 @@
         "purpose": "materialised as alpine:3.19"
       },
       {
+        "dimension": "software",
+        "identifier": "target1.software.openssh@default",
+        "value": "openssh@default",
+        "source": "analyst_authored",
+        "host": "target1",
+        "purpose": "The remote authenticated SSH service the attacker brute-forces (T1110.001) and pivots through (T1021.004). A FREE, analyst-authored implementation choice: the corpus pins only that a remote authenticated service must exist, not which SSH server realises it. The non-uniqueness witness substitutes it (OpenSSH <-> Dropbear) and executes both to completion under one corpus fingerprint."
+      },
+      {
         "dimension": "credentials",
         "identifier": "target1.credential.labuser",
         "value": "password:labuser",
@@ -1078,6 +1086,14 @@
         "source": "corpus_supported",
         "host": "target2",
         "purpose": "materialised as alpine:3.19"
+      },
+      {
+        "dimension": "software",
+        "identifier": "target2.software.openssh@default",
+        "value": "openssh@default",
+        "source": "analyst_authored",
+        "host": "target2",
+        "purpose": "The remote authenticated SSH service the attacker brute-forces (T1110.001) and pivots through (T1021.004). A FREE, analyst-authored implementation choice: the corpus pins only that a remote authenticated service must exist, not which SSH server realises it. The non-uniqueness witness substitutes it (OpenSSH <-> Dropbear) and executes both to completion under one corpus fingerprint."
       },
       {
         "dimension": "credentials",
@@ -3162,17 +3178,17 @@
     },
     {
       "campaign_id": "0.pivot_demo",
-      "total_elements": 7,
+      "total_elements": 9,
       "by_source": {
         "corpus_supported": 3,
-        "analyst_authored": 2,
+        "analyst_authored": 4,
         "autosut_concretized": 2,
         "inferred": 0
       },
       "percentages": {
-        "corpus_supported": 42.9,
-        "analyst_authored": 28.6,
-        "autosut_concretized": 28.6,
+        "corpus_supported": 33.3,
+        "analyst_authored": 44.4,
+        "autosut_concretized": 22.2,
         "inferred": 0.0
       },
       "by_dimension": {
@@ -3184,7 +3200,7 @@
         },
         "software": {
           "corpus_supported": 0,
-          "analyst_authored": 0,
+          "analyst_authored": 2,
           "autosut_concretized": 0,
           "inferred": 0
         },
@@ -3237,6 +3253,14 @@
           "purpose": "materialised as alpine:3.19"
         },
         {
+          "dimension": "software",
+          "identifier": "target1.software.openssh@default",
+          "value": "openssh@default",
+          "source": "analyst_authored",
+          "host": "target1",
+          "purpose": "The remote authenticated SSH service the attacker brute-forces (T1110.001) and pivots through (T1021.004). A FREE, analyst-authored implementation choice: the corpus pins only that a remote authenticated service must exist, not which SSH server realises it. The non-uniqueness witness substitutes it (OpenSSH <-> Dropbear) and executes both to completion under one corpus fingerprint."
+        },
+        {
           "dimension": "credentials",
           "identifier": "target1.credential.labuser",
           "value": "password:labuser",
@@ -3259,6 +3283,14 @@
           "source": "corpus_supported",
           "host": "target2",
           "purpose": "materialised as alpine:3.19"
+        },
+        {
+          "dimension": "software",
+          "identifier": "target2.software.openssh@default",
+          "value": "openssh@default",
+          "source": "analyst_authored",
+          "host": "target2",
+          "purpose": "The remote authenticated SSH service the attacker brute-forces (T1110.001) and pivots through (T1021.004). A FREE, analyst-authored implementation choice: the corpus pins only that a remote authenticated service must exist, not which SSH server realises it. The non-uniqueness witness substitutes it (OpenSSH <-> Dropbear) and executes both to completion under one corpus fingerprint."
         },
         {
           "dimension": "credentials",
