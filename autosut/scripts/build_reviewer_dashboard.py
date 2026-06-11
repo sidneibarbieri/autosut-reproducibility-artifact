@@ -1322,7 +1322,8 @@ def render_subdetermination_section() -> str:
             "server.</p>")
     coverage_note = (
         "<p class='muted'>Scope: the non-uniqueness result rests on the "
-        "executable CVE-2021-41773 and coincident SSH-pivot witnesses above. "
+        "executable CVE-2021-41773 and coincident service-substitution "
+        "witnesses above. "
         "Campaigns carrying "
         "<code>naive_simulated</code> techniques are included to study "
         "environment reconstruction and compatibility; declared behavioral "
