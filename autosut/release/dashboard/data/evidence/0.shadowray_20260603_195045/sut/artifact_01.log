@@ -1,0 +1,10 @@
+$ mkdir -p $(dirname /opt/sensitive/manifest.txt) && cat > /opt/sensitive/manifest.txt <<'AUTOSUT_ART_EOF'
+training_dataset_v3.parquet
+
+AUTOSUT_ART_EOF
+chmod 0644 /opt/sensitive/manifest.txt && chown root:root /opt/sensitive/manifest.txt 2>/dev/null || true
+exit_code: 0
+--- stdout ---
+
+--- stderr ---
+
